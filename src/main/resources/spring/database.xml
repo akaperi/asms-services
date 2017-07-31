@@ -1,0 +1,50 @@
+<beans:beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:beans="http://www.springframework.org/schema/beans"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans	http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<beans:bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<beans:property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<beans:property name="url"
+			value="jdbc:mysql://localhost:3306/testing" />
+		<beans:property name="connectionProperties"
+			value="useUnicode=yes;characterEncoding=utf8;" />
+		<beans:property name="username" value="root" />
+		<beans:property name="password" value="Admin" />
+	</beans:bean>
+
+	<!-- Hibernate 4 SessionFactory Bean definition -->
+	<beans:bean id="hibernate4AnnotatedSessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<beans:property name="dataSource" ref="dataSource" />
+		<beans:property name="annotatedClasses">
+			<beans:list>
+			<beans:value>com.asms.adminmgmt.entity.Admin</beans:value>
+				<beans:value>com.asms.schoolmgmt.entity.SchoolDetails</beans:value>
+				<beans:value>com.asms.rolemgmt.entity.Role</beans:value>
+				<beans:value>com.asms.rolemgmt.entity.SubRole</beans:value>
+				<beans:value>com.asms.usermgmt.entity.User</beans:value>
+				<beans:value>com.asms.usermgmt.student.entity.Student</beans:value>
+			</beans:list>
+		</beans:property>
+		<beans:property name="hibernateProperties">
+			<beans:props>
+			 <beans:prop key="connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider</beans:prop>
+				<beans:prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect
+				</beans:prop>
+				<beans:prop key="hibernate.current_session_context_class">thread</beans:prop>
+				<beans:prop key="hibernate.autoReconnect">true</beans:prop>
+				<beans:prop key="hibernate.show_sql">false</beans:prop>
+				<beans:prop key="hibernate.connection.useUnicode">true</beans:prop>
+				<beans:prop key="hibernate.connection.characterEncoding">UTF-8</beans:prop>
+				<beans:prop key="hibernate.c3p0.min_size">5</beans:prop>
+				<beans:prop key="hibernate.c3p0.max_size">20</beans:prop>
+				<beans:prop key="hibernate.c3p0.timeout">300</beans:prop>
+				<beans:prop key="hibernate.c3p0.max_statements">50</beans:prop>
+				<beans:prop key="hibernate.c3p0.idle_test_period">3000</beans:prop>
+            
+			</beans:props>
+		</beans:property>
+	</beans:bean>
+
+</beans:beans>
