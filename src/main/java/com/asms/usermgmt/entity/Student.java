@@ -14,7 +14,8 @@ import com.asms.rolemgmt.entity.Role;
 import com.asms.rolemgmt.entity.SubRole;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-/* student_details class is the entity class for student_details table
+/* Class name: student_details 
+ * class is the entity class for student_details table
  */
 
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
