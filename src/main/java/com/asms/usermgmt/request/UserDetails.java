@@ -60,11 +60,11 @@ public class UserDetails {
 	}
 
 	public StudentDetails getStudenrDetails() {
-		return studenrDetails;
+		return studentDetails;
 	}
 
-	public void setStudenrDetails(StudentDetails studenrDetails) {
-		this.studenrDetails = studenrDetails;
+	public void setStudenrDetails(StudentDetails studentDetails) {
+		this.studentDetails = studentDetails;
 	}
 	
 	
