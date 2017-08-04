@@ -13,7 +13,7 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.asms.adminmgmt.entity.Admin;
-import com.asms.usermgmt.student.entity.Student;
+import com.asms.usermgmt.entity.Student;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -96,13 +96,11 @@ public class SchoolDetails {
 	private List<Admin> adminObjectList;
 
 	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "schoolDetailsObject")
-	private List<Student> studentObjectList;
+	//@OneToMany(cascade = CascadeType.ALL, mappedBy = "schoolDetailsObject")
+	//private List<Student> studentObjectList;
 	
 	
-	public List<Student> getStudentObjectList() {
-		return studentObjectList;
-	}
+	
 
 
 
@@ -110,10 +108,6 @@ public class SchoolDetails {
 
 
 
-
-	public void setStudentObjectList(List<Student> studentObjectList) {
-		this.studentObjectList = studentObjectList;
-	}
 
 
 

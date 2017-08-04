@@ -1,5 +1,6 @@
 package com.asms.usermgmt.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,11 +8,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.asms.rolemgmt.entity.Role;
 import com.asms.rolemgmt.entity.SubRole;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /* user class is the base class for all roles
@@ -47,8 +50,8 @@ public class User {
 	@JoinColumn(name = "sub_role_id")
 	private SubRole subRoleObject;
 	
-	//@OneToOne(cascade = CascadeType.ALL, mappedBy = "bookingObject")
-	//private RejectedBooking rejectedBookingObject;
+	@OneToOne(cascade = CascadeType.ALL, mappedBy = "userObject")
+	private Student student;
 	
 
 	
@@ -102,6 +105,15 @@ public class User {
 
 	public void setSubRoleObject(SubRole subRoleObject) {
 		this.subRoleObject = subRoleObject;
+	}
+
+	@JsonIgnore
+	public Student getStudent() {
+		return student;
+	}
+
+	public void setStudent(Student student) {
+		this.student = student;
 	}
 	
 	

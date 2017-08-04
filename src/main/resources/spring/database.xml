@@ -24,9 +24,8 @@
 				<beans:value>com.asms.rolemgmt.entity.Role</beans:value>
 				<beans:value>com.asms.rolemgmt.entity.SubRole</beans:value>
 				<beans:value>com.asms.usermgmt.entity.User</beans:value>
-				<beans:value>com.asms.usermgmt.student.entity.Student</beans:value>
+				<beans:value>com.asms.usermgmt.entity.Student</beans:value>
 			
-				<beans:value>com.asms.usermgmt.entity.Management</beans:value>
 				<beans:value>com.asms.CountryMgmt.Entity.GeograhicEntity</beans:value>
 			</beans:list>
 		</beans:property>

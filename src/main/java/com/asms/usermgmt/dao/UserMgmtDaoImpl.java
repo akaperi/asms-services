@@ -1,6 +1,7 @@
 package com.asms.usermgmt.dao;
 
 import java.util.ResourceBundle;
+import java.util.UUID;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -9,13 +10,18 @@ import org.jboss.logging.MDC;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.asms.Exception.AsmsException;
 import com.asms.Exception.ExceptionHandler;
 import com.asms.common.helper.AsmsHelper;
+import com.asms.common.helper.Constants;
+import com.asms.usermgmt.entity.Student;
 import com.asms.usermgmt.entity.User;
+import com.asms.usermgmt.helper.EntityCreator;
+import com.asms.usermgmt.request.UserDetails;
 import com.asms.usermgmt.service.UserMgmtService;
 
 
@@ -29,6 +35,9 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 	
 	@Autowired
 	private ExceptionHandler exceptionHandler;
+	
+	@Autowired
+	private EntityCreator entityCreator;
 	
 	private static final Logger logger = LoggerFactory.getLogger(UserMgmtService.class);
 
@@ -85,11 +94,7 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 		}
 	}*/
 
-	@Override
-	public void register(User user) {
-		// TODO Auto-generated method stub
-		
-	}
+
 	
 	/*
 	 * Method : getUserRole : gets the user role from database
@@ -119,7 +124,107 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
 			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"), messages.getString("SYSTEM_EXCEPTION"));	
 		}
-	
 	}
+	
+	@Override
+	public User getUser(String email) throws AsmsException {
+		Session session = null;
+		Transaction tx = null;
+		try {
+			session = sessionFactory.getCurrentSession();
+			tx = session.beginTransaction();
+			String hql = "from User U where U.email=?";
+			User user = (User) session.createQuery(hql).setParameter(0, email).uniqueResult();
+			tx.commit();
+			return user;
+
+		} catch (Exception e) {
+			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
+					+ "getUser()" + "   " + e);
+			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
+			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+					messages.getString("SYSTEM_EXCEPTION"));
+		}
+
+	}
+
+	
+	/*
+	 * Method : registerUser : inserts user details into database
+	 * input : UserDetails
+	 * return : void
+	 *
+	 */
+	@Override
+	public void registerUser(UserDetails userDetails, User user) throws AsmsException {
+		try {
+			
+			
+			if(userDetails.getRole().equalsIgnoreCase(Constants.role_student))	{
+				user.setUserPassword(generatePassword(Constants.role_student));
+				user.setUserId(generateUserId());
+				Student student = entityCreator.createStudent(userDetails.getStudenrDetails(), user);
+				user.setStudent(student);
+				
+				insertUser(user);
+				
+			}
+			else {
+				logger.debug("invalid role");
+			}
+			
+		}
+		catch (Exception e) {
+			logger.error("Session Id: " + MDC.get("sessionId") + "   "+
+					"Method: "+ this.getClass().getName()+ "." + "registerUser()" + "   "+e);
+			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
+			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"), messages.getString("SYSTEM_EXCEPTION"));	
+		}
+		
+	}
+	
+	
+	/*
+	 * Method : insertStudent : inserts Student entity into database
+	 * input : student
+	 * return : void
+	 *
+	 */
+
+	@Override
+	public void insertUser(User user) throws AsmsException {
+		Session session = null;
+		Transaction tx = null;
+		try {
+			
+			session = this.sessionFactory.getCurrentSession();
+			tx = session.beginTransaction();
+			session.save(user);
+
+			tx.commit();
+		} catch (Exception ex) {
+			logger.error("Session Id: " + MDC.get("sessionId") + "   "+
+					"Method: "+ this.getClass().getName()+ "." + "insertUser()" + "   "+ex);
+			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
+			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"), messages.getString("SYSTEM_EXCEPTION"));	
+			
+		}
+		
+	}
+
+	
+	
+	// generate default encrypted password
+	private String generatePassword(String role) {
+		return  BCrypt.hashpw(role + "123", BCrypt.gensalt(10));
+	}
+	
+	// generate userid 
+		private String generateUserId() {
+			return  UUID.randomUUID().toString();
+		}
+		
+	
+	
 
 }
