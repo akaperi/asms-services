@@ -42,7 +42,7 @@ public class SubRole {
 	
 
 	@Column(name = "sub_role_name")
-	private int subRoleName;
+	private String subRoleName;
 	
 	@ManyToOne
 	@JoinColumn(name = "role_id")
@@ -93,7 +93,7 @@ public class SubRole {
 
 
 
-	public int getSubRoleName() {
+	public String getSubRoleName() {
 		return subRoleName;
 	}
 
@@ -102,7 +102,7 @@ public class SubRole {
 
 
 
-	public void setSubRoleName(int subRoleName) {
+	public void setSubRoleName(String subRoleName) {
 		this.subRoleName = subRoleName;
 	}
 

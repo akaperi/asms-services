@@ -27,7 +27,7 @@ public class EntityCreator {
 		student.setAdmissionDate(details.getAdmissionDate());
 		student.setAdmissionNo(details.getAdmissionNo());
 		
-		student.setSchoolId("SSC123");
+		student.setSchoolId("SCH001");
 		student.setStudentAgeInYears(details.getStudentAgeInYears());
 		student.setStudentBirthplace(details.getStudentBirthplace());
 		student.setStudentCasteCategory(details.getStudentCasteCategory());
@@ -42,7 +42,11 @@ public class EntityCreator {
 		student.setStudentMotherTongue(details.getStudentMotherTongue());
 		student.setStudentNationality(details.getStudentNationality());
 		student.setStudentPhoto(details.getStudentPhoto());
-		student.setUserObject(user);
+		student.setStudentReligion(details.getStudentReligion());
+		student.setStudentSection(details.getStudentSection());
+		
+		student.setStudentSubCaste(details.getStudentSubCaste());
+		student.setStudentType(details.getStudentType());
 		return student;
 	}
 

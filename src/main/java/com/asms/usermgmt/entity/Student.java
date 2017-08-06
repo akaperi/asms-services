@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -25,21 +26,15 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @XmlRootElement
 @Entity
 @Table(name = "student_details")
-public class Student {
+@PrimaryKeyJoinColumn(name = "student_id", referencedColumnName = "serial_no")
+public class Student extends User{
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "serial_no")
-	private int serialNo;
+	
 
 	@Column(name = "school_id")
 	private String schoolId;
 	
-	@JsonIgnore
-	@OneToOne
-	@JoinColumn(name = "user_id")
-	private User userObject;
-
+	
 	@Column(name = "admission_no")
 	private String admissionNo;
 
@@ -103,12 +98,17 @@ public class Student {
 	@Column(name = "student_photo")
 	private String studentPhoto;
 	
-	public int getSerialNo() {
-		return serialNo;
+	@Column(name = "student_status")
+	private String status;
+	
+	
+
+	public String getStatus() {
+		return status;
 	}
 
-	public void setSerialNo(int serialNo) {
-		this.serialNo = serialNo;
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	public String getSchoolId() {
@@ -289,13 +289,10 @@ public class Student {
 		this.studentPhoto = studentPhoto;
 	}
 
-	public User getUserObject() {
-		return userObject;
-	}
 
-	public void setUserObject(User userObject) {
-		this.userObject = userObject;
-	}
+
+	
+	
 
 
 }

@@ -1,20 +1,19 @@
 package com.asms.usermgmt.entity;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.InheritanceType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.asms.rolemgmt.entity.Role;
 import com.asms.rolemgmt.entity.SubRole;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /* user class is the base class for all roles
@@ -25,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @XmlRootElement
 @Entity
 @Table(name = "user_information")
+@Inheritance(strategy=InheritanceType.JOINED)
 public class User {
 	
 	@Id
@@ -50,13 +50,13 @@ public class User {
 	@JoinColumn(name = "sub_role_id")
 	private SubRole subRoleObject;
 	
-	@OneToOne(cascade = CascadeType.ALL, mappedBy = "userObject")
-	private Student student;
+
 	
 
 	
 	
 	
+
 	public String getUserId() {
 		return userId;
 	}
@@ -107,14 +107,6 @@ public class User {
 		this.subRoleObject = subRoleObject;
 	}
 
-	@JsonIgnore
-	public Student getStudent() {
-		return student;
-	}
-
-	public void setStudent(Student student) {
-		this.student = student;
-	}
 	
 	
 

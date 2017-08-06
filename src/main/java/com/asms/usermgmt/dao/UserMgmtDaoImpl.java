@@ -1,5 +1,6 @@
 package com.asms.usermgmt.dao;
 
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
@@ -18,6 +19,8 @@ import com.asms.Exception.AsmsException;
 import com.asms.Exception.ExceptionHandler;
 import com.asms.common.helper.AsmsHelper;
 import com.asms.common.helper.Constants;
+import com.asms.rolemgmt.entity.Role;
+import com.asms.rolemgmt.entity.SubRole;
 import com.asms.usermgmt.entity.Student;
 import com.asms.usermgmt.entity.User;
 import com.asms.usermgmt.helper.EntityCreator;
@@ -147,6 +150,51 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 		}
 
 	}
+	
+	@Override
+	public Role getRoleObject(String roleName) throws AsmsException {
+		Session session = null;
+		Transaction tx = null;
+		try {
+			session = sessionFactory.getCurrentSession();
+			tx = session.beginTransaction();
+			String hql = "from Role U where U.roleName=?";
+			Role role = (Role) session.createQuery(hql).setParameter(0, roleName).uniqueResult();
+			tx.commit();
+			return role;
+
+		} catch (Exception e) {
+			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
+					+ "getRoleObject()" + "   " + e);
+			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
+			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+					messages.getString("SYSTEM_EXCEPTION"));
+		}
+
+	}
+	
+	@Override
+	public SubRole getSubRoleObject(String roleName) throws AsmsException {
+		Session session = null;
+		Transaction tx = null;
+		try {
+			session = sessionFactory.getCurrentSession();
+			tx = session.beginTransaction();
+			String hql = "from SubRole U where U.subRoleName=?";
+			@SuppressWarnings("unchecked")
+			List<SubRole> sRole = (List<SubRole>) session.createQuery(hql).setParameter(0, roleName).list();
+			tx.commit();
+			return sRole.get(0);
+
+		} catch (Exception e) {
+			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
+					+ "getSubRoleObject()" + "   " + e);
+			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
+			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+					messages.getString("SYSTEM_EXCEPTION"));
+		}
+
+	}
 
 	
 	/*
@@ -161,16 +209,26 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 			
 			
 			if(userDetails.getRole().equalsIgnoreCase(Constants.role_student))	{
-				user.setUserPassword(generatePassword(Constants.role_student));
-				user.setUserId(generateUserId());
-				Student student = entityCreator.createStudent(userDetails.getStudenrDetails(), user);
-				user.setStudent(student);
-				
-				insertUser(user);
+			    Role role = getRoleObject(userDetails.getRole());
+			    SubRole sRole = getSubRoleObject(userDetails.getRole());
+			    if(null != role && null != sRole) {
+			    	Student student = entityCreator.createStudent(userDetails.getStudenrDetails(), user);
+					student.setUserPassword(generatePassword(Constants.role_student));
+					student.setUserId(generateUserId());
+					student.setEmail(userDetails.getEmail());
+				    student.setRoleObject(role);
+				    student.setSubRoleObject(sRole);
+				    student.setStatus("Complete");
+				    
+					insertStudent(student);
+			    }
+			    else {
+			    	logger.debug("role not matched ");
+			    }
 				
 			}
 			else {
-				logger.debug("invalid role");
+				logger.debug("invalid role ");
 			}
 			
 		}
@@ -204,7 +262,29 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 			tx.commit();
 		} catch (Exception ex) {
 			logger.error("Session Id: " + MDC.get("sessionId") + "   "+
-					"Method: "+ this.getClass().getName()+ "." + "insertUser()" + "   "+ex);
+					"Method: "+ this.getClass().getName()+ "." + "insertUser()" + "   ",ex);
+			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
+			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"), messages.getString("SYSTEM_EXCEPTION"));	
+			
+		}
+		
+	}
+	
+	@Override
+	public void insertStudent(Student student) throws AsmsException {
+		Session session = null;
+		Transaction tx = null;
+		try {
+			
+			session = this.sessionFactory.getCurrentSession();
+			tx = session.beginTransaction();
+			
+			session.save(student);
+
+			tx.commit();
+		} catch (Exception ex) {
+			logger.error("Session Id: " + MDC.get("sessionId") + "   "+
+					"Method: "+ this.getClass().getName()+ "." + "insertStudent()" + "   "+ex);
 			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
 			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"), messages.getString("SYSTEM_EXCEPTION"));	
 			
@@ -216,7 +296,8 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 	
 	// generate default encrypted password
 	private String generatePassword(String role) {
-		return  BCrypt.hashpw(role + "123", BCrypt.gensalt(10));
+		//return  BCrypt.hashpw(role + "123", BCrypt.gensalt(10));
+		return role +"123";
 	}
 	
 	// generate userid 
