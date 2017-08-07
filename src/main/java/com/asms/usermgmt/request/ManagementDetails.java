@@ -9,11 +9,13 @@ import java.util.Date;
  */
 public class ManagementDetails {
 	
+	private int serId;
+	
 	private String schoolId;
 	
 	private String trustId;
 	
-	private String trustName;
+	//private String trustName;
 	
 	private String mngmtRole;
 	
@@ -25,7 +27,7 @@ public class ManagementDetails {
 	
 	private String mngmtDesignation;
 	
-	private String mngmtLoginId;
+	//private String mngmtLoginId;
 	
 	private String mngmtContactNo;
 	
@@ -34,6 +36,8 @@ public class ManagementDetails {
 	private String mngmtCreatedByWadmin;
 	
 	private Date mngmtCreationTime;
+	
+	private String acStatus;
 	
 	public String getSchoolId() {
 		return schoolId;
@@ -47,12 +51,12 @@ public class ManagementDetails {
 	public void setTrustId(String trustId) {
 		this.trustId = trustId;
 	}
-	public String getTrustName() {
+	/*public String getTrustName() {
 		return trustName;
 	}
 	public void setTrustName(String trustName) {
 		this.trustName = trustName;
-	}
+	}*/
 	public String getMngmtRole() {
 		return mngmtRole;
 	}
@@ -83,12 +87,12 @@ public class ManagementDetails {
 	public void setMngmtDesignation(String mngmtDesignation) {
 		this.mngmtDesignation = mngmtDesignation;
 	}
-	public String getMngmtLoginId() {
+	/*public String getMngmtLoginId() {
 		return mngmtLoginId;
 	}
 	public void setMngmtLoginId(String mngmtLoginId) {
 		this.mngmtLoginId = mngmtLoginId;
-	}
+	}*/
 	public String getMngmtContactNo() {
 		return mngmtContactNo;
 	}
@@ -112,6 +116,18 @@ public class ManagementDetails {
 	}
 	public void setMngmtCreationTime(Date mngmtCreationTime) {
 		this.mngmtCreationTime = mngmtCreationTime;
+	}
+	public String getAcStatus() {
+		return acStatus;
+	}
+	public void setAcStatus(String acStatus) {
+		this.acStatus = acStatus;
+	}
+	public int getSerId() {
+		return serId;
+	}
+	public void setSerId(int serId) {
+		this.serId = serId;
 	}
 	
 	

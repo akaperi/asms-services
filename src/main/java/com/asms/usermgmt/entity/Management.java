@@ -4,11 +4,9 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -23,20 +21,19 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @XmlRootElement
 @Entity
 @Table(name = "management")
-public class Management {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "serial_no")	
-	private int serialNo;
+
+public class Management extends User{
+
+	//@Column(nullable = false)
+	@Column(name = "siNo")	
+	@PrimaryKeyJoinColumn(name = "siNo", referencedColumnName = "serial_no")
+	private int serId;
 	
 	@Column(name = "school_id")
 	private String schoolId;
 	
 	@Column(name = "trust_id")	
 	private String trustId;
-	
-	@Column(name = "trust_name")
-	private String trustName;
 	
 	@Column(name = "mngmt_role")
 	private String mngmtRole;
@@ -53,12 +50,6 @@ public class Management {
 	@Column(name = "mngmt_designation")
 	private String mngmtDesignation;
 	
-	@JsonIgnore
-	@OneToOne
-	@JoinColumn(name = "user_id")
-	private User userObject;
-	
-	
 	@Column(name = "mngmt_contact_no")
 	private String mngmtContactNo;
 	
@@ -71,14 +62,11 @@ public class Management {
 	@Column(name = "mngmt_creation_time")
 	private Date mngmtCreationTime;
 
+	@Column(name ="mngmt_status")
+	private String acStatus;
 
-	public int getSerialNo() {
-		return serialNo;
-	}
-
-	public void setSerialNo(int serialNo) {
-		this.serialNo = serialNo;
-	}
+	
+	
 	
 	public String getSchoolId() {
 		return schoolId;
@@ -93,14 +81,6 @@ public class Management {
 
 	public void setTrustId(String trustId) {
 		this.trustId = trustId;
-	}
-
-	public String getTrustName() {
-		return trustName;
-	}
-
-	public void setTrustName(String trustName) {
-		this.trustName = trustName;
 	}
 
 	public String getMngmtRole() {
@@ -143,14 +123,14 @@ public class Management {
 		this.mngmtDesignation = mngmtDesignation;
 	}
 
-	public User getUserObject() {
+	/*public User getUserObject() {
 		return userObject;
 	}
 
 	public void setUserObject(User userObject) {
 		this.userObject = userObject;
 	}
-
+*/
 	public String getMngmtContactNo() {
 		return mngmtContactNo;
 	}
@@ -181,6 +161,22 @@ public class Management {
 
 	public void setMngmtCreationTime(Date mngmtCreationTime) {
 		this.mngmtCreationTime = mngmtCreationTime;
+	}
+
+	public String getAcStatus() {
+		return acStatus;
+	}
+
+	public void setAcStatus(String acStatus) {
+		this.acStatus = acStatus;
+	}
+
+	public int getSerId() {
+		return serId;
+	}
+
+	public void setSerId(int serId) {
+		this.serId = serId;
 	}
 
 	

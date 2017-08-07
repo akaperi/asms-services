@@ -18,6 +18,8 @@ public class UserDetails {
 	private String subRole;
 	
 	private StudentDetails studentDetails;
+	
+	private ManagementDetails managementDetails;
 
 	public String getUserId() {
 		return userId;
@@ -65,6 +67,22 @@ public class UserDetails {
 
 	public void setStudenrDetails(StudentDetails studentDetails) {
 		this.studentDetails = studentDetails;
+	}
+
+	public StudentDetails getStudentDetails() {
+		return studentDetails;
+	}
+
+	public void setStudentDetails(StudentDetails studentDetails) {
+		this.studentDetails = studentDetails;
+	}
+
+	public ManagementDetails getManagementDetails() {
+		return managementDetails;
+	}
+
+	public void setManagementDetails(ManagementDetails managementDetails) {
+		this.managementDetails = managementDetails;
 	}
 	
 	

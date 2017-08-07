@@ -10,7 +10,7 @@
 		<beans:property name="connectionProperties"
 			value="useUnicode=yes;characterEncoding=utf8;" />
 		<beans:property name="username" value="root" />
-		<beans:property name="password" value="Admin" />
+		<beans:property name="password" value="Mallu" />
 	</beans:bean>
 
 	<!-- Hibernate 4 SessionFactory Bean definition -->
@@ -27,7 +27,6 @@
 				<beans:value>com.asms.usermgmt.entity.Student</beans:value>
 			
 				<beans:value>com.asms.CountryMgmt.Entity.GeograhicEntity</beans:value>
-				
 				<beans:value>com.asms.usermgmt.entity.Management</beans:value>
 			
 			</beans:list>
