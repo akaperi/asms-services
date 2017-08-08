@@ -180,7 +180,24 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 					insertManagement(management);
 				}
 
-			} else {
+			} 
+			else if (userDetails.getRole().equalsIgnoreCase(Constants.role_teacher)) {
+				Role role = getRoleObject(userDetails.getRole());
+				SubRole sRole = getSubRoleObject(userDetails.getSubRole());
+				if (null != role && null != sRole) {
+					TeachingStaff teachingStaff = entityCreator.createTeachingStaff(userDetails.getTeachingStaffDetails(), user);
+					
+					teachingStaff.setUserPassword(generatePassword(Constants.role_teacher));
+					teachingStaff.setUserId(generateUserId());
+					teachingStaff.setEmail(userDetails.getEmail());
+					teachingStaff.setRoleObject(role);
+					teachingStaff.setSubRoleObject(sRole);
+					
+
+					insertTeachingStaff(teachingStaff);
+				}
+
+			}else {
 				logger.debug("role not matched");
 			}
 
