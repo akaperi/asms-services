@@ -54,11 +54,9 @@ public class EntityCreator {
 	
 	
 	public Management createManagement(ManagementDetails managementDetails,User user) {
+		
 		Management management =new Management();
-		
-		
-		
-		
+
 		management.setTrustId(managementDetails.getTrustId());
 		management.setMngmtRole(managementDetails.getMngmtRole());
 		management.setMngmtFirstName(managementDetails.getMngmtFirstName());
@@ -67,8 +65,11 @@ public class EntityCreator {
 		management.setMngmtDesignation(managementDetails.getMngmtDesignation());
 		management.setMngmtContactNo(managementDetails.getMngmtContactNo());
 		management.setMngmtEmailId(managementDetails.getMngmtEmailId());
+		
 		management.setMngmtCreationTime(new Date());
-
+		management.setSchoolId("SCH001");
+		management.setMngmtCreatedByWadmin(user.getUserId());
+		management.setAcStatus("Complete");
 		
 		return management;
 	}

@@ -40,6 +40,7 @@ public class PrivilegesManager {
 			pUser.setPrivileged(true);
 			pUser.setLoggedInUser(user);
 		}else {
+			System.out.println(new AsmsException());
 			
 		}
 		return pUser;

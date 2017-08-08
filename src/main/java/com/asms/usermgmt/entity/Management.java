@@ -4,13 +4,10 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /*
@@ -21,14 +18,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @XmlRootElement
 @Entity
 @Table(name = "management")
-
+@PrimaryKeyJoinColumn(name = "siNo", referencedColumnName = "serial_no")
 public class Management extends User{
 
-	//@Column(nullable = false)
-	@Column(name = "siNo")	
-	@PrimaryKeyJoinColumn(name = "siNo", referencedColumnName = "serial_no")
-	private int serId;
-	
 	@Column(name = "school_id")
 	private String schoolId;
 	
@@ -171,13 +163,6 @@ public class Management extends User{
 		this.acStatus = acStatus;
 	}
 
-	public int getSerId() {
-		return serId;
-	}
-
-	public void setSerId(int serId) {
-		this.serId = serId;
-	}
 
 	
 	

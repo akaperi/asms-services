@@ -183,62 +183,38 @@ public class Validator {
 			
 			ManagementDetails managementDetails = request.getUserDetails().getManagementDetails();
 			
-			if(managementDetails == null)
+			if(null==managementDetails )
 				throw exceptionHandler.constructAsmsException(messages.getString("MGMT_DETAILS_NULL_CODE"),
 						messages.getString("MGMT_DETAILS_NULL_MSG"));
 			
-			if((managementDetails.getSchoolId().isEmpty() == true) || (managementDetails.getSchoolId() == null))
-						throw exceptionHandler.constructAsmsException(messages.getString("MGMT_DETAILS_SCHOOLID_NULL_CODE"),
-								messages.getString("MGMT_DETAILS_SCHOOLID_NULL_MSG"));
-			
-			/*if((managementDetails.getTrustId().isEmpty() == true) || (managementDetails.getTrustName() == null))
-					throw exceptionHandler.constructAsmsException(messages.getString("MGMT_DETAILS_TRUSTID_NULL_CODE"),
-							messages.getString("MGMT_DETAILS_TRUSTID_NULL_MSG"));*/
-			
-			/*if((managementDetails.getTrustName().isEmpty() == true) || (managementDetails.getTrustName() == null))
-						throw exceptionHandler.constructAsmsException(messages.getString("MGMT_DETAILS_TRUSTNAME_NULL_CODE"),
-								messages.getString("MGMT_DETAILS_TRUSTNAME_NULL_MSG"));*/
-			
-			if((managementDetails.getMngmtRole().isEmpty() == true) || (managementDetails.getMngmtRole() == null))
+			if((null == managementDetails.getMngmtRole() ) || (managementDetails.getMngmtRole().isEmpty()))
 							throw exceptionHandler.constructAsmsException(messages.getString("MGMT_DETAILS_MNGMTROLE_NULL_CODE"),
 									messages.getString("MGMT_DETAILS_MNGMTROLE_NULL_MSG"));
 			
-			if((managementDetails.getMngmtFirstName().isEmpty() == true) || (managementDetails.getMngmtFirstName() == null))
+			if((  null == managementDetails.getMngmtFirstName()) || (managementDetails.getMngmtFirstName().isEmpty()))
 								throw exceptionHandler.constructAsmsException(messages.getString("MGMT_DETAILS_MNGMTFIRSTNAME_NULL_CODE"),
 										messages.getString("MGMT_DETAILS_MNGMTFIRSTNAME_NULL_MSG"));
 			
-			if((managementDetails.getMngmtMiddleName().isEmpty() == true) || (managementDetails.getMngmtMiddleName() == null))
+			if( ( null == managementDetails.getMngmtMiddleName() )|| (managementDetails.getMngmtMiddleName().isEmpty() ))
 									throw exceptionHandler.constructAsmsException(messages.getString("MGMT_DETAILS_MNGMTMIDDLENAME_NULL_CODE"),
 											messages.getString("MGMT_DETAILS_MNGMTMIDDLENAME_NULL_MSG"));
 			
-			if((managementDetails.getMngmtLastName().isEmpty() == true) || (managementDetails.getMngmtLastName() == null))
+			if((null == managementDetails.getMngmtLastName() )||(managementDetails.getMngmtLastName().isEmpty()))
 										throw exceptionHandler.constructAsmsException(messages.getString("MGMT_DETAILS_MNGMTLASTNAME_NULL_CODE"),
 												messages.getString("MGMT_DETAILS_MNGMTLASTNAME_NULL_MSG"));
 			
-			if((managementDetails.getMngmtDesignation().isEmpty() == true) || (managementDetails.getMngmtDesignation() == null))
+			if(((null==managementDetails.getMngmtDesignation()) ||managementDetails.getMngmtDesignation().isEmpty()) )
 											throw exceptionHandler.constructAsmsException(messages.getString("MGMT_DETAILS_MNGMTDESIGNATION_NULL_CODE"),
 													messages.getString("MGMT_DETAILS_MNGMTDESIGNATION_NULL_MSG"));
-			
-			/*if((managementDetails.getMngmtLoginId().isEmpty() == true) || (managementDetails.getMngmtLoginId() == null))
-												throw exceptionHandler.constructAsmsException(messages.getString("MGMT_DETAILS_MNGMTLOGINID_NULL_CODE"),
-														messages.getString("MGMT_DETAILS_MNGMTLOGINID_NULL_MSG"));
-			*/									
-			if((managementDetails.getMngmtContactNo().isEmpty() == true) || (managementDetails.getMngmtCreationTime() == null))
+
+											
+			if((  null == managementDetails.getMngmtContactNo())||(managementDetails.getMngmtContactNo().isEmpty()) )
 				throw exceptionHandler.constructAsmsException(messages.getString("MGMT_DETAILS_MNGMTCONTACTNO_NULL_CODE"),
 						messages.getString("MGMT_DETAILS_MNGMTCONTACTNO_NULL_MSG"));
 			
-			if((managementDetails.getMngmtEmailId().isEmpty() == true) || (managementDetails.getMngmtEmailId() == null))
+			if( ( null == managementDetails.getMngmtEmailId() )||(managementDetails.getMngmtEmailId().isEmpty()) )
 				throw exceptionHandler.constructAsmsException(messages.getString("MGMT_DETAILS_MNGMTEMAILID_NULL_CODE"),
 						messages.getString("MGMT_DETAILS_MNGMTEMAILID_NULL_MSG"));
-			
-			/*if((managementDetails.getMngmtCreatedByWadmin().isEmpty() == true) || (managementDetails.getMngmtCreatedByWadmin() == null))
-				throw exceptionHandler.constructAsmsException(messages.getString("MGMT_DETAILS_MNGMTCREATEDBYWADMIn_NULL_CODE"),
-						messages.getString("MGMT_DETAILS_MNGMTCREATEDBYWADMIn_NULL_MSG"));
-*/			
-			/*if((managementDetails.getMngmtCreationTime().toString().isEmpty() == true) || (managementDetails.getMngmtCreationTime() == null))
-				throw exceptionHandler.constructAsmsException(messages.getString("MGMT_DETAILS_MNGMTCREATIONTIME_NULL_CODE"),
-						messages.getString("MGMT_DETAILS_MNGMTCREATIONTIME_NULL_MSG"));*/
-			
 		}
 		else
 		{

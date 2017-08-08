@@ -25,7 +25,6 @@ import com.asms.usermgmt.entity.Student;
 import com.asms.usermgmt.entity.TeachingStaff;
 import com.asms.usermgmt.entity.User;
 import com.asms.usermgmt.helper.EntityCreator;
-import com.asms.usermgmt.request.ManagementDetails;
 import com.asms.usermgmt.request.UserDetails;
 import com.asms.usermgmt.service.UserMgmtService;
 
@@ -124,7 +123,7 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 			tx = session.beginTransaction();
 			String hql = "from SubRole U where U.subRoleName=?";
 			@SuppressWarnings("unchecked")
-			List<SubRole> sRole = (List<SubRole>) session.createQuery(hql).setParameter(0, roleName).list();
+			List<SubRole> sRole = session.createQuery(hql).setParameter(0, roleName).list();
 			tx.commit();
 			return sRole.get(0);
 
@@ -166,28 +165,20 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 			}
 
 			else if (userDetails.getRole().equalsIgnoreCase(Constants.role_management)) {
-				
-				Management management = entityCreator.createManagement(userDetails.getManagementDetails(), user);
-				
-				
-				
-				/*managementDetails.setAcStatus("Complete");
-				managementDetails.setMngmtCreatedByWadmin("ABC");
-				managementDetails.setSerId(1);
-				managementDetails.setSchoolId("SCH001");
-				userDetails.setManagementDetails(managementDetails);
-				
-				management.setSchoolId(userDetails.getManagementDetails().getSchoolId());
-				management.setSerialNo(userDetails.getManagementDetails().getSerId());
-				management.setMngmtCreatedByWadmin(userDetails.getManagementDetails().getMngmtCreatedByWadmin());
-				management.setAcStatus(userDetails.getManagementDetails().getAcStatus());*/
-				
-				management.setSchoolId("SCH001");
-				management.setSerialNo(1);
-				management.setMngmtCreatedByWadmin("ABC");
-				management.setAcStatus("Complete");
-				
-				insertManagement(management);
+				Role role = getRoleObject(userDetails.getRole());
+				SubRole sRole = getSubRoleObject(userDetails.getSubRole());
+				if (null != role && null != sRole) {
+					Management management = entityCreator.createManagement(userDetails.getManagementDetails(), user);
+					
+					management.setUserPassword(generatePassword(Constants.role_management));
+					management.setUserId(generateUserId());
+					management.setEmail(userDetails.getEmail());
+					management.setRoleObject(role);
+					management.setSubRoleObject(sRole);
+					
+
+					insertManagement(management);
+				}
 
 			} else {
 				logger.debug("role not matched");
