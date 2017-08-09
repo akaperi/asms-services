@@ -17,7 +17,7 @@ public class ManagementDetails {
 	
 	//private String trustName;
 	
-	private String mngmtRole;
+
 	
 	private String mngmtFirstName;
 	
@@ -31,7 +31,7 @@ public class ManagementDetails {
 	
 	private String mngmtContactNo;
 	
-	private String mngmtEmailId;
+
 	
 	private String mngmtCreatedByWadmin;
 	
@@ -57,12 +57,7 @@ public class ManagementDetails {
 	public void setTrustName(String trustName) {
 		this.trustName = trustName;
 	}*/
-	public String getMngmtRole() {
-		return mngmtRole;
-	}
-	public void setMngmtRole(String mngmtRole) {
-		this.mngmtRole = mngmtRole;
-	}
+	
 	public String getMngmtFirstName() {
 		return mngmtFirstName;
 	}
@@ -99,12 +94,7 @@ public class ManagementDetails {
 	public void setMngmtContactNo(String mngmtContactNo) {
 		this.mngmtContactNo = mngmtContactNo;
 	}
-	public String getMngmtEmailId() {
-		return mngmtEmailId;
-	}
-	public void setMngmtEmailId(String mngmtEmailId) {
-		this.mngmtEmailId = mngmtEmailId;
-	}
+	
 	public String getMngmtCreatedByWadmin() {
 		return mngmtCreatedByWadmin;
 	}

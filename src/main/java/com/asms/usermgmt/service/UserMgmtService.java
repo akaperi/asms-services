@@ -18,10 +18,10 @@ import org.springframework.stereotype.Service;
 
 import com.asms.Exception.AsmsException;
 import com.asms.adminmgmt.entity.Admin;
-import com.asms.usermgmt.auth.PrivilegesManager;
 import com.asms.common.helper.AsmsHelper;
 import com.asms.common.response.FailureResponse;
 import com.asms.common.service.BaseService;
+import com.asms.usermgmt.auth.PrivilegesManager;
 import com.asms.usermgmt.dao.UserMgmtDao;
 import com.asms.usermgmt.helper.PrincipalUser;
 import com.asms.usermgmt.helper.Validator;
@@ -65,7 +65,6 @@ public class UserMgmtService extends BaseService {
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public Response register(UserRequest userRequest) {
 		try {
-
 			// validate request
 			validator.validateRequest(userRequest);
 			// authorize

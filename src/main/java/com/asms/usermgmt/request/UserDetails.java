@@ -23,6 +23,7 @@ public class UserDetails {
 	
 	private TeachingStaffDetails teachingStaffDetails;
 	
+	private NonTeachingStaffDetails nonTeachingStaffDetails;
 	public String getUserId() {
 		return userId;
 	}
@@ -93,6 +94,14 @@ public class UserDetails {
 
 	public void setTeachingStaffDetails(TeachingStaffDetails teachingStaffDetails) {
 		this.teachingStaffDetails = teachingStaffDetails;
+	}
+
+	public NonTeachingStaffDetails getNonTeachingStaffDetails() {
+		return nonTeachingStaffDetails;
+	}
+
+	public void setNonTeachingStaffDetails(NonTeachingStaffDetails nonTeachingStaffDetails) {
+		this.nonTeachingStaffDetails = nonTeachingStaffDetails;
 	}
 	
 	

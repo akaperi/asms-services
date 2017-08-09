@@ -45,7 +45,7 @@ public class TeachingStaff extends User{
 	@Column(name = "t_staff_age_in_years")
 	private int ageInYears;
 	@Column(name = "t_staff_contact_no")
-	private int contactNo;
+	private long contactNo;
 	@Column(name = "t_staff_qualification")
 	private String qualification;
 	@Column(name = "t_staff_email_id")
@@ -139,10 +139,10 @@ public class TeachingStaff extends User{
 	public void setAgeInYears(int ageInYears) {
 		this.ageInYears = ageInYears;
 	}
-	public int getContactNo() {
+	public long getContactNo() {
 		return contactNo;
 	}
-	public void setContactNo(int contactNo) {
+	public void setContactNo(long contactNo) {
 		this.contactNo = contactNo;
 	}
 	public String getQualification() {

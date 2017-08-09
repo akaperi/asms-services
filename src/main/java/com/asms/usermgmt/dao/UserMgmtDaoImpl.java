@@ -21,6 +21,7 @@ import com.asms.common.helper.Constants;
 import com.asms.rolemgmt.entity.Role;
 import com.asms.rolemgmt.entity.SubRole;
 import com.asms.usermgmt.entity.Management;
+import com.asms.usermgmt.entity.NonTeachingStaff;
 import com.asms.usermgmt.entity.Student;
 import com.asms.usermgmt.entity.TeachingStaff;
 import com.asms.usermgmt.entity.User;
@@ -63,7 +64,7 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 
 		} catch (Exception e) {
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
-					+ "getUserRole()" + "   " + e);
+					+ "getUserRole()" + "   " , e);
 			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
 			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
 					messages.getString("SYSTEM_EXCEPTION"));
@@ -84,7 +85,7 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 
 		} catch (Exception e) {
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
-					+ "getUser()" + "   " + e);
+					+ "getUser()" + "   " , e);
 			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
 			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
 					messages.getString("SYSTEM_EXCEPTION"));
@@ -106,7 +107,7 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 
 		} catch (Exception e) {
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
-					+ "getRoleObject()" + "   " + e);
+					+ "getRoleObject()" + "   " , e);
 			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
 			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
 					messages.getString("SYSTEM_EXCEPTION"));
@@ -129,7 +130,7 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 
 		} catch (Exception e) {
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
-					+ "getSubRoleObject()" + "   " + e);
+					+ "getSubRoleObject()" + "   " , e);
 			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
 			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
 					messages.getString("SYSTEM_EXCEPTION"));
@@ -178,16 +179,18 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 					
 
 					insertManagement(management);
+				}else {
+					logger.debug("role not matched");
 				}
 
 			} 
-			else if (userDetails.getRole().equalsIgnoreCase(Constants.role_teacher)) {
+			else if (userDetails.getRole().equalsIgnoreCase(Constants.role_teaching_staff)) {
 				Role role = getRoleObject(userDetails.getRole());
 				SubRole sRole = getSubRoleObject(userDetails.getSubRole());
 				if (null != role && null != sRole) {
 					TeachingStaff teachingStaff = entityCreator.createTeachingStaff(userDetails.getTeachingStaffDetails(), user);
 					
-					teachingStaff.setUserPassword(generatePassword(Constants.role_teacher));
+					teachingStaff.setUserPassword(generatePassword(Constants.role_teaching_staff));
 					teachingStaff.setUserId(generateUserId());
 					teachingStaff.setEmail(userDetails.getEmail());
 					teachingStaff.setRoleObject(role);
@@ -195,15 +198,34 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 					
 
 					insertTeachingStaff(teachingStaff);
+				}else {
+					logger.debug("role not matched");
 				}
 
-			}else {
-				logger.debug("role not matched");
+			}
+			else if (userDetails.getRole().equalsIgnoreCase(Constants.role_non_teaching_staff)) {
+				Role role = getRoleObject(userDetails.getRole());
+				SubRole sRole = getSubRoleObject(userDetails.getSubRole());
+				if (null != role && null != sRole) {
+					NonTeachingStaff nonTeachingStaff = entityCreator.createNonTeachingStaff(userDetails.getNonTeachingStaffDetails(), user);
+					
+					nonTeachingStaff.setUserPassword(generatePassword(Constants.role_non_teaching_staff));
+					nonTeachingStaff.setUserId(generateUserId());
+					nonTeachingStaff.setEmail(userDetails.getEmail());
+					nonTeachingStaff.setRoleObject(role);
+					nonTeachingStaff.setSubRoleObject(sRole);
+					
+
+					insertNonTeachingStaff(nonTeachingStaff);
+				}else {
+					logger.debug("role not matched");
+				}
+
 			}
 
 		} catch (Exception e) {
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
-					+ "registerUser()" + "   " + e);
+					+ "registerUser()" + "   " ,e);
 			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
 			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
 					messages.getString("SYSTEM_EXCEPTION"));
@@ -272,7 +294,7 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 			tx.commit();
 		} catch (Exception ex) {
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
-					+ "insertStudent()" + "   " + ex);
+					+ "insertStudent()" + "   " , ex);
 			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
 			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
 					messages.getString("SYSTEM_EXCEPTION"));
@@ -334,11 +356,38 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 					tx.rollback();
 				}
 			} else {
-				System.out.println("sessionid :{} error while inserting Management :{}" + ex);
+				System.out.println("sessionid :{} error while inserting TeachingStaff :{}"+ex);
 				session.close();
 			}
 			throw ex;
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see com.asms.usermgmt.dao.UserMgmtDao#insertNonTeachingStaff(com.asms.usermgmt.entity.NonTeachingStaff)
+	 */
+	@Override
+	public void insertNonTeachingStaff(NonTeachingStaff nonTeachingStaff) throws AsmsException {
+		Session session = null;
+		Transaction tx = null;
+		session = this.sessionFactory.getCurrentSession();
+		try {
+			tx = session.beginTransaction();
+			session.save(nonTeachingStaff);
+			tx.commit();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			if (tx != null) {
+				if (tx.wasCommitted() == false) {
+					tx.rollback();
+				}
+			} else {
+				System.out.println("sessionid :{} error while inserting NonTeachingStaff :{}"+ex);
+				session.close();
+			}
+			throw ex;
+		}
+
 	}
 
 }

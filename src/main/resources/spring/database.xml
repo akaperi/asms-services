@@ -27,8 +27,9 @@
 				<beans:value>com.asms.usermgmt.entity.Student</beans:value>
 			
 				<beans:value>com.asms.CountryMgmt.Entity.GeograhicEntity</beans:value>
-				<beans:value>com.asms.usermgmt.entity.Management</beans:value>
-			
+				<!-- <beans:value>com.asms.usermgmt.entity.Management</beans:value> -->
+				<!-- <beans:value>com.asms.usermgmt.entity.TeachingStaff</beans:value> -->
+			<beans:value>com.asms.usermgmt.entity.NonTeachingStaff</beans:value>
 			</beans:list>
 		</beans:property>
 		<beans:property name="hibernateProperties">

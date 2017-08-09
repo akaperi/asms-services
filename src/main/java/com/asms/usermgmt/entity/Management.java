@@ -27,8 +27,7 @@ public class Management extends User{
 	@Column(name = "trust_id")	
 	private String trustId;
 	
-	@Column(name = "mngmt_role")
-	private String mngmtRole;
+	
 	
 	@Column(name = "mngmt_first_name")
 	private String mngmtFirstName;
@@ -44,9 +43,6 @@ public class Management extends User{
 	
 	@Column(name = "mngmt_contact_no")
 	private String mngmtContactNo;
-	
-	@Column(name = "mngmt_email_id")
-	private String mngmtEmailId;
 	
 	@Column(name = "mngmt_created_by_wadmin")
 	private String mngmtCreatedByWadmin;
@@ -75,13 +71,7 @@ public class Management extends User{
 		this.trustId = trustId;
 	}
 
-	public String getMngmtRole() {
-		return mngmtRole;
-	}
-
-	public void setMngmtRole(String mngmtRole) {
-		this.mngmtRole = mngmtRole;
-	}
+	
 
 	public String getMngmtFirstName() {
 		return mngmtFirstName;
@@ -131,13 +121,6 @@ public class Management extends User{
 		this.mngmtContactNo = mngmtContactNo;
 	}
 
-	public String getMngmtEmailId() {
-		return mngmtEmailId;
-	}
-
-	public void setMngmtEmailId(String mngmtEmailId) {
-		this.mngmtEmailId = mngmtEmailId;
-	}
 
 	public String getMngmtCreatedByWadmin() {
 		return mngmtCreatedByWadmin;

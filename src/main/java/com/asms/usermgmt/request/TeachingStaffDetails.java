@@ -12,10 +12,9 @@ public class TeachingStaffDetails {
 	@{author} mallikarjun.guranna
 	08-Aug-2017
 	*/
-	private int serialNo;
-	private String Id;
+
 	private String schoolId;
-	private String roleName;
+
 	private String designation;
 	private String firstName;
 	private String middleName;
@@ -24,7 +23,7 @@ public class TeachingStaffDetails {
 	private Date Dob;
 	private String Gender;
 	private int ageInYears;
-	private int contactNo;
+	private long contactNo;
 	private String qualification;
 	private String emailId;
 	private String religion;
@@ -39,31 +38,13 @@ public class TeachingStaffDetails {
 	private Date creationTime;
 	private String acStatus;
 	
-	
-	public int getSerialNo() {
-		return serialNo;
-	}
-	public void setSerialNo(int serialNo) {
-		this.serialNo = serialNo;
-	}
-	public String getId() {
-		return Id;
-	}
-	public void setId(String id) {
-		Id = id;
-	}
 	public String getSchoolId() {
 		return schoolId;
 	}
 	public void setSchoolId(String schoolId) {
 		this.schoolId = schoolId;
 	}
-	public String getRoleName() {
-		return roleName;
-	}
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
-	}
+	
 	public String getDesignation() {
 		return designation;
 	}
@@ -112,10 +93,10 @@ public class TeachingStaffDetails {
 	public void setAgeInYears(int ageInYears) {
 		this.ageInYears = ageInYears;
 	}
-	public int getContactNo() {
+	public long getContactNo() {
 		return contactNo;
 	}
-	public void setContactNo(int contactNo) {
+	public void setContactNo(long contactNo) {
 		this.contactNo = contactNo;
 	}
 	public String getQualification() {
