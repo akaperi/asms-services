@@ -94,6 +94,7 @@ public class UserMgmtService extends BaseService {
 				rReponse.setIsNew("true");
 				rReponse.setUserId(userid);
 				rReponse.setProgressPercentage(20);
+				return Response.status(Status.OK).entity(rReponse).build();
 
 			} else {
 				// throw authorization error
