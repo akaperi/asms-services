@@ -7,7 +7,6 @@ import com.asms.rolemgmt.entity.Role;
 import com.asms.rolemgmt.entity.SubRole;
 import com.asms.usermgmt.entity.Management;
 import com.asms.usermgmt.entity.Student;
-import com.asms.usermgmt.entity.TeachingStaff;
 import com.asms.usermgmt.entity.User;
 import com.asms.usermgmt.request.UserDetails;
 
@@ -29,8 +28,9 @@ public interface UserMgmtDao {
 	void insertStudent(Student student) throws AsmsException;
 	
 	public void insertManagement(Management management) throws AsmsException;
-	
-	public void insertTeachingStaff(TeachingStaff teachingStaff) throws AsmsException;
+
+	boolean authenticate(HttpServletRequest request, HttpServletResponse response, String email, String password)
+			throws AsmsException;
 	
 	
 

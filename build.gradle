@@ -60,7 +60,13 @@ dependencies {
 	
     
     
-   
+   task deploy(dependsOn: war)	{
+    copy{
+        from "build/libs"
+        into "F:/apache-tomcat-9.0.0.M21/apache-tomcat-9.0.0.M21/webapps/"
+        include "*.war"
+    }
+    } 
    
     
 }

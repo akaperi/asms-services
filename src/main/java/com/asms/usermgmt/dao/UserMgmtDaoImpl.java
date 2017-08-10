@@ -17,7 +17,6 @@ import org.jboss.logging.MDC;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +28,6 @@ import com.asms.rolemgmt.entity.Role;
 import com.asms.rolemgmt.entity.SubRole;
 import com.asms.usermgmt.entity.Management;
 import com.asms.usermgmt.entity.Student;
-import com.asms.usermgmt.entity.TeachingStaff;
 import com.asms.usermgmt.entity.User;
 import com.asms.usermgmt.helper.EntityCreator;
 import com.asms.usermgmt.request.UserDetails;
@@ -153,7 +151,6 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 	@Override
 	public void registerUser(UserDetails userDetails, User user) throws AsmsException {
 		try {
-
 			if (userDetails.getRole().equalsIgnoreCase(Constants.role_student)) {
 				Role role = getRoleObject(userDetails.getRole());
 				SubRole sRole = getSubRoleObject(userDetails.getRole());
@@ -168,6 +165,7 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 
 					insertStudent(student);
 				} else {
+
 					logger.debug("role not matched ");
 				}
 
@@ -185,11 +183,19 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 				
 
 				insertManagement(management);
-			}
+
+					logger.debug("role not matched");
+				}
+
+
+			
+
 
 		} else {
 			logger.debug("role not matched");
 		}
+
+			
 
 		} catch (Exception e) {
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
@@ -202,8 +208,13 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 	}
 
 	/*
+<<<<<<< HEAD
 	 * Method : insertUser : inserts User entity into database input : user return :
 	 * void
+=======
+	 * Method : insertStudent : inserts Student entity into database input :
+	 * student return : void
+>>>>>>> branch 'master' of https://github.com/akaperi/asms-services
 	 *
 	 */
 
@@ -229,14 +240,36 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 
 	}
 
+
 	/*
 	 * Method : insertStudent : inserts Student entity into database input : student
 	 * return : void
 	 *
 	 */
 
+
+	// generate default encrypted password
+	private String generatePassword(String role) {
+		// return BCrypt.hashpw(role + "123", BCrypt.gensalt(10));
+		return role + "123";
+	}
+
+	// generate userid
+	private String generateUserId() {
+		return UUID.randomUUID().toString();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.asms.usermgmt.dao.UserMgmtDao#insertStudent(com.asms.usermgmt.entity.
+	 * Student)
+	 */
+
 	@Override
 	public void insertStudent(Student student) throws AsmsException {
+		// TODO Auto-generated method stub
 		Session session = null;
 		Transaction tx = null;
 		try {
@@ -250,6 +283,8 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 		} catch (Exception ex) {
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
 					+ "insertStudent()" + "   " , ex);
+
+
 			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
 			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
 					messages.getString("SYSTEM_EXCEPTION"));
@@ -258,32 +293,27 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 
 	}
 
-	// generate default encrypted password
-	private String generatePassword(String role) {
-		// return BCrypt.hashpw(role + "123", BCrypt.gensalt(10));
-		return role + "123";
-	}
 
-	// generate userid
-	private String generateUserId() {
-		return UUID.randomUUID().toString();
-	}
 	
+	
+
+
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.asms.usermgmt.dao.UserMgmtDao#insertTeachingStaff(com.asms.usermgmt.
-	 * entity.TeachingStaff)
+	 * com.asms.usermgmt.dao.UserMgmtDao#insertManagement(com.asms.usermgmt.
+	 * entity.Management)
 	 */
 	@Override
-	public void insertTeachingStaff(TeachingStaff teachingStaff) throws AsmsException {
+	public void insertManagement(Management management) throws AsmsException {
 		Session session = null;
 		Transaction tx = null;
 		session = this.sessionFactory.getCurrentSession();
 		try {
 			tx = session.beginTransaction();
-			session.save(teachingStaff);
+			session.save(management);
+
 			tx.commit();
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -298,6 +328,7 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 			throw ex;
 		}
 	}
+
 
 
 	@Override
@@ -331,6 +362,35 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 
 		}
 
-	}
 
-}
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.asms.usermgmt.dao.UserMgmtDao#insertTeachingStaff(com.asms.usermgmt.
+	 * entity.TeachingStaff)
+	 */
+/*	@Override
+	public void insertTeachingStaff(TeachingStaff teachingStaff) throws AsmsException {
+		Session session = null;
+		Transaction tx = null;
+		session = this.sessionFactory.getCurrentSession();
+		try {
+			tx = session.beginTransaction();
+			session.save(teachingStaff);
+			tx.commit();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			if (tx != null) {
+				if (tx.wasCommitted() == false) {
+					tx.rollback();
+				}
+			} else {
+				System.out.println("sessionid :{} error while inserting Management :{}" + ex);
+				session.close();
+			}
+			throw ex;
+		}
+	}*/
+
+}}
