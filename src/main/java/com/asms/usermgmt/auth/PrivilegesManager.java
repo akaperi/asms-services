@@ -32,10 +32,9 @@ public class PrivilegesManager {
 	 * This method checks if the logged in user is privileged to do the requested
 	 * action
 	 */
-	public PrincipalUser isPrivileged(String userEmail, String role, String action) throws AsmsException {
+	public PrincipalUser isPrivileged(User user, String role, String action) throws AsmsException {
 		
 		PrincipalUser pUser = new PrincipalUser();
-		User user = userMgmtDao.getUser(userEmail);
 		if(Constants.role_admin.equalsIgnoreCase(user.getRoleObject().getRoleName())){
 			pUser.setPrivileged(true);
 			pUser.setLoggedInUser(user);

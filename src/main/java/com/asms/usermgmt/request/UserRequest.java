@@ -18,8 +18,7 @@ public class UserRequest {
 	// object is for user object
 	private UserDetails userDetails;
 	
-	//logged in user's email
-	private String loggedInUserEmail;
+	
 
 	public String getRequestType() {
 		return requestType;
@@ -46,13 +45,6 @@ public class UserRequest {
 		this.userDetails = userDetails;
 	}
 
-	public String getLoggedInUserEmail() {
-		return loggedInUserEmail;
-	}
-
-	public void setLoggedInUserEmail(String loggedInUserEmail) {
-		this.loggedInUserEmail = loggedInUserEmail;
-	}
 	
 	
 

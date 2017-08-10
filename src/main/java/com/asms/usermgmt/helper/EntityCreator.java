@@ -44,7 +44,7 @@ public class EntityCreator {
 		student.setStudentPhoto(details.getStudentPhoto());
 		student.setStudentReligion(details.getStudentReligion());
 		student.setStudentSection(details.getStudentSection());
-		
+		student.setEmergencyontactNo(details.getEmergencyContactNo());
 		student.setStudentSubCaste(details.getStudentSubCaste());
 		student.setStudentType(details.getStudentType());
 		return student;

@@ -1,4 +1,6 @@
 package com.asms.usermgmt.dao;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.asms.Exception.AsmsException;
 import com.asms.rolemgmt.entity.Role;
@@ -23,6 +25,10 @@ public interface UserMgmtDao {
 	SubRole getSubRoleObject(String roleName) throws AsmsException;
 
 	void insertStudent(Student student) throws AsmsException;
+	
+	
+
+	public boolean authenticate(HttpServletRequest request, HttpServletResponse response, String email, String password) throws AsmsException;
 	
 	
 

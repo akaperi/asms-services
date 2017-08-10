@@ -41,6 +41,9 @@ public class User {
 	@Column(name = "password")
 	private String userPassword;
 	
+	@Column(name = "isNew")
+	private String isNew;
+	
 	@ManyToOne
 	@JoinColumn(name = "role_id")
 	private Role roleObject;
@@ -105,6 +108,14 @@ public class User {
 
 	public void setSubRoleObject(SubRole subRoleObject) {
 		this.subRoleObject = subRoleObject;
+	}
+
+	public String getIsNew() {
+		return isNew;
+	}
+
+	public void setIsNew(String isNew) {
+		this.isNew = isNew;
 	}
 
 	
