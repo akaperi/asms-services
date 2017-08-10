@@ -48,7 +48,6 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 
 	private static final Logger logger = LoggerFactory.getLogger(UserMgmtService.class);
 
-
 	/*
 	 * Method : getUserRole : gets the user role from database input : String
 	 * (email) return : String
@@ -170,32 +169,24 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 				}
 
 			} else if (userDetails.getRole().equalsIgnoreCase(Constants.role_management)) {
-			Role role = getRoleObject(userDetails.getRole());
-			SubRole sRole = getSubRoleObject(userDetails.getSubRole());
-			if (null != role && null != sRole) {
-				Management management = entityCreator.createManagement(userDetails.getManagementDetails(), user);
-				
-				management.setUserPassword(generatePassword(Constants.role_management));
-				management.setUserId(generateUserId());
-				management.setEmail(userDetails.getEmail());
-				management.setRoleObject(role);
-				management.setSubRoleObject(sRole);
-				
+				Role role = getRoleObject(userDetails.getRole());
+				SubRole sRole = getSubRoleObject(userDetails.getSubRole());
+				if (null != role && null != sRole) {
+					Management management = entityCreator.createManagement(userDetails.getManagementDetails(), user);
 
-				insertManagement(management);
+					management.setUserPassword(generatePassword(Constants.role_management));
+					management.setUserId(generateUserId());
+					management.setEmail(userDetails.getEmail());
+					management.setRoleObject(role);
+					management.setSubRoleObject(sRole);
 
-					logger.debug("role not matched");
+					insertManagement(management);
+
 				}
 
-
-			
-
-
-		} else {
-			logger.debug("role not matched");
-		}
-
-			
+			} else {
+				logger.debug("role not matched");
+			}
 
 		} catch (Exception e) {
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
@@ -208,13 +199,10 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 	}
 
 	/*
-<<<<<<< HEAD
-	 * Method : insertUser : inserts User entity into database input : user return :
-	 * void
-=======
-	 * Method : insertStudent : inserts Student entity into database input :
-	 * student return : void
->>>>>>> branch 'master' of https://github.com/akaperi/asms-services
+	 * <<<<<<< HEAD Method : insertUser : inserts User entity into database input :
+	 * user return : void ======= Method : insertStudent : inserts Student entity
+	 * into database input : student return : void >>>>>>> branch 'master' of
+	 * https://github.com/akaperi/asms-services
 	 *
 	 */
 
@@ -240,13 +228,11 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 
 	}
 
-
 	/*
 	 * Method : insertStudent : inserts Student entity into database input : student
 	 * return : void
 	 *
 	 */
-
 
 	// generate default encrypted password
 	private String generatePassword(String role) {
@@ -282,8 +268,7 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 			tx.commit();
 		} catch (Exception ex) {
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
-					+ "insertStudent()" + "   " , ex);
-
+					+ "insertStudent()" + "   ", ex);
 
 			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
 			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
@@ -293,16 +278,10 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 
 	}
 
-
-	
-	
-
-
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.asms.usermgmt.dao.UserMgmtDao#insertManagement(com.asms.usermgmt.
+	 * @see com.asms.usermgmt.dao.UserMgmtDao#insertManagement(com.asms.usermgmt.
 	 * entity.Management)
 	 */
 	@Override
@@ -329,10 +308,9 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 		}
 	}
 
-
-
 	@Override
-	public boolean authenticate(HttpServletRequest request, HttpServletResponse response, String email, String password) throws AsmsException  {
+	public boolean authenticate(HttpServletRequest request, HttpServletResponse response, String email, String password)
+			throws AsmsException {
 		Session session = null;
 		Transaction tx = null;
 		try {
@@ -341,16 +319,15 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 			String hql = "from User U where U.email=? and U.userPassword=?";
 			User user = (User) session.createQuery(hql).setParameter(0, email).setParameter(1, password).uniqueResult();
 			tx.commit();
-			if(null == user) {
+			if (null == user) {
 				return false;
-			}else {
-				
+			} else {
+
 				HttpSession httpSession = request.getSession(false);
 				httpSession.setAttribute("ap_user", user);
-				//user = (User)httpSession.getAttribute("ap_user");
+				// user = (User)httpSession.getAttribute("ap_user");
 				return true;
 			}
-			
 
 		} catch (Exception e) {
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
@@ -358,39 +335,25 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
 			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
 					messages.getString("SYSTEM_EXCEPTION"));
-			
 
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see com.asms.usermgmt.dao.UserMgmtDao#insertTeachingStaff(com.asms.usermgmt.
+		 * entity.TeachingStaff)
+		 */
+		/*
+		 * @Override public void insertTeachingStaff(TeachingStaff teachingStaff) throws
+		 * AsmsException { Session session = null; Transaction tx = null; session =
+		 * this.sessionFactory.getCurrentSession(); try { tx =
+		 * session.beginTransaction(); session.save(teachingStaff); tx.commit(); } catch
+		 * (Exception ex) { ex.printStackTrace(); if (tx != null) { if
+		 * (tx.wasCommitted() == false) { tx.rollback(); } } else {
+		 * System.out.println("sessionid :{} error while inserting Management :{}" +
+		 * ex); session.close(); } throw ex; } }
+		 */
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.asms.usermgmt.dao.UserMgmtDao#insertTeachingStaff(com.asms.usermgmt.
-	 * entity.TeachingStaff)
-	 */
-/*	@Override
-	public void insertTeachingStaff(TeachingStaff teachingStaff) throws AsmsException {
-		Session session = null;
-		Transaction tx = null;
-		session = this.sessionFactory.getCurrentSession();
-		try {
-			tx = session.beginTransaction();
-			session.save(teachingStaff);
-			tx.commit();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			if (tx != null) {
-				if (tx.wasCommitted() == false) {
-					tx.rollback();
-				}
-			} else {
-				System.out.println("sessionid :{} error while inserting Management :{}" + ex);
-				session.close();
-			}
-			throw ex;
-		}
-	}*/
-
-}}
+	}
+}
