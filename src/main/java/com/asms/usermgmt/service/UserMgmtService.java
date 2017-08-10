@@ -90,6 +90,43 @@ public class UserMgmtService extends BaseService {
 			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
 		}
 	}
+	
+	
+	//-------------------------------------------
+	@Path("/register/additionalDetails")
+	@POST
+	@Consumes("application/json")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public Response registerAdditionalDetails(UserRequest userRequest) {
+		try {
+			// validate request
+			validator.validateRequest(userRequest);
+			// authorize
+			
+			//check if logged in user has got rights to create user
+			PrincipalUser user = privilegesManager.isPrivileged(userRequest.getLoggedInUserEmail(), userRequest.getUserRole(),
+					userRequest.getRequestType());
+			if(user.isPrivileged()) {
+				UserDetails userDetails = userRequest.getUserDetails();
+				userDetails.setRole(userRequest.getUserRole());
+				userMgmtDao.registerUser(userDetails,user.getLoggedInUser());
+				
+			}else {
+				//  throw authorization error
+			}
+			
+			
+
+			return Response.status(200).entity("success").build();
+		} catch (AsmsException ex) {
+			// construct failure response
+			FailureResponse failureResponse = new FailureResponse(ex);
+			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+		}
+	}
+	
+	
+	
 
 	@Path("/login")
 	@POST
