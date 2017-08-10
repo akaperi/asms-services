@@ -11,6 +11,7 @@ import com.asms.Exception.AsmsException;
 import com.asms.Exception.ExceptionHandler;
 import com.asms.common.helper.AsmsHelper;
 import com.asms.common.helper.Constants;
+import com.asms.usermgmt.request.ManagementDetails;
 import com.asms.usermgmt.request.StudentDetails;
 import com.asms.usermgmt.request.UserRequest;
 
@@ -175,12 +176,50 @@ public class Validator {
 					
 			}
 
-		} else {
+		} else if (request.getUserRole().equalsIgnoreCase(Constants.role_management)) {
+			
+			ManagementDetails managementDetails = request.getUserDetails().getManagementDetails();
+			
+			if(null==managementDetails )
+				throw exceptionHandler.constructAsmsException(messages.getString("MGMT_DETAILS_NULL_CODE"),
+						messages.getString("MGMT_DETAILS_NULL_MSG"));
+			
+			if((null == managementDetails.getMngmtRole() ) || (managementDetails.getMngmtRole().isEmpty()))
+							throw exceptionHandler.constructAsmsException(messages.getString("MGMT_DETAILS_MNGMTROLE_NULL_CODE"),
+									messages.getString("MGMT_DETAILS_MNGMTROLE_NULL_MSG"));
+			
+			if((  null == managementDetails.getMngmtFirstName()) || (managementDetails.getMngmtFirstName().isEmpty()))
+								throw exceptionHandler.constructAsmsException(messages.getString("MGMT_DETAILS_MNGMTFIRSTNAME_NULL_CODE"),
+										messages.getString("MGMT_DETAILS_MNGMTFIRSTNAME_NULL_MSG"));
+			
+			if( ( null == managementDetails.getMngmtMiddleName() )|| (managementDetails.getMngmtMiddleName().isEmpty() ))
+									throw exceptionHandler.constructAsmsException(messages.getString("MGMT_DETAILS_MNGMTMIDDLENAME_NULL_CODE"),
+											messages.getString("MGMT_DETAILS_MNGMTMIDDLENAME_NULL_MSG"));
+			
+			if((null == managementDetails.getMngmtLastName() )||(managementDetails.getMngmtLastName().isEmpty()))
+										throw exceptionHandler.constructAsmsException(messages.getString("MGMT_DETAILS_MNGMTLASTNAME_NULL_CODE"),
+												messages.getString("MGMT_DETAILS_MNGMTLASTNAME_NULL_MSG"));
+			
+			if(((null==managementDetails.getMngmtDesignation()) ||managementDetails.getMngmtDesignation().isEmpty()) )
+											throw exceptionHandler.constructAsmsException(messages.getString("MGMT_DETAILS_MNGMTDESIGNATION_NULL_CODE"),
+													messages.getString("MGMT_DETAILS_MNGMTDESIGNATION_NULL_MSG"));
+
+											
+			if((  null == managementDetails.getMngmtContactNo())||(managementDetails.getMngmtContactNo().isEmpty()) )
+				throw exceptionHandler.constructAsmsException(messages.getString("MGMT_DETAILS_MNGMTCONTACTNO_NULL_CODE"),
+						messages.getString("MGMT_DETAILS_MNGMTCONTACTNO_NULL_MSG"));
+			
+			if( ( null == managementDetails.getMngmtEmailId() )||(managementDetails.getMngmtEmailId().isEmpty()) )
+				throw exceptionHandler.constructAsmsException(messages.getString("MGMT_DETAILS_MNGMTEMAILID_NULL_CODE"),
+						messages.getString("MGMT_DETAILS_MNGMTEMAILID_NULL_MSG"));
+		}
+		else
+		{
 			// invalid role sent
 			throw exceptionHandler.constructAsmsException(messages.getString("ROLE_INVALID_CODE"),
 					messages.getString("ROLE_INVALID"));
 		}
-
+	}
 	}
 
-}
+

@@ -27,7 +27,9 @@ import com.asms.common.helper.AsmsHelper;
 import com.asms.common.helper.Constants;
 import com.asms.rolemgmt.entity.Role;
 import com.asms.rolemgmt.entity.SubRole;
+import com.asms.usermgmt.entity.Management;
 import com.asms.usermgmt.entity.Student;
+import com.asms.usermgmt.entity.TeachingStaff;
 import com.asms.usermgmt.entity.User;
 import com.asms.usermgmt.helper.EntityCreator;
 import com.asms.usermgmt.request.UserDetails;
@@ -49,6 +51,11 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 	private static final Logger logger = LoggerFactory.getLogger(UserMgmtService.class);
 
 
+	/*
+	 * Method : getUserRole : gets the user role from database input : String
+	 * (email) return : String
+	 *
+	 */
 
 	@Override
 	public String getUserRole(String email) throws AsmsException {
@@ -124,7 +131,7 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 			tx = session.beginTransaction();
 			String hql = "from SubRole U where U.subRoleName=?";
 			@SuppressWarnings("unchecked")
-			List<SubRole> sRole = (List<SubRole>) session.createQuery(hql).setParameter(0, roleName).list();
+			List<SubRole> sRole = session.createQuery(hql).setParameter(0, roleName).list();
 			tx.commit();
 			return sRole.get(0);
 
@@ -164,9 +171,25 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 					logger.debug("role not matched ");
 				}
 
-			} else {
-				logger.debug("invalid role ");
+			} else if (userDetails.getRole().equalsIgnoreCase(Constants.role_management)) {
+			Role role = getRoleObject(userDetails.getRole());
+			SubRole sRole = getSubRoleObject(userDetails.getSubRole());
+			if (null != role && null != sRole) {
+				Management management = entityCreator.createManagement(userDetails.getManagementDetails(), user);
+				
+				management.setUserPassword(generatePassword(Constants.role_management));
+				management.setUserId(generateUserId());
+				management.setEmail(userDetails.getEmail());
+				management.setRoleObject(role);
+				management.setSubRoleObject(sRole);
+				
+
+				insertManagement(management);
 			}
+
+		} else {
+			logger.debug("role not matched");
+		}
 
 		} catch (Exception e) {
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
@@ -245,6 +268,37 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 	private String generateUserId() {
 		return UUID.randomUUID().toString();
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.asms.usermgmt.dao.UserMgmtDao#insertTeachingStaff(com.asms.usermgmt.
+	 * entity.TeachingStaff)
+	 */
+	@Override
+	public void insertTeachingStaff(TeachingStaff teachingStaff) throws AsmsException {
+		Session session = null;
+		Transaction tx = null;
+		session = this.sessionFactory.getCurrentSession();
+		try {
+			tx = session.beginTransaction();
+			session.save(teachingStaff);
+			tx.commit();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			if (tx != null) {
+				if (tx.wasCommitted() == false) {
+					tx.rollback();
+				}
+			} else {
+				System.out.println("sessionid :{} error while inserting Management :{}" + ex);
+				session.close();
+			}
+			throw ex;
+		}
+	}
+
 
 	@Override
 	public boolean authenticate(HttpServletRequest request, HttpServletResponse response, String email, String password) throws AsmsException  {
