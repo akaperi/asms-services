@@ -15,7 +15,7 @@ public interface UserMgmtDao {
 
 	public String getUserRole(String email) throws AsmsException;
 	
-	public void registerUser(UserDetails userDetails, User user) throws AsmsException;
+	public String registerUser(UserDetails userDetails, User user) throws AsmsException;
 
 	public User getUser(String email) throws AsmsException;
 
@@ -25,7 +25,7 @@ public interface UserMgmtDao {
 
 	SubRole getSubRoleObject(String roleName) throws AsmsException;
 
-	void insertStudent(Student student) throws AsmsException;
+	public void insertStudent(Student student) throws AsmsException;
 	
 	public void insertManagement(Management management) throws AsmsException;
 

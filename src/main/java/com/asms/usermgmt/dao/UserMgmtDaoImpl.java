@@ -148,19 +148,21 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 	 *
 	 */
 	@Override
-	public void registerUser(UserDetails userDetails, User user) throws AsmsException {
+	public String registerUser(UserDetails userDetails, User user) throws AsmsException {
+		
 		try {
+			String userid = generateUserId();
 			if (userDetails.getRole().equalsIgnoreCase(Constants.role_student)) {
 				Role role = getRoleObject(userDetails.getRole());
-				SubRole sRole = getSubRoleObject(userDetails.getRole());
+				SubRole sRole = getSubRoleObject(userDetails.getSubRole());
 				if (null != role && null != sRole) {
 					Student student = entityCreator.createStudent(userDetails.getStudenrDetails(), user);
-					student.setUserPassword(generatePassword(Constants.role_student));
-					student.setUserId(generateUserId());
+					student.setUserId(userid);
 					student.setEmail(userDetails.getEmail());
 					student.setRoleObject(role);
 					student.setSubRoleObject(sRole);
 					student.setStatus("Complete");
+					student.setUserPassword(userDetails.getUserPassword());
 
 					insertStudent(student);
 				} else {
@@ -172,14 +174,12 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 				Role role = getRoleObject(userDetails.getRole());
 				SubRole sRole = getSubRoleObject(userDetails.getSubRole());
 				if (null != role && null != sRole) {
-					Management management = entityCreator.createManagement(userDetails.getManagementDetails(), user);
-
-					management.setUserPassword(generatePassword(Constants.role_management));
-					management.setUserId(generateUserId());
+					Management management = entityCreator.createManagement(userDetails.getManagementDetails(), user);				
+					management.setUserId(userid);
 					management.setEmail(userDetails.getEmail());
 					management.setRoleObject(role);
 					management.setSubRoleObject(sRole);
-
+					management.setUserPassword(userDetails.getUserPassword());
 					insertManagement(management);
 
 				}
@@ -187,6 +187,7 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 			} else {
 				logger.debug("role not matched");
 			}
+			return userid;
 
 		} catch (Exception e) {
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
@@ -320,6 +321,8 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 			User user = (User) session.createQuery(hql).setParameter(0, email).setParameter(1, password).uniqueResult();
 			tx.commit();
 			if (null == user) {
+				logger.info("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
+						+ "authenticate()" + "   ", "Authentication failed");
 				return false;
 			} else {
 
