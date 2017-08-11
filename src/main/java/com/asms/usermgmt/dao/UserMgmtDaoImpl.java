@@ -4,6 +4,10 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -22,7 +26,8 @@ import com.asms.rolemgmt.entity.Role;
 import com.asms.rolemgmt.entity.SubRole;
 import com.asms.usermgmt.entity.Management;
 import com.asms.usermgmt.entity.Student;
-import com.asms.usermgmt.entity.TeachingStaff;
+//import com.asms.usermgmt.entity.Student;
+//import com.asms.usermgmt.entity.TeachingStaff;
 import com.asms.usermgmt.entity.User;
 import com.asms.usermgmt.helper.EntityCreator;
 import com.asms.usermgmt.request.UserDetails;
@@ -143,46 +148,46 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 	 *
 	 */
 	@Override
-	public void registerUser(UserDetails userDetails, User user) throws AsmsException {
+	public String registerUser(UserDetails userDetails, User user) throws AsmsException {
+		
 		try {
+			String userid = generateUserId();
 			if (userDetails.getRole().equalsIgnoreCase(Constants.role_student)) {
 				Role role = getRoleObject(userDetails.getRole());
-				SubRole sRole = getSubRoleObject(userDetails.getRole());
+				SubRole sRole = getSubRoleObject(userDetails.getSubRole());
 				if (null != role && null != sRole) {
 					Student student = entityCreator.createStudent(userDetails.getStudenrDetails(), user);
-					student.setUserPassword(generatePassword(Constants.role_student));
-					student.setUserId(generateUserId());
+					student.setUserId(userid);
 					student.setEmail(userDetails.getEmail());
 					student.setRoleObject(role);
 					student.setSubRoleObject(sRole);
 					student.setStatus("Complete");
+					student.setUserPassword(userDetails.getUserPassword());
 
 					insertStudent(student);
 				} else {
-					logger.debug("role not matched");
+
+					logger.debug("role not matched ");
 				}
 
-			}
-
-			else if (userDetails.getRole().equalsIgnoreCase(Constants.role_management)) {
+			} else if (userDetails.getRole().equalsIgnoreCase(Constants.role_management)) {
 				Role role = getRoleObject(userDetails.getRole());
 				SubRole sRole = getSubRoleObject(userDetails.getSubRole());
 				if (null != role && null != sRole) {
-					Management management = entityCreator.createManagement(userDetails.getManagementDetails(), user);
-					
-					management.setUserPassword(generatePassword(Constants.role_management));
-					management.setUserId(generateUserId());
+					Management management = entityCreator.createManagement(userDetails.getManagementDetails(), user);				
+					management.setUserId(userid);
 					management.setEmail(userDetails.getEmail());
 					management.setRoleObject(role);
 					management.setSubRoleObject(sRole);
-					
-
+					management.setUserPassword(userDetails.getUserPassword());
 					insertManagement(management);
+
 				}
 
 			} else {
 				logger.debug("role not matched");
 			}
+			return userid;
 
 		} catch (Exception e) {
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
@@ -255,7 +260,8 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 			tx.commit();
 		} catch (Exception ex) {
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
-					+ "insertStudent()" + "   " + ex);
+					+ "insertStudent()" + "   ", ex);
+
 			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
 			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
 					messages.getString("SYSTEM_EXCEPTION"));
@@ -301,7 +307,7 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 	 * com.asms.usermgmt.dao.UserMgmtDao#insertTeachingStaff(com.asms.usermgmt.
 	 * entity.TeachingStaff)
 	 */
-	@Override
+/*	@Override
 	public void insertTeachingStaff(TeachingStaff teachingStaff) throws AsmsException {
 		Session session = null;
 		Transaction tx = null;
@@ -321,6 +327,39 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 				session.close();
 			}
 			throw ex;
+		}
+	}
+*/
+	@Override
+	public boolean authenticate(HttpServletRequest request, HttpServletResponse response, String email, String password)
+			throws AsmsException {
+		Session session = null;
+		Transaction tx = null;
+		try {
+			session = sessionFactory.getCurrentSession();
+			tx = session.beginTransaction();
+			String hql = "from User U where U.email=? and U.userPassword=?";
+			User user = (User) session.createQuery(hql).setParameter(0, email).setParameter(1, password).uniqueResult();
+			tx.commit();
+			if (null == user) {
+				logger.info("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
+						+ "authenticate()" + "   ", "Authentication failed");
+				return false;
+			} else {
+
+				HttpSession httpSession = request.getSession(false);
+				httpSession.setAttribute("ap_user", user);
+				// user = (User)httpSession.getAttribute("ap_user");
+				return true;
+			}
+
+		} catch (Exception e) {
+			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
+					+ "authenticate()" + "   ", e);
+			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
+			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+					messages.getString("SYSTEM_EXCEPTION"));
+
 		}
 	}
 
