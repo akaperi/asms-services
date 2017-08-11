@@ -6,10 +6,14 @@ import java.util.Date;
 import org.springframework.stereotype.Component;
 
 import com.asms.usermgmt.entity.Management;
+import com.asms.usermgmt.entity.NonTeachingStaff;
 import com.asms.usermgmt.entity.Student;
+import com.asms.usermgmt.entity.TeachingStaff;
 import com.asms.usermgmt.entity.User;
 import com.asms.usermgmt.request.ManagementDetails;
+import com.asms.usermgmt.request.NonTeachingStaffDetails;
 import com.asms.usermgmt.request.StudentDetails;
+import com.asms.usermgmt.request.TeachingStaffDetails;
 
 /*
  * EntityCreator.java does creation of entity objects
@@ -26,6 +30,7 @@ public class EntityCreator {
 	 * return : Student
 	 * 
 	 */
+
 	public Student createStudent(StudentDetails details, User user) {
 		Student student = new Student();
 		student.setAdmissionDate(details.getAdmissionDate());
@@ -65,6 +70,7 @@ public class EntityCreator {
 		management.setMngmtDesignation(managementDetails.getMngmtDesignation());
 		management.setMngmtContactNo(managementDetails.getMngmtContactNo());
 		
+
 		management.setMngmtCreationTime(new Date());
 		management.setSchoolId("SCH001");
 		management.setMngmtCreatedByWadmin(user.getUserId());
@@ -72,5 +78,81 @@ public class EntityCreator {
 		
 		return management;
 	}
+	
+	
+public TeachingStaff createTeachingStaff(TeachingStaffDetails teachingStaffDetails,User user) {
+		 
+	TeachingStaff teachingStaff =new TeachingStaff();
+	
+//--------------------------------------------------------
+//	teachingStaff.setId(teachingStaffDetails.getId());
+	
+	
+	teachingStaff.setDesignation(teachingStaffDetails.getDesignation());
+	teachingStaff.setFirstName(teachingStaffDetails.getFirstName());
+	teachingStaff.setMiddleName(teachingStaffDetails.getMiddleName());
+	teachingStaff.setLastName(teachingStaffDetails.getMiddleName());
+	teachingStaff.setFlagMakeAdmin(teachingStaffDetails.isFlagMakeAdmin());
+	teachingStaff.setDob(teachingStaffDetails.getDob());
+	teachingStaff.setGender(teachingStaffDetails.getGender());
+	teachingStaff.setAgeInYears(teachingStaffDetails.getAgeInYears());
+	teachingStaff.setContactNo(teachingStaffDetails.getContactNo());
+	teachingStaff.setQualification(teachingStaffDetails.getQualification());
+	teachingStaff.setEmail(teachingStaffDetails.getEmailId());
+	teachingStaff.setReligion(teachingStaffDetails.getReligion());
+	teachingStaff.setCasteCategory(teachingStaffDetails.getCasteCategory());
+	teachingStaff.setPhoto(teachingStaffDetails.getPhoto());
+	teachingStaff.setClassesHandled(teachingStaffDetails.getClassesHandled());
+	teachingStaff.setSubjectsHandled(teachingStaffDetails.getSubjectsHandled());
+	teachingStaff.setMaritalStatus(teachingStaffDetails.getMaritalStatus());
+	teachingStaff.setSpouseName(teachingStaffDetails.getSpouseName());
+	teachingStaff.setSpouseContactNo(teachingStaffDetails.getSpouseContactNo());
+	//hard coded values
+	teachingStaff.setSchoolId("SCH001");
+	teachingStaff.setCreatedByWadmin(user.getUserId());
+	teachingStaff.setCreationTime(new Date());
+	
+	/*
+	 * Before setting this status to incomplete first validate
+	 * whether all teachingStaff details completed or not 
+	 */
+	
+	teachingStaff.setAcStatus("Incomplete");
+		
+	return teachingStaff;
+	}
+public NonTeachingStaff createNonTeachingStaff(NonTeachingStaffDetails nonTeachingStaffDetails,User user)
+{
+	NonTeachingStaff nonTeachingStaff = new NonTeachingStaff();
+	
+	nonTeachingStaff.setDesignation(nonTeachingStaffDetails.getDesignation());
+	nonTeachingStaff.setFirstName(nonTeachingStaffDetails.getFirstName());
+	nonTeachingStaff.setMiddleName(nonTeachingStaffDetails.getMiddleName());
+	nonTeachingStaff.setLastName(nonTeachingStaffDetails.getLastName());
+	nonTeachingStaff.setFlagMakeAdmin(nonTeachingStaffDetails.getFlagMakeAdmin());
+	nonTeachingStaff.setDob(nonTeachingStaffDetails.getDob());
+	nonTeachingStaff.setGender(nonTeachingStaffDetails.getGender());
+	nonTeachingStaff.setAgeInYears(nonTeachingStaffDetails.getAgeInYears());
+	nonTeachingStaff.setContactNo(nonTeachingStaffDetails.getContactNo());
+	nonTeachingStaff.setQualification(nonTeachingStaffDetails.getQualification());
+	nonTeachingStaff.setReligion(nonTeachingStaffDetails.getReligion());
+	nonTeachingStaff.setCasteCategory(nonTeachingStaffDetails.getCasteCategory());
+	nonTeachingStaff.setPhoto(nonTeachingStaffDetails.getPhoto());
+	nonTeachingStaff.setMaritalStatus(nonTeachingStaffDetails.getMaritalStatus());
+	nonTeachingStaff.setSpouseName(nonTeachingStaffDetails.getSpouseName());
+	nonTeachingStaff.setSpouseContactNo(nonTeachingStaffDetails.getSpouseContactNo());
+	nonTeachingStaff.setCreatedByWadmin(user.getUserId());
+	nonTeachingStaff.setCreationTime(new Date());
+	//hard coded values
+	nonTeachingStaff.setSchoolId("SCH001");
+	/*
+	 * Before setting this status to incomplete first validate
+	 * whether all teachingStaff details completed or not 
+	 */
+	nonTeachingStaff.setStatus("Incomplete");
+	
+	return nonTeachingStaff;
+	
+}
 
 }

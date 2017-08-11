@@ -1,6 +1,5 @@
 package com.asms.usermgmt.request;
 
-import com.asms.usermgmt.entity.User;
 
 /* User Request class represents the request object
  * for user management operations 

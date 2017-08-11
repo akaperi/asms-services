@@ -27,7 +27,6 @@ public class Management extends User{
 	@Column(name = "trust_id")	
 	private String trustId;
 	
-	
 	@Column(name = "mngmt_first_name")
 	private String mngmtFirstName;
 	
@@ -42,8 +41,6 @@ public class Management extends User{
 	
 	@Column(name = "mngmt_contact_no")
 	private String mngmtContactNo;
-	
-
 	
 	@Column(name = "mngmt_created_by_wadmin")
 	private String mngmtCreatedByWadmin;
@@ -121,8 +118,6 @@ public class Management extends User{
 	public void setMngmtContactNo(String mngmtContactNo) {
 		this.mngmtContactNo = mngmtContactNo;
 	}
-
-	
 
 	public String getMngmtCreatedByWadmin() {
 		return mngmtCreatedByWadmin;

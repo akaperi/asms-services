@@ -25,7 +25,9 @@ import com.asms.common.helper.Constants;
 import com.asms.rolemgmt.entity.Role;
 import com.asms.rolemgmt.entity.SubRole;
 import com.asms.usermgmt.entity.Management;
+import com.asms.usermgmt.entity.NonTeachingStaff;
 import com.asms.usermgmt.entity.Student;
+import com.asms.usermgmt.entity.TeachingStaff;
 import com.asms.usermgmt.entity.User;
 import com.asms.usermgmt.helper.EntityCreator;
 import com.asms.usermgmt.request.UserDetails;
@@ -66,7 +68,7 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 
 		} catch (Exception e) {
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
-					+ "getUserRole()" + "   " + e);
+					+ "getUserRole()" + "   ", e);
 			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
 			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
 					messages.getString("SYSTEM_EXCEPTION"));
@@ -87,7 +89,7 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 
 		} catch (Exception e) {
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
-					+ "getUser()" + "   " + e);
+					+ "getUser()" + "   ", e);
 			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
 			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
 					messages.getString("SYSTEM_EXCEPTION"));
@@ -109,7 +111,7 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 
 		} catch (Exception e) {
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
-					+ "getRoleObject()" + "   " + e);
+					+ "getRoleObject()" + "   ", e);
 			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
 			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
 					messages.getString("SYSTEM_EXCEPTION"));
@@ -132,7 +134,7 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 
 		} catch (Exception e) {
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
-					+ "getSubRoleObject()" + "   " + e);
+					+ "getSubRoleObject()" + "   ", e);
 			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
 			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
 					messages.getString("SYSTEM_EXCEPTION"));
@@ -147,7 +149,7 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 	 */
 	@Override
 	public String registerUser(UserDetails userDetails, User user) throws AsmsException {
-		
+
 		try {
 			String userid = generateUserId();
 			if (userDetails.getRole().equalsIgnoreCase(Constants.role_student)) {
@@ -172,7 +174,7 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 				Role role = getRoleObject(userDetails.getRole());
 				SubRole sRole = getSubRoleObject(userDetails.getSubRole());
 				if (null != role && null != sRole) {
-					Management management = entityCreator.createManagement(userDetails.getManagementDetails(), user);				
+					Management management = entityCreator.createManagement(userDetails.getManagementDetails(), user);
 					management.setUserId(userid);
 					management.setEmail(userDetails.getEmail());
 					management.setRoleObject(role);
@@ -180,16 +182,53 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 					management.setUserPassword(userDetails.getUserPassword());
 					insertManagement(management);
 
+				} else {
+					logger.debug("role not matched");
+
 				}
 
-			} else {
-				logger.debug("role not matched");
+			} else if (userDetails.getRole().equalsIgnoreCase(Constants.role_teaching_staff)) {
+				Role role = getRoleObject(userDetails.getRole());
+				SubRole sRole = getSubRoleObject(userDetails.getSubRole());
+				if (null != role && null != sRole) {
+					TeachingStaff teachingStaff = entityCreator
+							.createTeachingStaff(userDetails.getTeachingStaffDetails(), user);
+
+					teachingStaff.setUserPassword(generatePassword(Constants.role_teaching_staff));
+					teachingStaff.setUserId(generateUserId());
+					teachingStaff.setEmail(userDetails.getEmail());
+					teachingStaff.setRoleObject(role);
+					teachingStaff.setSubRoleObject(sRole);
+
+					insertTeachingStaff(teachingStaff);
+				} else {
+					logger.debug("role not matched");
+				}
+
+			} else if (userDetails.getRole().equalsIgnoreCase(Constants.role_non_teaching_staff)) {
+				Role role = getRoleObject(userDetails.getRole());
+				SubRole sRole = getSubRoleObject(userDetails.getSubRole());
+				if (null != role && null != sRole) {
+					NonTeachingStaff nonTeachingStaff = entityCreator
+							.createNonTeachingStaff(userDetails.getNonTeachingStaffDetails(), user);
+
+					nonTeachingStaff.setUserPassword(generatePassword(Constants.role_non_teaching_staff));
+					nonTeachingStaff.setUserId(generateUserId());
+					nonTeachingStaff.setEmail(userDetails.getEmail());
+					nonTeachingStaff.setRoleObject(role);
+					nonTeachingStaff.setSubRoleObject(sRole);
+
+					insertNonTeachingStaff(nonTeachingStaff);
+				} else {
+					logger.debug("role not matched");
+				}
+
 			}
 			return userid;
 
 		} catch (Exception e) {
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
-					+ "registerUser()" + "   " + e);
+					+ "registerUser()" + "   ", e);
 			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
 			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
 					messages.getString("SYSTEM_EXCEPTION"));
@@ -198,10 +237,10 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 	}
 
 	/*
-	 * <<<<<<< HEAD Method : insertUser : inserts User entity into database input :
-	 * user return : void ======= Method : insertStudent : inserts Student entity
-	 * into database input : student return : void >>>>>>> branch 'master' of
-	 * https://github.com/akaperi/asms-services
+	 * <<<<<<< HEAD Method : insertUser : inserts User entity into database
+	 * input : user return : void ======= Method : insertStudent : inserts
+	 * Student entity into database input : student return : void >>>>>>> branch
+	 * 'master' of https://github.com/akaperi/asms-services
 	 *
 	 */
 
@@ -228,8 +267,8 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 	}
 
 	/*
-	 * Method : insertStudent : inserts Student entity into database input : student
-	 * return : void
+	 * Method : insertStudent : inserts Student entity into database input :
+	 * student return : void
 	 *
 	 */
 
@@ -267,6 +306,7 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 			tx.commit();
 		} catch (Exception ex) {
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
+
 					+ "insertStudent()" + "   ", ex);
 
 			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
@@ -280,69 +320,34 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.asms.usermgmt.dao.UserMgmtDao#insertManagement(com.asms.usermgmt.
+	 * @see
+	 * com.asms.usermgmt.dao.UserMgmtDao#insertManagement(com.asms.usermgmt.
 	 * entity.Management)
 	 */
 	@Override
 	public void insertManagement(Management management) throws AsmsException {
 		Session session = null;
 		Transaction tx = null;
-		session = this.sessionFactory.getCurrentSession();
 		try {
+
+			session = this.sessionFactory.getCurrentSession();
 			tx = session.beginTransaction();
+
 			session.save(management);
 
 			tx.commit();
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			if (tx != null) {
-				if (tx.wasCommitted() == false) {
-					tx.rollback();
-				}
-			} else {
-				System.out.println("sessionid :{} error while inserting Management :{}" + ex);
-				session.close();
-			}
-			throw ex;
+			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
+
+					+ "insertManagement()" + "   ", ex);
+
+			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
+			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+					messages.getString("SYSTEM_EXCEPTION"));
+
 		}
 	}
 
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.asms.usermgmt.dao.UserMgmtDao#insertTeachingStaff(com.asms.usermgmt.
-	 * entity.TeachingStaff)
-	 */
-/*	@Override
-	public void insertTeachingStaff(TeachingStaff teachingStaff) throws AsmsException {
-=======
-	@Override
-	public boolean authenticate(HttpServletRequest request, HttpServletResponse response, String email, String password)
-			throws AsmsException {
->>>>>>> branch 'master' of https://github.com/akaperi/asms-services
-		Session session = null;
-		Transaction tx = null;
-		try {
-			session = sessionFactory.getCurrentSession();
-			tx = session.beginTransaction();
-			String hql = "from User U where U.email=? and U.userPassword=?";
-			User user = (User) session.createQuery(hql).setParameter(0, email).setParameter(1, password).uniqueResult();
-			tx.commit();
-			if (null == user) {
-				logger.info("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
-						+ "authenticate()" + "   ", "Authentication failed");
-				return false;
-			} else {
-<<<<<<< HEAD
-				System.out.println("sessionid :{} error while inserting Management :{}" + ex);
-				session.close();
-			}
-			throw ex;
-		}
-	}
-*/
 	@Override
 	public boolean authenticate(HttpServletRequest request, HttpServletResponse response, String email, String password)
 			throws AsmsException {
@@ -376,5 +381,66 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.asms.usermgmt.dao.UserMgmtDao#insertNonTeachingStaff(com.asms.
+	 * usermgmt.entity.NonTeachingStaff)
+	 */
+	@Override
+	public void insertNonTeachingStaff(NonTeachingStaff nonTeachingStaff) throws AsmsException {
+		Session session = null;
+		Transaction tx = null;
+		try {
 
+			session = this.sessionFactory.getCurrentSession();
+			tx = session.beginTransaction();
+
+			session.save(nonTeachingStaff);
+
+			tx.commit();
+		} catch (Exception ex) {
+			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
+
+					+ "insertNonTeachingStaff()" + "   ", ex);
+
+			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
+			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+					messages.getString("SYSTEM_EXCEPTION"));
+
+		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.asms.usermgmt.dao.UserMgmtDao#insertTeachingStaff(com.asms.usermgmt.
+	 * entity.TeachingStaff)
+	 */
+	@Override
+	public void insertTeachingStaff(TeachingStaff teachingStaff) throws AsmsException {
+		Session session = null;
+		Transaction tx = null;
+		try {
+
+			session = this.sessionFactory.getCurrentSession();
+			tx = session.beginTransaction();
+
+			session.save(teachingStaff);
+
+			tx.commit();
+		} catch (Exception ex) {
+			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
+
+					+ "insertTeachingStaff()" + "   ", ex);
+
+			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
+			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+					messages.getString("SYSTEM_EXCEPTION"));
+
+		}
+
+	}
 }
