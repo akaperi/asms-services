@@ -47,6 +47,7 @@ public class EntityCreator {
 		student.setStudentPhoto(details.getStudentPhoto());
 		student.setStudentReligion(details.getStudentReligion());
 		student.setStudentSection(details.getStudentSection());
+		student.setEmergencyContactNo(details.getEmergencyContactNo());
 		student.setStudentSubCaste(details.getStudentSubCaste());
 		student.setStudentType(details.getStudentType());
 		return student;
@@ -58,13 +59,11 @@ public class EntityCreator {
 		Management management =new Management();
 
 		management.setTrustId(managementDetails.getTrustId());
-		management.setMngmtRole(managementDetails.getMngmtRole());
 		management.setMngmtFirstName(managementDetails.getMngmtFirstName());
 		management.setMngmtMiddleName(managementDetails.getMngmtMiddleName());
 		management.setMngmtLastName(managementDetails.getMngmtLastName());
 		management.setMngmtDesignation(managementDetails.getMngmtDesignation());
 		management.setMngmtContactNo(managementDetails.getMngmtContactNo());
-		management.setMngmtEmailId(managementDetails.getMngmtEmailId());
 		
 		management.setMngmtCreationTime(new Date());
 		management.setSchoolId("SCH001");

@@ -90,7 +90,18 @@ public class Student extends User{
 	@Column(name = "student_status")
 	private String status;
 	
+	@Column(name = "student_emergency_contact_no")
+	private long emergencyContactNo;
 	
+	
+
+	public long getEmergencyContactNo() {
+		return emergencyContactNo;
+	}
+
+	public void setEmergencyContactNo(long emergencyContactNo) {
+		this.emergencyContactNo = emergencyContactNo;
+	}
 
 	public String getStatus() {
 		return status;

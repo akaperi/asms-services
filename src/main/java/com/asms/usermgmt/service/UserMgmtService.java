@@ -2,6 +2,11 @@ package com.asms.usermgmt.service;
 
 import java.util.ResourceBundle;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -21,12 +26,17 @@ import com.asms.adminmgmt.entity.Admin;
 import com.asms.usermgmt.auth.PrivilegesManager;
 import com.asms.common.helper.AsmsHelper;
 import com.asms.common.response.FailureResponse;
+import com.asms.common.response.SuccessResponse;
 import com.asms.common.service.BaseService;
 import com.asms.usermgmt.dao.UserMgmtDao;
+import com.asms.usermgmt.entity.User;
 import com.asms.usermgmt.helper.PrincipalUser;
 import com.asms.usermgmt.helper.Validator;
 import com.asms.usermgmt.request.UserDetails;
 import com.asms.usermgmt.request.UserRequest;
+import com.asms.usermgmt.response.RegistrationResponse;
+
+import javax.ws.rs.core.Context;
 
 /*
  * UserMgmtService.java handles user registration, update and delete 
@@ -63,26 +73,32 @@ public class UserMgmtService extends BaseService {
 	@POST
 	@Consumes("application/json")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	public Response register(UserRequest userRequest) {
+	public Response register(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse,
+			UserRequest userRequest) {
+		RegistrationResponse rReponse = new RegistrationResponse();
 		try {
 
 			// validate request
 			validator.validateRequest(userRequest);
+			HttpSession session = hRequest.getSession();
+			User user = (User) session.getAttribute("ap_user");
 			// authorize
-			
-			//check if logged in user has got rights to create user
-			PrincipalUser user = privilegesManager.isPrivileged(userRequest.getLoggedInUserEmail(), userRequest.getUserRole(),
+
+			// check if logged in user has got rights to create user
+			PrincipalUser pUser = privilegesManager.isPrivileged(user, userRequest.getUserRole(),
 					userRequest.getRequestType());
-			if(user.isPrivileged()) {
+			if (pUser.isPrivileged()) {
 				UserDetails userDetails = userRequest.getUserDetails();
 				userDetails.setRole(userRequest.getUserRole());
-				userMgmtDao.registerUser(userDetails,user.getLoggedInUser());
-				
-			}else {
-				//  throw authorization error
+				String userid =userMgmtDao.registerUser(userDetails, user);
+				rReponse.setIsNew("true");
+				rReponse.setUserId(userid);
+				rReponse.setProgressPercentage(20);
+				return Response.status(Status.OK).entity(rReponse).build();
+
+			} else {
+				// throw authorization error
 			}
-			
-			
 
 			return Response.status(200).entity("success").build();
 		} catch (AsmsException ex) {
@@ -92,32 +108,54 @@ public class UserMgmtService extends BaseService {
 		}
 	}
 
+	/*
+	 * api : /user/login request type :POST
+	 * 
+	 * Method : login -> This method does login authentication input : UserRequest
+	 * object outbut: Response object
+	 * 
+	 * 
+	 */
+
 	@Path("/login")
 	@POST
 	@Consumes("application/json")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	public Response login(Admin admin) throws Exception {
+	public Response login(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse,
+			UserDetails userDetails) {
 		Response response = null;
+		FailureResponse failureResponse = new FailureResponse();
+		// get the error code and description from resource bundles
+		ResourceBundle messages = AsmsHelper.getMessageFromBundle();
 		try {
 
-			if (null == admin) {
-				FailureResponse failureResponse = new FailureResponse();
-				// get the error code and description from resource bundles
-				ResourceBundle messages = AsmsHelper.getMessageFromBundle();
-				failureResponse.setCode(Integer.parseInt(messages.getString("SYSTEM_EXCEPTION_CODE")));
-				failureResponse.setErrorDescription(messages.getString("SYSTEM_EXCEPTION"));
+			SuccessResponse successRespone = new SuccessResponse();
 
-				response = Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			if (null == userDetails) {
+				
+				
+				failureResponse.setCode(Integer.parseInt(messages.getString("REQUEST_NULL_CODE")));
+				failureResponse.setErrorDescription(messages.getString("REQUEST_NULL"));
+
+				return response = Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
 			} else {
-
-				response = Response.status(200).entity("S").build();
+				boolean result = userMgmtDao.authenticate(hRequest, hResponse, userDetails.getEmail(),
+						userDetails.getUserPassword());
+				if (result) {
+					return Response.status(Status.OK).entity(successRespone).build();
+				}else {
+					failureResponse.setCode(Integer.parseInt(messages.getString("AUTHENTICATION_FAILED_CODE")));
+					failureResponse.setErrorDescription(messages.getString("AUTHENTICATION_FAILED_MSG"));
+					return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+				}
+				
 
 			}
-		} catch (Exception e) {
-			logger.error("error", e);
-			// TODO: handle exception
+		} catch (AsmsException ex) {
+			// construct failure response
+			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
 		}
-		return response;
+		
 	}
 
 }

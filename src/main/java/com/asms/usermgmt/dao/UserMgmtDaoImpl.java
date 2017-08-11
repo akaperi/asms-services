@@ -26,8 +26,6 @@ import com.asms.rolemgmt.entity.Role;
 import com.asms.rolemgmt.entity.SubRole;
 import com.asms.usermgmt.entity.Management;
 import com.asms.usermgmt.entity.Student;
-//import com.asms.usermgmt.entity.Student;
-//import com.asms.usermgmt.entity.TeachingStaff;
 import com.asms.usermgmt.entity.User;
 import com.asms.usermgmt.helper.EntityCreator;
 import com.asms.usermgmt.request.UserDetails;
@@ -200,8 +198,10 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 	}
 
 	/*
-	 * Method : insertStudent : inserts Student entity into database input :
-	 * student return : void
+	 * <<<<<<< HEAD Method : insertUser : inserts User entity into database input :
+	 * user return : void ======= Method : insertStudent : inserts Student entity
+	 * into database input : student return : void >>>>>>> branch 'master' of
+	 * https://github.com/akaperi/asms-services
 	 *
 	 */
 
@@ -227,6 +227,12 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 
 	}
 
+	/*
+	 * Method : insertStudent : inserts Student entity into database input : student
+	 * return : void
+	 *
+	 */
+
 	// generate default encrypted password
 	private String generatePassword(String role) {
 		// return BCrypt.hashpw(role + "123", BCrypt.gensalt(10));
@@ -245,6 +251,7 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 	 * com.asms.usermgmt.dao.UserMgmtDao#insertStudent(com.asms.usermgmt.entity.
 	 * Student)
 	 */
+
 	@Override
 	public void insertStudent(Student student) throws AsmsException {
 		// TODO Auto-generated method stub
@@ -273,8 +280,7 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.asms.usermgmt.dao.UserMgmtDao#insertManagement(com.asms.usermgmt.
+	 * @see com.asms.usermgmt.dao.UserMgmtDao#insertManagement(com.asms.usermgmt.
 	 * entity.Management)
 	 */
 	@Override
@@ -285,6 +291,7 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 		try {
 			tx = session.beginTransaction();
 			session.save(management);
+
 			tx.commit();
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -300,6 +307,7 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 		}
 	}
 
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -309,20 +317,25 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 	 */
 /*	@Override
 	public void insertTeachingStaff(TeachingStaff teachingStaff) throws AsmsException {
+=======
+	@Override
+	public boolean authenticate(HttpServletRequest request, HttpServletResponse response, String email, String password)
+			throws AsmsException {
+>>>>>>> branch 'master' of https://github.com/akaperi/asms-services
 		Session session = null;
 		Transaction tx = null;
-		session = this.sessionFactory.getCurrentSession();
 		try {
+			session = sessionFactory.getCurrentSession();
 			tx = session.beginTransaction();
-			session.save(teachingStaff);
+			String hql = "from User U where U.email=? and U.userPassword=?";
+			User user = (User) session.createQuery(hql).setParameter(0, email).setParameter(1, password).uniqueResult();
 			tx.commit();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			if (tx != null) {
-				if (tx.wasCommitted() == false) {
-					tx.rollback();
-				}
+			if (null == user) {
+				logger.info("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
+						+ "authenticate()" + "   ", "Authentication failed");
+				return false;
 			} else {
+<<<<<<< HEAD
 				System.out.println("sessionid :{} error while inserting Management :{}" + ex);
 				session.close();
 			}
@@ -362,5 +375,6 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 
 		}
 	}
+
 
 }

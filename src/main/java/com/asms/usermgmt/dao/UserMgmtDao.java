@@ -28,8 +28,10 @@ public interface UserMgmtDao {
 	public void insertStudent(Student student) throws AsmsException;
 	
 	public void insertManagement(Management management) throws AsmsException;
+
 //	
 //	public void insertTeachingStaff(TeachingStaff teachingStaff) throws AsmsException;
+
 
 	boolean authenticate(HttpServletRequest request, HttpServletResponse response, String email, String password)
 			throws AsmsException;

@@ -54,6 +54,8 @@ public class StudentDetails {
 	private Date studentRegisteredOn;
 
 	private String studentPhoto;
+	
+	private long emergencyContactNo;
 
 	public String getSchoolId() {
 		return schoolId;
@@ -238,5 +240,15 @@ public class StudentDetails {
 	public void setStudentPhoto(String studentPhoto) {
 		this.studentPhoto = studentPhoto;
 	}
+
+	public long getEmergencyContactNo() {
+		return emergencyContactNo;
+	}
+
+	public void setEmergencyContactNo(long emergencyContactNo) {
+		this.emergencyContactNo = emergencyContactNo;
+	}
+	
+	
 
 }

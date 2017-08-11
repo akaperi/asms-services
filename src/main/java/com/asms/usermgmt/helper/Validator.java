@@ -43,11 +43,7 @@ public class Validator {
 					messages.getString("REQUEST_TYPE_NULL"));
 		}
 
-		if (null == request.getLoggedInUserEmail() || request.getLoggedInUserEmail().trim().isEmpty()) {
-			throw exceptionHandler.constructAsmsException(messages.getString("LOGGEDINUSER_EMAIL_NULL_CODE"),
-					messages.getString("LOGGEDINUSER_EMAIL_NULL"));
-		}
-
+		
 		if (null == request.getUserRole() || request.getUserRole().trim().isEmpty()) {
 			throw exceptionHandler.constructAsmsException(messages.getString("LOGGEDINUSER_EMAIL_NULL_CODE"),
 					messages.getString("NEW_USER_ROLE_NULL"));
