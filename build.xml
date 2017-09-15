@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?> 
-<project name="asms" default="war">
+<project name="asms-services" default="war">
 
 	<path id="compile.classpath">
 		<fileset dir="lib">
@@ -23,7 +23,7 @@
 	
 	<target name="war" depends="compile">
 		<!-- <war destfile="dist/asms-services.war" webxml="src/main/webapp/WEB-INF/web.xml">-->
-			<war destfile="F:/apache-tomcat-9.0.0.M21/apache-tomcat-9.0.0.M21/webapps/asms-services.war" webxml="src/main/webapp/WEB-INF/web.xml">
+			<war destfile="D:/apache-tomcat-9.0.0.M21/apache-tomcat-9.0.0.M21/webapps/asms-services.war" webxml="src/main/webapp/WEB-INF/web.xml">
 			<fileset dir="src/main/webapp"/>
 			<lib dir="lib"/>
 			<classes dir="build/ant_classes"/>

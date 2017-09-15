@@ -56,14 +56,15 @@ dependencies {
     compile group:'com.google.code.gson', name:'gson', version:'2.3.1'
     compile group:'org.jboss.resteasy', name:'resteasy-jaxrs', version:'2.2.1.GA'
     compile group:'org.json',name:'json',version:'20090211'
-    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'    
-	
-    
-    
-   task deploy(dependsOn: war)	{
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'   
+    task deploy(dependsOn: war)	{
     copy{
         from "build/libs"
-        into "F:/apache-tomcat-9.0.0.M21/apache-tomcat-9.0.0.M21/webapps/"
+         into "d:/apache-tomcat-9.0.0.M21/apache-tomcat-9.0.0.M21/webapps/"
+       // into  "f:/apache-tomcat-8.5.14/apache-tomcat-8.5.14/webapps/"
+          //svn path
+          //into "https://app1.corp.esika.in/svn/aSMS/asms-services/"
+          
         include "*.war"
     }
     } 
