@@ -1,0 +1,51 @@
+package com.asms.multitenancy.dao;
+import java.util.List;
+
+import com.asms.Exception.AsmsException;
+import com.asms.multitenancy.entity.Trust;
+import com.asms.multitenancy.request.TrustDetails;
+
+public interface MultitenancyDao {
+	
+
+	
+	
+	/**
+	 * 
+	 * @param name
+	 * @return
+	 * @throws AsmsException
+	 */
+	public boolean createSchema(String name) throws AsmsException;
+	
+	/**
+	 * @param id
+	 * @param name
+	 * @return
+	 * @throws AsmsException
+	 */
+	public String createTenantId(String id,String name) throws AsmsException;
+	
+	
+
+	/**
+	 * @param tenantId
+	 * @return String tenant schema name
+	 * @throws AsmsException
+	 */
+	public String getSchema(String tenantId) throws AsmsException;
+	
+	/**
+	 * @param TrustDetails
+	 * @return
+	 * @throws AsmsException
+	 */
+	public void createTrust(TrustDetails trustDetails, String schema) throws AsmsException;
+	
+	/**
+	 * @param 
+	 * @return List of  Trust 
+	 * @throws AsmsException
+	 */
+	public List<Trust> getTrust(String schema) throws AsmsException;
+}
