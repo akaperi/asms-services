@@ -41,11 +41,11 @@ import com.asms.schoolmgmt.request.UserRequest;
 import com.asms.schoolmgmt.response.SchoolSuccessResponse;
 import com.asms.usermgmt.auth.PrivilegesManager;
 import com.asms.usermgmt.entity.User;
-<<<<<<< HEAD
+
 import com.asms.usermgmt.request.student.ParentDetails;
-=======
+
 import com.asms.usermgmt.helper.PrincipalUser;
->>>>>>> refs/heads/master
+
 import com.asms.usermgmt.response.GetUserResponse;
 import com.asms.usermgmt.response.RegistrationResponse;
 

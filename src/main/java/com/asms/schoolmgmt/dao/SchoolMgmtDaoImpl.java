@@ -495,4 +495,14 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 	
 	}
 
+	/* (non-Javadoc)
+	 * @see com.asms.schoolmgmt.dao.SchoolMgmtDao#get(com.asms.schoolmgmt.request.BroadCasteSearchTypesDetails, java.lang.String)
+	 */
+	@Override
+	public List<BroadCasteSearchTypesDetails> get(BroadCasteSearchTypesDetails typesDetails, String tenantId)
+			throws AsmsException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
