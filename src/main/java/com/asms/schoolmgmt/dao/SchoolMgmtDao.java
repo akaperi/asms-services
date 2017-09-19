@@ -11,11 +11,7 @@ import com.asms.schoolmgmt.request.SchoolDetails;
 
 public interface SchoolMgmtDao {
 	
-	/**
-	 * @param name,tenantId
-	 * @return
-	 * @throws AsmsException
-	 */
+	
 	public Class getClassByName(String name, String tenantId) throws AsmsException;
 	
 	public Section getSectionByName(String className, String sectionName ,String tenantId) throws AsmsException;
