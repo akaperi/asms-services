@@ -405,26 +405,7 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 		/**
 		@{author} mallikarjun.guranna
 		13-Sep-2017
-		*/ 
-		
-		
-		Class classes = new Class();
-		ClassDetails classDetails = (ClassDetails) setupSchoolDetail.getClassDetails();
-		
-		Section sections = new Section();
-		List<SectionDetails> sectionDetails =setupSchoolDetail.getSectionDetails();
-		
-		
-		for(int i=0; i<setupSchoolDetail.getClassDetails().size(); i++)
-		{
-			
-		}
-				
-		for(int i=0; i<setupSchoolDetail.getSectionDetails().size(); i++)
-		{
-			
-		}
-		
+		*/
 		
 		Session session = null;
 		Transaction tx = null;
