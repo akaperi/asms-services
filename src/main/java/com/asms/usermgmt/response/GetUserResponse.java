@@ -46,6 +46,8 @@ public class GetUserResponse extends SuccessResponse {
 	
 	private List<BroadCasteSearchTypesDetails> broadCasteSearchTypesDetails;
 	
+//	private BroadCasteSearchTypesDetails broadCasteSearchTypesDetails2;
+	
 	public UserDetails getUser() {
 		return user;
 	}
@@ -150,6 +152,7 @@ public class GetUserResponse extends SuccessResponse {
 		this.broadCasteSearchTypesDetails = broadCasteSearchTypesDetails;
 	}
 
+	
 	
 
 }

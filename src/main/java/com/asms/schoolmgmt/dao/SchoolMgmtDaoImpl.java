@@ -442,20 +442,49 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 	/* (non-Javadoc)
 	 * @see com.asms.schoolmgmt.dao.SchoolMgmtDao#get(com.asms.schoolmgmt.request.BroadCasteSearchTypesDetails, java.lang.String)
 	 */
+	
 	@Override
-	public List<BroadCasteSearchTypesDetails> get(BroadCasteSearchTypesDetails typesDetails, String tenantId)
-			throws AsmsException {
-		// TODO Auto-generated method stub
-		return null;
-		/**
-		@{author} mallikarjun.guranna
-		15-Sep-2017
-		*/
+	public List<BroadCasteSearchTypesDetails> get(String tenantId,
+			boolean parent, boolean management,boolean student) throws AsmsException {
+		Session session = null;
+		try{
+			String schema = multitenancyDao.getSchema(tenantId);
+			if(null!=schema)
+				session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
+		String hql="";
+			if (parent==true) {
+		   	hql = hql+"select fEmail,fFirstName from Parent";
+			}
+			else if(student==true)
+				{
+				hql = hql+"select studentFirstName from Student";
+			}
+			else if(management==true){
+				hql=hql+"select mngmtFirstName from Management";
+			}
+			
+			@SuppressWarnings("unchecked")
+			List<BroadCasteSearchTypesDetails> typesDetails1= session.createQuery(hql).list();
+			session.close();
+			return typesDetails1;
+			
+			} catch (Exception e) {
+			if (session.isOpen()) {
+				session.close();
+			}
+			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
+					+ "get" + "   ", e);
+			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
+			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+					messages.getString("SYSTEM_EXCEPTION"));
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
+		}
+	
+	
+	
 	}
-	
-	
-	
-	
-	
 
 }
