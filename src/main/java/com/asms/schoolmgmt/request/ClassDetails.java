@@ -23,31 +23,44 @@ public class ClassDetails {
 	
 	private String name;
 
-	
+
 
 	public int getBoardId() {
 		return boardId;
 	}
 
+
+
 	public void setBoardId(int boardId) {
 		this.boardId = boardId;
 	}
 
-	public String getName() {
-		return name;
-	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
 
 	public List<SectionDetails> getSectionDetails() {
 		return sectionDetails;
 	}
 
+
+
 	public void setSectionDetails(List<SectionDetails> sectionDetails) {
 		this.sectionDetails = sectionDetails;
 	}
 
+
+
+	public String getName() {
+		return name;
+	}
+
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	
+
+	
 	
 }
