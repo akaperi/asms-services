@@ -11,6 +11,7 @@ import com.asms.schoolmgmt.request.ClassDetails;
 import com.asms.schoolmgmt.request.SectionDetails;
 import com.asms.schoolmgmt.request.SubjectDetails;
 
+
 public class SetupSchoolDetails {
 	/**
 	@{author} mallikarjun.guranna
