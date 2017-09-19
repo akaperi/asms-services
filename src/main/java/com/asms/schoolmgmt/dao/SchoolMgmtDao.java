@@ -29,7 +29,11 @@ public interface SchoolMgmtDao {
 
 	public List<BroadCasteSearchTypesDetails>  get(String tenantId,boolean parent,boolean management,boolean student) throws AsmsException;
 	
-	
+	/**
+	 * @param schoolDetails
+	 * @return
+	 * @throws AsmsException
+	 */
 	public void createSchool(SchoolDetails schoolDetails, String schema) throws AsmsException;
 	
 	public void setupSchool(SetupSchoolDetails setupSchoolDetail,String schema) throws AsmsException;
