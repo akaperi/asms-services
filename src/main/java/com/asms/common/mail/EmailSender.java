@@ -1,6 +1,5 @@
 package com.asms.common.mail;
 
-import javax.mail.Message;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
@@ -11,31 +10,29 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Component;
 
-
+import javax.mail.Message;
 
 @Component
-public class EmailSender {
+public class EmailSender 
+{
 
 	private static Logger logger = LoggerFactory.getLogger(EmailSender.class);
 
 	@Autowired
 	private JavaMailSender mailSender;
-	
-	
 
-
-	public void send(final String toEmail, final String fromEmail, final String subject,final String message, final String type,String tenantId) {
+	public void send(final String toEmail, final String fromEmail, final String subject,final String message, final String type) {
 		//final String toEmailId = toEmail;
 		//final String fromEmailId = fromEmail;
 		//final String mailSubject =
 
 		logger.info("[send] Send the message");
 		MimeMessagePreparator preparator = new MimeMessagePreparator() {
-			
+
 			@Override
 			public void prepare(MimeMessage mimeMessage) throws Exception {
 				mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));
-				mimeMessage.setFrom(new InternetAddress(fromEmail, "admin@admin.com"));
+				mimeMessage.setFrom(new InternetAddress(fromEmail, "TraHeal"));
 				mimeMessage.setSubject(subject);
 				mimeMessage.setContent(message, type);
 				
@@ -45,4 +42,5 @@ public class EmailSender {
 
 		mailSender.send(preparator);
 	}
+
 }
