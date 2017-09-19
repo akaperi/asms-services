@@ -172,7 +172,7 @@ public class SchoolMgmtService extends BaseService {
 	@Consumes("application/json")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public Response setupSchool(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse,
-			UserRequest userRequest) {
+			UserRequest userRequest,@QueryParam("tenantId") String tenant) {
 		RegistrationResponse rReponse = new RegistrationResponse();
 		ResourceBundle messages;
 		try {
@@ -184,13 +184,12 @@ public class SchoolMgmtService extends BaseService {
 			// validator.validateUserDetails(userRequest, messages);
 			HttpSession session = hRequest.getSession();
 			Object user = session.getAttribute("ap_user");
-			String schema = null ;
 			
 			PrincipalUser pUser = privilegesManager.isPrivileged((User)user, userRequest.getUserRole(),
 					userRequest.getRequestType());
 			if (pUser.isPrivileged()) {
 					SetupSchoolDetails setupSchoolDetails = userRequest.getSetupSchoolDetails();
-					schoolMgmtDao.setupSchool(setupSchoolDetails,schema);
+					schoolMgmtDao.setupSchool(setupSchoolDetails,tenant);
 					return Response.status(Status.OK).entity(rReponse).build();
 				}else{
 					FailureResponse failureResponse = new FailureResponse();

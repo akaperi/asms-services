@@ -54,7 +54,7 @@ public class Class {
 	private List<Section> sectionObjects = new ArrayList<Section>();
 
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "classes")
-	private List<AcademicYear> academicYears;
+	private List<AcademicYear> academicYears = new ArrayList<AcademicYear>();
 
 	@JsonIgnore
 	public List<Section> getSectionObjects() {

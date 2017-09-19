@@ -16,25 +16,20 @@ public class SectionDetails {
 	13-Sep-2017
 	*/
 	
-	private List<String> name;
+	private String name;
 	
 	
 	private List<SubjectDetails> subjectDetails;
 	
-	private List<AdditionalSubjectsDetails> additionalSubjectsDetails;
-	
-	
-	
-	
-	private List<TeachingSubjects> teachingSubjects = new ArrayList<TeachingSubjects>();
+	private List<AdditionalSubjectsDetails> additionalSubjectsDetails;	
 
-	private Class classObject;
+	
 
-	public List<String> getName() {
+	public String getName() {
 		return name;
 	}
 
-	public void setName(List<String> name) {
+	public void setName(String name) {
 		this.name = name;
 	}
 
@@ -54,19 +49,5 @@ public class SectionDetails {
 		this.additionalSubjectsDetails = additionalSubjectsDetails;
 	}
 
-	public List<TeachingSubjects> getTeachingSubjects() {
-		return teachingSubjects;
-	}
-
-	public void setTeachingSubjects(List<TeachingSubjects> teachingSubjects) {
-		this.teachingSubjects = teachingSubjects;
-	}
-
-	public Class getClassObject() {
-		return classObject;
-	}
-
-	public void setClassObject(Class classObject) {
-		this.classObject = classObject;
-	}
+	
 }

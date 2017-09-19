@@ -1,10 +1,13 @@
 package com.asms.schoolmgmt.entity;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.asms.usermgmt.entity.teachingStaff.TeachingSubjects;
@@ -48,12 +52,13 @@ public class Section {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "sectionObject")
 	private List<TeachingSubjects> teachingSubjects = new ArrayList<TeachingSubjects>();
 	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "sectionObject")
-	private List<ClassSubjects> Subjects = new ArrayList<ClassSubjects>();
+	@XmlElement
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "sectionObject", fetch = FetchType.EAGER)
+	private Set<ClassSubjects> Subjects = new HashSet<ClassSubjects>();
 	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "sectionObject")
-	private List<AdditionalSubjects> additionalSubjects = new ArrayList<AdditionalSubjects>();
-
+	@XmlElement
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "sectionObject", fetch = FetchType.EAGER)
+	private Set<AdditionalSubjects> additionalSubjects = new HashSet<AdditionalSubjects>();
 	
 	@ManyToOne
 	@JoinColumn(name = "class_id")
@@ -131,7 +136,13 @@ public class Section {
 
 
 
-	public List<ClassSubjects> getSubjects() {
+	
+
+
+
+
+	@JsonIgnore
+	public Set<ClassSubjects> getSubjects() {
 		return Subjects;
 	}
 
@@ -140,7 +151,7 @@ public class Section {
 
 
 
-	public void setSubjects(List<ClassSubjects> subjects) {
+	public void setSubjects(Set<ClassSubjects> subjects) {
 		Subjects = subjects;
 	}
 
@@ -148,8 +159,8 @@ public class Section {
 
 
 
-
-	public List<AdditionalSubjects> getAdditionalSubjects() {
+    @JsonIgnore
+	public Set<AdditionalSubjects> getAdditionalSubjects() {
 		return additionalSubjects;
 	}
 
@@ -158,7 +169,7 @@ public class Section {
 
 
 
-	public void setAdditionalSubjects(List<AdditionalSubjects> additionalSubjects) {
+	public void setAdditionalSubjects(Set<AdditionalSubjects> additionalSubjects) {
 		this.additionalSubjects = additionalSubjects;
 	}
 

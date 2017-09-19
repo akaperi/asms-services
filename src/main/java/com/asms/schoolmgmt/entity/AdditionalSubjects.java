@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
@@ -53,6 +54,7 @@ public class AdditionalSubjects {
 		this.name = name;
 	}
 
+	@JsonIgnore
 	public Section getSectionObject() {
 		return sectionObject;
 	}
