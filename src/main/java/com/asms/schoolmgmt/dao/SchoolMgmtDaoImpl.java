@@ -2,12 +2,15 @@ package com.asms.schoolmgmt.dao;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.annotation.Resource;
+import javax.security.auth.Subject;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -26,14 +29,19 @@ import com.asms.common.helper.Constants;
 import com.asms.multitenancy.dao.MultitenancyDao;
 import com.asms.rolemgmt.entity.Role;
 import com.asms.rolemgmt.entity.SubRole;
+import com.asms.schoolmgmt.entity.AcademicYear;
+import com.asms.schoolmgmt.entity.AdditionalSubjects;
 import com.asms.schoolmgmt.entity.Class;
+import com.asms.schoolmgmt.entity.ClassSubjects;
 import com.asms.schoolmgmt.entity.School;
 import com.asms.schoolmgmt.entity.Section;
 import com.asms.schoolmgmt.entity.SetupSchoolDetails;
+import com.asms.schoolmgmt.request.AdditionalSubjectsDetails;
 import com.asms.schoolmgmt.request.BroadCasteSearchTypesDetails;
 import com.asms.schoolmgmt.request.ClassDetails;
 import com.asms.schoolmgmt.request.SchoolDetails;
 import com.asms.schoolmgmt.request.SectionDetails;
+import com.asms.schoolmgmt.request.SubjectDetails;
 import com.asms.usermgmt.entity.Admin;
 
 @Service
@@ -53,8 +61,6 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 
 	@Autowired
 	private MultitenancyDao multitenancyDao;
-	
-	
 
 	ResourceBundle messages;
 
@@ -94,14 +100,13 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 	@Override
 	public Section getSectionByName(String className, String sectionName, String schema) throws AsmsException {
 		Session session = null;
-		try{
-				session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
-				String hql = "from Section C where C.name=? and C.classObject.name = ?";
-				Section section = (Section) session.createQuery(hql).setParameter(0, sectionName)
-						.setParameter(1, className).uniqueResult();
-				session.close();
-				return section;
-			
+		try {
+			session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
+			String hql = "from Section C where C.name=? and C.classObject.name = ?";
+			Section section = (Section) session.createQuery(hql).setParameter(0, sectionName).setParameter(1, className)
+					.uniqueResult();
+			session.close();
+			return section;
 
 		} catch (Exception e) {
 			if (session.isOpen()) {
@@ -158,7 +163,7 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 			String schema = multitenancyDao.getSchema(tenantId);
 			if (null != schema) {
 				session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
-				String hql = "from Class";
+				String hql = "from Class C";
 
 				@SuppressWarnings("unchecked")
 				List<Class> classes = session.createQuery(hql).list();
@@ -305,7 +310,7 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 
 		Session session = null;
 		Transaction tx = null;
-		
+
 		try {
 
 			session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
@@ -316,7 +321,7 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 
 			SubRole sRole = (SubRole) session.createQuery("from SubRole S where S.subRoleName = ?")
 					.setParameter(0, Constants.role_admin_subrole_admin).uniqueResult();
-			
+
 			session.save(school);
 			Admin admin = createAdmin(school);
 			admin.setRoleObject(role);
@@ -394,37 +399,94 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 			}
 		}
 
-	} 
+	}
 
-	/* (non-Javadoc)
-	 * @see com.asms.schoolmgmt.dao.SchoolMgmtDao#setupSchool(com.asms.schoolmgmt.entity.SetupSchoolDetails, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.asms.schoolmgmt.dao.SchoolMgmtDao#setupSchool(com.asms.schoolmgmt.
+	 * entity.SetupSchoolDetails, java.lang.String)
 	 */
 	@Override
-	public void setupSchool(SetupSchoolDetails setupSchoolDetail, String schema) throws AsmsException {
+	public void setupSchool(SetupSchoolDetails setupSchoolDetail, String tenant) throws AsmsException {
 		// TODO Auto-generated method stub
 		/**
-		@{author} mallikarjun.guranna
-		13-Sep-2017
-		*/
-		
+<<<<<<< HEAD
+		 * @{author} mallikarjun.guranna 13-Sep-2017
+		 */
+
+		Class classes;
+		List<ClassDetails> classDetails = (List<ClassDetails>) setupSchoolDetail.getClassDetails();
+		Section section;
+		ClassSubjects sub;
+		AdditionalSubjects addSubs;
+		Set<ClassSubjects> subList;
+		AcademicYear academicYear;
+		Set<AdditionalSubjects> addSubsList;
+		List<Class> classObjects = new ArrayList<Class>();
+		for (ClassDetails cd : classDetails) {
+			classes = new Class();
+			classes.setName(cd.getName());
+			classes.setBoardId(cd.getBoardId());
+			academicYear = new AcademicYear();
+			academicYear.setAcademicYearFromTo(setupSchoolDetail.getCurrentAcademicYear());
+			academicYear.getClasses().add(classes);
+			classes.getAcademicYears().add(academicYear);
+
+			List<SectionDetails> sectionDetails = cd.getSectionDetails();
+			if (null != sectionDetails) {
+				for (SectionDetails se : sectionDetails) {
+					section = new Section();
+					section.setName(se.getName());
+
+					List<SubjectDetails> subjectDetails = se.getSubjectDetails();
+					if (null != subjectDetails) {
+						subList = new HashSet<ClassSubjects>();
+						for (SubjectDetails sd : subjectDetails) {
+							sub = new ClassSubjects();
+							sub.setName(sd.getName());
+							sub.setSectionObject(section);
+							subList.add(sub);
+						}
+						section.setSubjects(subList);
+					}
+					List<AdditionalSubjectsDetails> addSubjectDetails = se.getAdditionalSubjectsDetails();
+					addSubsList = new HashSet<AdditionalSubjects>();
+					if (null != addSubjectDetails) {
+						for (AdditionalSubjectsDetails asd : addSubjectDetails) {
+							addSubs = new AdditionalSubjects();
+							addSubs.setName(asd.getName());
+							addSubs.setSectionObject(section);
+							addSubsList.add(addSubs);
+						}
+						section.setAdditionalSubjects(addSubsList);
+					}
+
+					section.setClassObject(classes);
+					classes.getSectionObjects().add(section);
+					
+				}
+			}
+			classObjects.add(classes);
+
+		}
+
+		String schema = multitenancyDao.getSchema(tenant);
+
 		Session session = null;
 		Transaction tx = null;
-		
+
 		try {
+			for (Class C : classObjects) {
+				session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
+				tx = session.beginTransaction();
 
-			session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
-			tx = session.beginTransaction();
+				session.save(C);
 
-			Role role = (Role) session.createQuery("from Role R where R.roleName = ?")
-					.setParameter(0, Constants.role_admin).uniqueResult();
-
-			SubRole sRole = (SubRole) session.createQuery("from SubRole S where S.subRoleName = ?")
-					.setParameter(0, Constants.role_admin_subrole_admin).uniqueResult();
-			
-			session.save(setupSchoolDetail);
-			
-			tx.commit();
-			session.close();
+				tx.commit();
+				session.close();
+			}
 		} catch (Exception ex) {
 			if (session.isOpen()) {
 				session.close();
@@ -443,12 +505,14 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 			}
 		}
 
-		
-
 	}
 
-	/* (non-Javadoc)
-	 * @see com.asms.schoolmgmt.dao.SchoolMgmtDao#get(com.asms.schoolmgmt.request.BroadCasteSearchTypesDetails, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.asms.schoolmgmt.dao.SchoolMgmtDao#get(com.asms.schoolmgmt.request.
+	 * BroadCasteSearchTypesDetails, java.lang.String)
 	 */
 	
 	@Override

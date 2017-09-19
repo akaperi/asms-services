@@ -10,6 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -30,6 +31,25 @@ public class ClassSubjects
 	@ManyToOne
 	@JoinColumn(name = "section_id")
 	private Section sectionObject;
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	@JsonIgnore
+	public Section getSectionObject() {
+		return sectionObject;
+	}
+
+	public void setSectionObject(Section sectionObject) {
+		this.sectionObject = sectionObject;
+	}
+
+	
 	
 	
 	public int getSerialNo() {

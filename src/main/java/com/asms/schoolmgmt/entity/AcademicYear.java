@@ -4,6 +4,7 @@
 */
 package com.asms.schoolmgmt.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -51,7 +52,7 @@ public class AcademicYear {
 	
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "AcademicYearClassMap", joinColumns = { @JoinColumn(name = "serialNo") }, inverseJoinColumns = { @JoinColumn(name = "classId") })
-	private List<Class> classes;
+	private List<Class> classes = new ArrayList<Class>();
 	
 	public int getAcademicYearId() {
 		return academicYearId;

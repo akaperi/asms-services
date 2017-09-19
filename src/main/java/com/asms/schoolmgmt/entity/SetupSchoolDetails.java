@@ -25,9 +25,6 @@ public class SetupSchoolDetails {
 	private String currentAcademicYear;
 	
 	private List<ClassDetails> classDetails;
-	private List<SectionDetails> sectionDetails;
-	
-	private List<SubjectDetails> subjectDetails;
 	
 	private List<AdditionalSubjectsDetails> additionalSubjectsDetails;
 	
@@ -47,14 +44,7 @@ public class SetupSchoolDetails {
 		this.classDetails = classDetails;
 	}
 
-	public List<SubjectDetails> getSubjectDetails() {
-		return subjectDetails;
-	}
-
-	public void setSubjectDetails(List<SubjectDetails> subjectDetails) {
-		this.subjectDetails = subjectDetails;
-	}
-
+	
 	public List<AdditionalSubjectsDetails> getAdditionalSubjectsDetails() {
 		return additionalSubjectsDetails;
 	}
@@ -63,13 +53,7 @@ public class SetupSchoolDetails {
 		this.additionalSubjectsDetails = additionalSubjectsDetails;
 	}
 
-	public List<SectionDetails> getSectionDetails() {
-		return sectionDetails;
-	}
-
-	public void setSectionDetails(List<SectionDetails> sectionDetails) {
-		this.sectionDetails = sectionDetails;
-	}
+	
 
 	
 	
