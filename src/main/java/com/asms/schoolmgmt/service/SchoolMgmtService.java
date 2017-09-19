@@ -39,8 +39,13 @@ import com.asms.schoolmgmt.request.BroadCasteSearchTypesDetails;
 import com.asms.schoolmgmt.request.SchoolDetails;
 import com.asms.schoolmgmt.request.UserRequest;
 import com.asms.schoolmgmt.response.SchoolSuccessResponse;
+import com.asms.usermgmt.auth.PrivilegesManager;
 import com.asms.usermgmt.entity.User;
+<<<<<<< HEAD
 import com.asms.usermgmt.request.student.ParentDetails;
+=======
+import com.asms.usermgmt.helper.PrincipalUser;
+>>>>>>> refs/heads/master
 import com.asms.usermgmt.response.GetUserResponse;
 import com.asms.usermgmt.response.RegistrationResponse;
 
@@ -58,7 +63,8 @@ public class SchoolMgmtService extends BaseService {
 	@Autowired
 	private SchoolMgmtDao schoolMgmtDao;
 
-
+	@Autowired
+	private PrivilegesManager privilegesManager;
 
 	@Autowired
 	private SchoolValidator schoolValidator;
@@ -184,7 +190,9 @@ public class SchoolMgmtService extends BaseService {
 			Object user = session.getAttribute("ap_user");
 			String schema = null ;
 			
-				if (true) {
+			PrincipalUser pUser = privilegesManager.isPrivileged((User)user, userRequest.getUserRole(),
+					userRequest.getRequestType());
+			if (pUser.isPrivileged()) {
 					SetupSchoolDetails setupSchoolDetails = userRequest.getSetupSchoolDetails();
 					schoolMgmtDao.setupSchool(setupSchoolDetails,schema);
 					return Response.status(Status.OK).entity(rReponse).build();

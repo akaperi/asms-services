@@ -408,33 +408,60 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 		*/ 
 		
 		
-		List<Class> classes = new ArrayList<Class>();
-		List<ClassDetails> classDetails = new ArrayList<ClassDetails>();
+		Class classes = new Class();
+		ClassDetails classDetails = (ClassDetails) setupSchoolDetail.getClassDetails();
 		
-		List<Section> sections = new ArrayList<Section>();
-		List<SectionDetails> sectionDetails = new ArrayList<SectionDetails>();
+		Section sections = new Section();
+		List<SectionDetails> sectionDetails =setupSchoolDetail.getSectionDetails();
 		
 		
 		for(int i=0; i<setupSchoolDetail.getClassDetails().size(); i++)
 		{
-			classDetails.addAll(setupSchoolDetail.getClassDetails());
+			
 		}
-		
+				
 		for(int i=0; i<setupSchoolDetail.getSectionDetails().size(); i++)
 		{
-			sectionDetails.addAll(setupSchoolDetail.getSectionDetails());
+			
 		}
 		
 		
+		Session session = null;
+		Transaction tx = null;
 		
-		
-		
+		try {
+
+			session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
+			tx = session.beginTransaction();
+
+			Role role = (Role) session.createQuery("from Role R where R.roleName = ?")
+					.setParameter(0, Constants.role_admin).uniqueResult();
+
+			SubRole sRole = (SubRole) session.createQuery("from SubRole S where S.subRoleName = ?")
+					.setParameter(0, Constants.role_admin_subrole_admin).uniqueResult();
 			
-		
-		
-		
-		
-		
+			session.save(setupSchoolDetail);
+			
+			tx.commit();
+			session.close();
+		} catch (Exception ex) {
+			if (session.isOpen()) {
+				session.close();
+			}
+			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
+
+					+ "setupSchool()" + "   ", ex);
+
+			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
+			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+					messages.getString("SYSTEM_EXCEPTION"));
+
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
+		}
+
 		
 
 	}
