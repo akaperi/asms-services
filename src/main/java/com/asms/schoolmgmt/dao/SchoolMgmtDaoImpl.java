@@ -456,7 +456,7 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 		   	hql = hql+"select fEmail,fFirstName from Parent";
 			}
 			else if(student==true)
-				{
+			{
 				hql = hql+"select studentFirstName from Student";
 			}
 			else if(management==true){
