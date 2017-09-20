@@ -10,7 +10,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import javax.annotation.Resource;
-import javax.security.auth.Subject;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -524,36 +523,66 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 	 */
 	
 	@Override
-	public List<String> get(BroadCasteSearchTypesDetails searchTypesDetails,String tenantId) throws AsmsException {
+	public List<String> createBoradCasteMessage(BroadCasteSearchTypesDetails searchTypesDetails,String tenantId) throws AsmsException {
 		Session session = null;
 		try{
 			String schema = multitenancyDao.getSchema(tenantId);
-			if(null!=schema)
+			if(null!=schema){
 				session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
-		String hql="";
+			
+		List<String> toEmailIdQry = new ArrayList<>();
+	
 			if (searchTypesDetails.isAllParents()==true) {
-		   	hql = hql+"select fEmail from Parent";
-			}
-			else if(searchTypesDetails.isAllStudents()==true)
+				toEmailIdQry.add("select fEmail from Parent");
+				}
+			if(searchTypesDetails.isAllStudents()==true)
 			{
-				hql = hql+"select email from Student";
-			}
-			else if(searchTypesDetails.isAllManagement()==true){
-				hql=hql+"select email from Management";
+				toEmailIdQry.add("select email from Student");
 			}
 			
-			@SuppressWarnings("unchecked")
-			List<String> emails= session.createQuery(hql).list();
-			session.close();
-			
+			if(searchTypesDetails.isAllStudents()==true && searchTypesDetails.isAllParents()==true && searchTypesDetails.isAllManagement()==false)
+			{
+				toEmailIdQry.add("select email from Student");
+			}
+			if(searchTypesDetails.isAllManagement()==true && searchTypesDetails.isAllParents()==true && searchTypesDetails.isAllStudents()==true){
+				toEmailIdQry.add("select email from Management");
+			}
+		   if(searchTypesDetails.isAllNonTeaching()==true)
+		   {
+			   toEmailIdQry.add("select email from NonTeachingStaff");
+		   }
+           if(searchTypesDetails.isAllTeachingStaff()==true)
+           {
+        	   toEmailIdQry.add("select email from TeachingStaff");
+           }
+           if(searchTypesDetails.isAllTeachingStaff()==true)
+           {
+        	   toEmailIdQry.add("select email from TeachingStaff");
+           }
+           if(searchTypesDetails.getAllclass()!=null)
+           {
+        	   toEmailIdQry.add("from User where studentClass='"+searchTypesDetails.getAllclass()+"'");
+           }
+           if(searchTypesDetails.getAllSection()!=null)
+           {
+        	   toEmailIdQry.add("from User where studentSection='"+searchTypesDetails.getAllSection()+"'");
+           }
+           
+		
+
+		for(String qry:toEmailIdQry)
+			{
+			List<String> emails= session.createQuery(qry).list();
 			for (String email : emails) {
 				
 				emailSender.send(email,searchTypesDetails.getFromEmail(),searchTypesDetails.getSubject(),searchTypesDetails.getMessage(), "text/html");
+				}
+
 			}
+		session.close();			
+						
 			
-			return emails;
-			
-			} catch (Exception e) {
+			}} catch (Exception e) {
 			if (session.isOpen()) {
 				session.close();
 			}
@@ -567,6 +596,8 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 				session.close();
 			}
 		}
+		return null;
+
 	
 	
 	

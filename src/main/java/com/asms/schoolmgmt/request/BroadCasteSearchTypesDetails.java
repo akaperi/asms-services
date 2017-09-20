@@ -10,6 +10,12 @@ public class BroadCasteSearchTypesDetails {
 	
 	private boolean allNonTeaching;
 	
+	private boolean allTeachingStaff;
+	
+	private String allclass;
+	
+	private String allSection;
+	
 	private String subject;
 
 	private String message;
@@ -59,6 +65,25 @@ public class BroadCasteSearchTypesDetails {
 	public void setAllNonTeaching(boolean allNonTeaching) {
 		this.allNonTeaching = allNonTeaching;
 	}
+	public boolean isAllTeachingStaff() {
+		return allTeachingStaff;
+	}
+	public void setAllTeachingStaff(boolean allTeachingStaff) {
+		this.allTeachingStaff = allTeachingStaff;
+	}
+	public String getAllclass() {
+		return allclass;
+	}
+	public void setAllclass(String allclass) {
+		this.allclass = allclass;
+	}
+	public String getAllSection() {
+		return allSection;
+	}
+	public void setAllSection(String allSection) {
+		this.allSection = allSection;
+	}
+	
 	
 	
 	

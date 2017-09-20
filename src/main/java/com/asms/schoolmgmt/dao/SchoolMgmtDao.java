@@ -30,7 +30,7 @@ public interface SchoolMgmtDao {
 
 	
 
-	public List<String>  get(BroadCasteSearchTypesDetails typesDetails,String tenantId) throws AsmsException;
+	public List<String>  createBoradCasteMessage(BroadCasteSearchTypesDetails typesDetails,String tenantId) throws AsmsException;
 	 
 
 	/**

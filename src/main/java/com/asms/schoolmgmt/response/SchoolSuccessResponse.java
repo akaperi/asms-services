@@ -6,7 +6,8 @@ import com.asms.common.response.SuccessResponse;
 
 public class SchoolSuccessResponse extends SuccessResponse{
 	
-	private List<String> subjectNames,classNames;
+	private List<String> subjectNames,classNames,emails;
+	
 
 	public List<String> getSubjectNames() {
 		return subjectNames;
@@ -22,6 +23,14 @@ public class SchoolSuccessResponse extends SuccessResponse{
 
 	public void setClassNames(List<String> classNames) {
 		this.classNames = classNames;
+	}
+
+	public List<String> getEmails() {
+		return emails;
+	}
+
+	public void setEmails(List<String> emails) {
+		this.emails = emails;
 	}
 
 }

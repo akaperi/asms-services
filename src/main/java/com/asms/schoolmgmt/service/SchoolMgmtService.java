@@ -348,8 +348,8 @@ public class SchoolMgmtService extends BaseService {
 	@POST
 	@Consumes("application/json")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	public Response getbroadCasteMessages(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse,@QueryParam("tenantId") 
-	String tenant,@QueryParam("parentDetails") boolean parent,@QueryParam("managementDetails") boolean management,@QueryParam("studentDetails") boolean student,UserRequest userRequest) 
+	public Response createbroadCasteMessages(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse,@QueryParam("tenantId") 
+	String tenant,UserRequest userRequest) 
 	{	try {
 			FailureResponse failureResponse = new FailureResponse();
 			// get bundles for error messages
@@ -361,13 +361,13 @@ public class SchoolMgmtService extends BaseService {
 					userRequest.getRequestType());
 			if (pUser.isPrivileged()) {
 				
-				BroadCasteSearchTypesDetails searchTypesDetails =  userRequest.getBroadCasteSearchTypesDetails();
+			BroadCasteSearchTypesDetails searchTypesDetails =  userRequest.getBroadCasteSearchTypesDetails();
 				
-				List<String> emails =schoolMgmtDao.get(searchTypesDetails,tenant);
+				List<String> emails =schoolMgmtDao.createBoradCasteMessage(searchTypesDetails,tenant);
 
-				GetUserResponse getUserResponse = new GetUserResponse();
-				getUserResponse.setEmails(emails);
-				return Response.status(Status.OK).entity(getUserResponse).build();
+				SchoolSuccessResponse schoolSuccessResponse  =  new SchoolSuccessResponse();
+				
+				return Response.status(Status.OK).entity(schoolSuccessResponse.getEmails()).build();
 
 			} else {
 				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
