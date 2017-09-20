@@ -2,53 +2,62 @@ package com.asms.schoolmgmt.request;
 
 public class BroadCasteSearchTypesDetails {
 
-	private String allStudents;
+	private boolean allStudents;
 	
-	private String allParents;
+	private boolean allParents;
 	
-	private String allManagement;
+	private boolean allManagement;
 	
-	private String allNonTeaching;
+	private boolean allNonTeaching;
 	
-	private String name;
+	private String subject;
 
 	private String message;
 	
-	public String getAllStudents() {
-		return allStudents;
-	}
-	public void setAllStudents(String allStudents) {
-		this.allStudents = allStudents;
-	}
-	public String getAllParents() {
-		return allParents;
-	}
-	public void setAllParents(String allParents) {
-		this.allParents = allParents;
-	}
-	public String getAllManagement() {
-		return allManagement;
-	}
-	public void setAllManagement(String allManagement) {
-		this.allManagement = allManagement;
-	}
-	public String getAllNonTeaching() {
-		return allNonTeaching;
-	}
-	public void setAllNonTeaching(String allNonTeaching) {
-		this.allNonTeaching = allNonTeaching;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
+	private String fromEmail;
+	
+	
 	public String getMessage() {
 		return message;
 	}
 	public void setMessage(String message) {
 		this.message = message;
+	}
+	public String getSubject() {
+		return subject;
+	}
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+	public String getFromEmail() {
+		return fromEmail;
+	}
+	public void setFromEmail(String fromEmail) {
+		this.fromEmail = fromEmail;
+	}
+	public boolean isAllStudents() {
+		return allStudents;
+	}
+	public void setAllStudents(boolean allStudents) {
+		this.allStudents = allStudents;
+	}
+	public boolean isAllParents() {
+		return allParents;
+	}
+	public void setAllParents(boolean allParents) {
+		this.allParents = allParents;
+	}
+	public boolean isAllManagement() {
+		return allManagement;
+	}
+	public void setAllManagement(boolean allManagement) {
+		this.allManagement = allManagement;
+	}
+	public boolean isAllNonTeaching() {
+		return allNonTeaching;
+	}
+	public void setAllNonTeaching(boolean allNonTeaching) {
+		this.allNonTeaching = allNonTeaching;
 	}
 	
 	

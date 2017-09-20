@@ -39,7 +39,9 @@ import com.asms.schoolmgmt.request.BroadCasteSearchTypesDetails;
 import com.asms.schoolmgmt.request.SchoolDetails;
 import com.asms.schoolmgmt.request.UserRequest;
 import com.asms.schoolmgmt.response.SchoolSuccessResponse;
+import com.asms.usermgmt.auth.PrivilegesManager;
 import com.asms.usermgmt.entity.User;
+import com.asms.usermgmt.helper.PrincipalUser;
 import com.asms.usermgmt.request.student.ParentDetails;
 import com.asms.usermgmt.response.GetUserResponse;
 import com.asms.usermgmt.response.RegistrationResponse;
@@ -59,6 +61,8 @@ public class SchoolMgmtService extends BaseService {
 	private SchoolMgmtDao schoolMgmtDao;
 
 
+	@Autowired
+	private PrivilegesManager privilegesManager;
 
 	@Autowired
 	private SchoolValidator schoolValidator;
@@ -68,6 +72,8 @@ public class SchoolMgmtService extends BaseService {
 	
 	@Resource(name = "asmsdbProperties")
 	private Properties dbProperties;
+	
+	
 
 	private static final Logger logger = LoggerFactory.getLogger(SchoolMgmtService.class);
 
@@ -336,25 +342,28 @@ public class SchoolMgmtService extends BaseService {
 	}
 	
 	@Path("/broadCasteMessages")
-	@GET
+	@POST
 	@Consumes("application/json")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public Response getbroadCasteMessages(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse,@QueryParam("tenantId") 
-	String tenant,@QueryParam("parentDetails") boolean parent,@QueryParam("managementDetails") boolean management,@QueryParam("studentDetails") boolean student) 
+	String tenant,@QueryParam("parentDetails") boolean parent,@QueryParam("managementDetails") boolean management,@QueryParam("studentDetails") boolean student,UserRequest userRequest) 
 	{	try {
 			FailureResponse failureResponse = new FailureResponse();
 			// get bundles for error messages
 			HttpSession session = hRequest.getSession();
 			User user = (User) session.getAttribute("ap_user");
-
-			if (null != user) {
-				
 			
+			
+			PrincipalUser pUser = privilegesManager.isPrivileged((User)user, userRequest.getUserRole(),
+					userRequest.getRequestType());
+			if (pUser.isPrivileged()) {
 				
-				List<BroadCasteSearchTypesDetails> braodCasteMessages =schoolMgmtDao.get(tenant,parent,management,student);
+				BroadCasteSearchTypesDetails searchTypesDetails =  userRequest.getBroadCasteSearchTypesDetails();
+				
+				List<String> emails =schoolMgmtDao.get(searchTypesDetails,tenant);
 
 				GetUserResponse getUserResponse = new GetUserResponse();
-				getUserResponse.setBroadCasteSearchTypesDetails(braodCasteMessages);
+				getUserResponse.setEmails(emails);
 				return Response.status(Status.OK).entity(getUserResponse).build();
 
 			} else {

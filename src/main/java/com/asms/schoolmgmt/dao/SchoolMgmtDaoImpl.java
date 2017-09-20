@@ -23,6 +23,7 @@ import com.asms.Exception.AsmsException;
 import com.asms.Exception.ExceptionHandler;
 import com.asms.common.helper.AsmsHelper;
 import com.asms.common.helper.Constants;
+import com.asms.common.mail.EmailSender;
 import com.asms.multitenancy.dao.MultitenancyDao;
 import com.asms.rolemgmt.entity.Role;
 import com.asms.rolemgmt.entity.SubRole;
@@ -54,7 +55,8 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 	@Autowired
 	private MultitenancyDao multitenancyDao;
 	
-	
+	@Autowired
+	private EmailSender emailSender;
 
 	ResourceBundle messages;
 
@@ -426,17 +428,6 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 		}
 		
 		
-		
-		
-		
-			
-		
-		
-		
-		
-		
-		
-
 	}
 
 	/* (non-Javadoc)
@@ -444,29 +435,34 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 	 */
 	
 	@Override
-	public List<BroadCasteSearchTypesDetails> get(String tenantId,
-			boolean parent, boolean management,boolean student) throws AsmsException {
+	public List<String> get(BroadCasteSearchTypesDetails searchTypesDetails,String tenantId) throws AsmsException {
 		Session session = null;
 		try{
 			String schema = multitenancyDao.getSchema(tenantId);
 			if(null!=schema)
 				session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
 		String hql="";
-			if (parent==true) {
-		   	hql = hql+"select fEmail,fFirstName from Parent";
+			if (searchTypesDetails.isAllParents()==true) {
+		   	hql = hql+"select fEmail from Parent";
 			}
-			else if(student==true)
+			else if(searchTypesDetails.isAllStudents()==true)
 			{
-				hql = hql+"select studentFirstName from Student";
+				hql = hql+"select email from Student";
 			}
-			else if(management==true){
-				hql=hql+"select mngmtFirstName from Management";
+			else if(searchTypesDetails.isAllManagement()==true){
+				hql=hql+"select email from Management";
 			}
 			
 			@SuppressWarnings("unchecked")
-			List<BroadCasteSearchTypesDetails> typesDetails1= session.createQuery(hql).list();
+			List<String> emails= session.createQuery(hql).list();
 			session.close();
-			return typesDetails1;
+			
+			for (String email : emails) {
+				
+				emailSender.send(email,searchTypesDetails.getFromEmail(),searchTypesDetails.getSubject(),searchTypesDetails.getMessage(), "text/html");
+			}
+			
+			return emails;
 			
 			} catch (Exception e) {
 			if (session.isOpen()) {
