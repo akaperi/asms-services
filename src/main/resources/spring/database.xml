@@ -48,7 +48,6 @@
 				<beans:value>com.asms.schoolmgmt.entity.Section</beans:value>
 				<beans:value>com.asms.schoolmgmt.entity.AdditionalSubjects</beans:value>
 				<beans:value>com.asms.schoolmgmt.entity.AcademicYear</beans:value>
-				<beans:value>com.asms.schoolmgmt.entity.AcademicYearClassMap</beans:value>
 				<beans:value>com.asms.schoolmgmt.entity.ClassSubjects</beans:value>
 
 				<beans:value>com.asms.usermgmt.entity.StudentType</beans:value>

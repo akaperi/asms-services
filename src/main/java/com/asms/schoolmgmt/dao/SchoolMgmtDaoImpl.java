@@ -430,12 +430,13 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 		AcademicYear academicYear;
 		Set<AdditionalSubjects> addSubsList;
 		List<Class> classObjects = new ArrayList<Class>();
+		academicYear = new AcademicYear();
+		academicYear.setAcademicYearFromTo(setupSchoolDetail.getCurrentAcademicYear());
 		for (ClassDetails cd : classDetails) {
 			classes = new Class();
 			classes.setName(cd.getName());
 			classes.setBoardId(cd.getBoardId());
-			academicYear = new AcademicYear();
-			academicYear.setAcademicYearFromTo(setupSchoolDetail.getCurrentAcademicYear());
+			
 			
 			List<SectionDetails> sectionDetails = cd.getSectionDetails();
 			if (null != sectionDetails) {
