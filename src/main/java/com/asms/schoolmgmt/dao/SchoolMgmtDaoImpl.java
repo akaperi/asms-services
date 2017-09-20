@@ -431,9 +431,7 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 			classes.setBoardId(cd.getBoardId());
 			academicYear = new AcademicYear();
 			academicYear.setAcademicYearFromTo(setupSchoolDetail.getCurrentAcademicYear());
-			academicYear.getClasses().add(classes);
-			classes.getAcademicYears().add(academicYear);
-
+			
 			List<SectionDetails> sectionDetails = cd.getSectionDetails();
 			if (null != sectionDetails) {
 				for (SectionDetails se : sectionDetails) {
@@ -468,6 +466,9 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 					
 				}
 			}
+			academicYear.getClasses().add(classes);
+			classes.getAcademicYears().add(academicYear);
+
 			classObjects.add(classes);
 
 		}

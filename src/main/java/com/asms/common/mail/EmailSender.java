@@ -32,7 +32,7 @@ public class EmailSender
 			@Override
 			public void prepare(MimeMessage mimeMessage) throws Exception {
 				mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));
-				mimeMessage.setFrom(new InternetAddress(fromEmail, "TraHeal"));
+				mimeMessage.setFrom(new InternetAddress(fromEmail, "Akaperi"));
 				mimeMessage.setSubject(subject);
 				mimeMessage.setContent(message, type);
 				
