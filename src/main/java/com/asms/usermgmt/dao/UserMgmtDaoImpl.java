@@ -100,8 +100,7 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 	private Properties dbProperties;
 
 	@Autowired
-	private MultitenancyDao multitenancyDao;	
-	
+	private MultitenancyDao multitenancyDao;
 
 	ResourceBundle messages;
 
@@ -647,7 +646,7 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 				SuperAdmin admin = (SuperAdmin) session.createQuery(hql).setParameter(0, email)
 						.setParameter(1, password).uniqueResult();
 				session.close();
-//				if(PasswordAuthentication) {}
+				// if(PasswordAuthentication) {}
 				if (null == admin) {
 					logger.info("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName()
 							+ "." + "authenticate()" + "   ", "Authentication failed");
@@ -2569,8 +2568,7 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
 			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
 					messages.getString("SYSTEM_EXCEPTION"));
-		}
-		finally {
+		} finally {
 			if (session.isOpen()) {
 				session.close();
 			}
@@ -2601,13 +2599,56 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 	}
 
 	@Override
-	public ChangePasswordDetails getchangePasswordDetails(HttpServletRequest request, HttpServletResponse response,
-			String changePasswordDetails, String tenant) throws AsmsException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public void changePassword(ChangePasswordDetails changePasswordDetails, User user, String tenant)
+			throws AsmsException {
 
-	
-	
+		Session session = null;
+
+		Transaction tx = null;
+
+		try {
+			messages = AsmsHelper.getMessageFromBundle();
+			String schema = multitenancyDao.getSchema(tenant);
+			if (null != schema) {
+				user = getUserById(user.getUserId(), schema);
+
+				if (!user.getUserPassword().equals(changePasswordDetails.getCurrentpassword())) {
+					throw exceptionHandler.constructAsmsException(
+							messages.getString("CURRENTPASSWORD_IS_SAMEAS_NEWPASSWORD_NULL_CODE"),
+							messages.getString("CURRENTPASSWORD_IS_SAMEAS_NEWPASSWORD_NULL_MSG"));
+				}
+				session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
+				tx = session.beginTransaction();
+				User user1 = (User) session.load(User.class, user.getSerialNo());
+				user1.setUserPassword(changePasswordDetails.getNewpassword());
+				session.update(user1);
+				tx.commit();
+				session.close();
+			}
+
+		} catch (Exception e) {
+			if (tx != null) {
+				tx.rollback();
+			}
+			if (null != session && session.isOpen()) {
+				session.close();
+			}
+			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
+					+ "updateUser()" + "   ", e);
+			ResourceBundle message = AsmsHelper.getMessageFromBundle();
+			if (e instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) e).getCode(),
+						((AsmsException) e).getMessage());
+			} else {
+				throw exceptionHandler.constructAsmsException(message.getString("SYSTEM_EXCEPTION_CODE"),
+						message.getString("SYSTEM_EXCEPTION"));
+			}
+		} finally {
+			if (null != session && session.isOpen()) {
+				session.close();
+			}
+		}
+
+	}
 
 }
