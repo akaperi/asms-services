@@ -41,7 +41,6 @@
 		<mapping class="com.asms.schoolmgmt.entity.Class" />
 		<mapping class="com.asms.schoolmgmt.entity.Section" />
 		<mapping class="com.asms.schoolmgmt.entity.AcademicYear" />
-		<mapping class="com.asms.schoolmgmt.entity.AcademicYearClassMap" />
 		<mapping class="com.asms.schoolmgmt.entity.AdditionalSubjects" />
 		<mapping class="com.asms.schoolmgmt.entity.ClassSubjects" />
 		

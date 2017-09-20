@@ -1,7 +1,9 @@
 package com.asms.schoolmgmt.entity;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -53,8 +55,8 @@ public class Class {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "classObject", fetch = FetchType.EAGER)
 	private List<Section> sectionObjects = new ArrayList<Section>();
 
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "classes")
-	private List<AcademicYear> academicYears = new ArrayList<AcademicYear>();
+	@ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER, mappedBy = "classes")
+	private Set<AcademicYear> academicYears = new HashSet<AcademicYear>();
 
 	@JsonIgnore
 	public List<Section> getSectionObjects() {
@@ -83,15 +85,16 @@ public class Class {
 		this.teachingSubjects = teachingSubjects;
 	}
 
+	
 	@JsonIgnore
-	public List<AcademicYear> getAcademicYears() {
+	public Set<AcademicYear> getAcademicYears() {
 		return academicYears;
 	}
 
-	public void setAcademicYears(List<AcademicYear> academicYears) {
+	public void setAcademicYears(Set<AcademicYear> academicYears) {
 		this.academicYears = academicYears;
 	}
-	
+
 	public int getBoardId() {
 		return boardId;
 	}

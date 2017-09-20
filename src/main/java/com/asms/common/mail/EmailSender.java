@@ -1,5 +1,6 @@
 package com.asms.common.mail;
 
+import javax.mail.Message;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
@@ -10,12 +11,9 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Component;
 
-import javax.mail.Message;
 
 @Component
-public class EmailSender 
-{
-
+public class EmailSender {
 	private static Logger logger = LoggerFactory.getLogger(EmailSender.class);
 
 	@Autowired
@@ -32,7 +30,8 @@ public class EmailSender
 			@Override
 			public void prepare(MimeMessage mimeMessage) throws Exception {
 				mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));
-				mimeMessage.setFrom(new InternetAddress(fromEmail, "TraHeal"));
+				mimeMessage.setFrom(new InternetAddress(fromEmail, "Akaperi"));
+				mimeMessage.setFrom(new InternetAddress(fromEmail, "devendrasignh77@gmail.com"));
 				mimeMessage.setSubject(subject);
 				mimeMessage.setContent(message, type);
 				

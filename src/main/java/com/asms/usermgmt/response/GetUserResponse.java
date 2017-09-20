@@ -46,6 +46,8 @@ public class GetUserResponse extends SuccessResponse {
 	
 	private List<BroadCasteSearchTypesDetails> broadCasteSearchTypesDetails;
 	
+	private List<String> emails;
+	
 //	private BroadCasteSearchTypesDetails broadCasteSearchTypesDetails2;
 	
 	public UserDetails getUser() {
@@ -150,6 +152,14 @@ public class GetUserResponse extends SuccessResponse {
 
 	public void setBroadCasteSearchTypesDetails(List<BroadCasteSearchTypesDetails> broadCasteSearchTypesDetails) {
 		this.broadCasteSearchTypesDetails = broadCasteSearchTypesDetails;
+	}
+
+	public List<String> getEmails() {
+		return emails;
+	}
+
+	public void setEmails(List<String> emails) {
+		this.emails = emails;
 	}
 
 	
