@@ -94,6 +94,7 @@
 				
 				<beans:value>com.asms.schoolmgmt.entity.ClassSubjects</beans:value>
 				<beans:value>com.asms.multitenancy.entity.Trust</beans:value>
+				<beans:value>com.asms.multitenancy.entity.Activity</beans:value>
 				<beans:value>com.asms.schoolmgmt.entity.SchoolBoard</beans:value>
 				<beans:value>com.asms.usermgmt.entity.Admin</beans:value>
 
