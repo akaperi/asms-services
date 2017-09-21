@@ -367,7 +367,7 @@ public class SchoolMgmtService extends BaseService {
 
 				SchoolSuccessResponse schoolSuccessResponse  =  new SchoolSuccessResponse();
 				
-				return Response.status(Status.OK).entity(schoolSuccessResponse.getEmails()).build();
+				return Response.status(Status.OK).entity(schoolSuccessResponse).build();
 
 			} else {
 				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();

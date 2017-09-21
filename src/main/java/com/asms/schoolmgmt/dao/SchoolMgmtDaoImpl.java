@@ -537,27 +537,24 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 				}
 			if(searchTypesDetails.isAllStudents()==true)
 			{
-				toEmailIdQry.add("select email from Student");
+				toEmailIdQry.add("select studentCreatedByWadmin from Student");
 			}
 			
 			if(searchTypesDetails.isAllStudents()==true && searchTypesDetails.isAllParents()==true && searchTypesDetails.isAllManagement()==false)
 			{
-				toEmailIdQry.add("select email from Student");
+				toEmailIdQry.add("select studentCreatedByWadmin from Student");
 			}
 			if(searchTypesDetails.isAllManagement()==true && searchTypesDetails.isAllParents()==true && searchTypesDetails.isAllStudents()==true){
-				toEmailIdQry.add("select email from Management");
+				toEmailIdQry.add("select mngmtCreatedByWadmin from Management");
 			}
 		   if(searchTypesDetails.isAllNonTeaching()==true)
 		   {
-			   toEmailIdQry.add("select email from NonTeachingStaff");
+			   toEmailIdQry.add("select createdByWadmin from NonTeachingStaff");
 		   }
+          
            if(searchTypesDetails.isAllTeachingStaff()==true)
            {
-        	   toEmailIdQry.add("select email from TeachingStaff");
-           }
-           if(searchTypesDetails.isAllTeachingStaff()==true)
-           {
-        	   toEmailIdQry.add("select email from TeachingStaff");
+        	   toEmailIdQry.add("select createdByWadmin from TeachingStaff");
            }
            if(searchTypesDetails.getAllclass()!=null)
            {
