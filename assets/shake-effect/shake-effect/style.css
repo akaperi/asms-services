@@ -1,0 +1,49 @@
+div#message
+{
+    color:red;
+    width:100%;
+}
+
+.frms
+{
+	margin:0 auto;
+	padding:10px;
+	border:#ddd 1px solid;
+	border-radius:.3em;
+	-moz-border-radius:.3em;
+	-webkit-border-radius:.3em;
+	-o-border-radius:.3em;
+	font-family:Tahoma, Geneva, sans-serif;
+	color:#333;
+	font-size:.9em;
+	line-height:1.2em;
+	width:80%;
+}
+
+.frms input[type="text"],[type="password"]
+{
+	width:99%;
+	background:#fff;
+	border:#ddd 1px solid;
+	border-radius:.35em;
+	-moz-border-radius:.35em;
+	-webkit-border-radius:.35em;
+	-o-border-radius:.35em;
+	padding:0 .5%;
+	margin-top:5px;
+	margin-bottom:15px;
+	height:35px;
+}
+.blue_button
+{
+       background: none repeat scroll 0 0 #468CD2;
+    border-bottom: 3px solid #3277BC;
+    text-shadow: 1px 1px 0 #214D73;
+     border: medium none;
+    border-radius: 0.3em;
+    color: #FFFFFF;
+    cursor: pointer;
+    font-weight: bold;
+    margin: 10px 0;
+    padding: 7px 14px
+}
