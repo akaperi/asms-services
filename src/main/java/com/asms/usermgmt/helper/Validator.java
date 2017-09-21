@@ -100,10 +100,8 @@ public class Validator {
 
 	}
 	/*
-	 * Method : validateUserDetails
-	 * input: request,messages
-	 * Call to validate code method based on role
-	 * output :void
+	 * Method : validateUserDetails input: request,messages Call to validate
+	 * code method based on role output :void
 	 */
 
 	public void validateUserDetails(UserRequest request, ResourceBundle messages) throws AsmsException {
@@ -239,6 +237,7 @@ public class Validator {
 		}
 
 	}
+
 	// ManagementDetails validation starts
 	public void validateManagementDetails(UserRequest request, ResourceBundle messages) throws AsmsException {
 
@@ -268,6 +267,7 @@ public class Validator {
 			throw exceptionHandler.constructAsmsException(messages.getString("MGMT_DETAILS_MNGMTCONTACTNO_NULL_CODE"),
 					messages.getString("MGMT_DETAILS_MNGMTCONTACTNO_NULL_MSG"));
 	}
+
 	// TeachingStaffDetails validation starts
 	public void validateTeachingStaffDetails(UserRequest request, ResourceBundle messages) throws AsmsException {
 		TeachingStaffDetails teachingStaffDetails = request.getUserDetails().getTeachingStaffDetails();
@@ -325,48 +325,49 @@ public class Validator {
 			throw exceptionHandler.constructAsmsException(messages.getString("TEACHING_STAFF_PHOTO_NULL_CODE"),
 					messages.getString("TEACHING_STAFF_PHOTO_NULL_MSG"));
 
-
-		/*if ((null == teachingStaffDetails.getClassesHandled()) || (teachingStaffDetails.getClassesHandled().isEmpty()))
-			throw exceptionHandler.constructAsmsException(
-					messages.getString("TEACHING_STAFF_CLASSES_HANDLED_NULL_CODE"),
-					messages.getString("TEACHING_STAFF_CLASSES_HANDLED_NULL_MSG"));
-
-		if ((null == teachingStaffDetails.getSubjectsHandled())
-				|| (teachingStaffDetails.getSubjectsHandled().isEmpty()))
-			throw exceptionHandler.constructAsmsException(
-					messages.getString("TEACHING_STAFF_SUBJECTS_HANDLED_NULL_CODE"),
-					messages.getString("TEACHING_STAFF_SUBJECTS_HANDLED_NULL_MSG"));*/
-
+		/*
+		 * if ((null == teachingStaffDetails.getClassesHandled()) ||
+		 * (teachingStaffDetails.getClassesHandled().isEmpty())) throw
+		 * exceptionHandler.constructAsmsException(
+		 * messages.getString("TEACHING_STAFF_CLASSES_HANDLED_NULL_CODE"),
+		 * messages.getString("TEACHING_STAFF_CLASSES_HANDLED_NULL_MSG"));
+		 * 
+		 * if ((null == teachingStaffDetails.getSubjectsHandled()) ||
+		 * (teachingStaffDetails.getSubjectsHandled().isEmpty())) throw
+		 * exceptionHandler.constructAsmsException(
+		 * messages.getString("TEACHING_STAFF_SUBJECTS_HANDLED_NULL_CODE"),
+		 * messages.getString("TEACHING_STAFF_SUBJECTS_HANDLED_NULL_MSG"));
+		 */
 
 		if ((null == teachingStaffDetails.getMaritalStatus()) || (teachingStaffDetails.getMaritalStatus().isEmpty()))
 			throw exceptionHandler.constructAsmsException(messages.getString("TEACHING_STAFF_MARITAL_STATUS_NULL_CODE"),
 					messages.getString("TEACHING_STAFF_MARITAL_STATUS_NULL_MSG"));
 
 		List<TeachingSubjectDetails> subjectDetailsList = teachingStaffDetails.getTeachingSubjectDetailsList();
-		
-		for(int i=0; i < subjectDetailsList.size(); i++){
-			
-			TeachingSubjectDetails subjectDetails = subjectDetailsList.get(i);
-		
 
-		if (null == subjectDetails)
-			throw exceptionHandler.constructAsmsException(messages.getString("TEACHING_SUBJECTS_NULL_CODE"),
-					messages.getString("TEACHING_SUBJECTS_NULL_MSG"));
-		
-		if (null == subjectDetails.getClassName() || subjectDetails.getClassName().isEmpty())
-			throw exceptionHandler.constructAsmsException(messages.getString("CLASSNAME_NULL_CODE"),
-					messages.getString("CLASSNAME_NULL_MSG"));
-		
-		if (null == subjectDetails.getSubject() || subjectDetails.getSubject().isEmpty())
-			throw exceptionHandler.constructAsmsException(messages.getString("SUBJECT_NULL_CODE"),
-					messages.getString("SUBJECT_NULL_MSG"));
-		
-		if (null == subjectDetails.getSectionName() || subjectDetails.getSectionName().isEmpty())
-			throw exceptionHandler.constructAsmsException(messages.getString("SECTION_NULL_CODE"),
-					messages.getString("SECTION_NULL_MSG"));
+		for (int i = 0; i < subjectDetailsList.size(); i++) {
+
+			TeachingSubjectDetails subjectDetails = subjectDetailsList.get(i);
+
+			if (null == subjectDetails)
+				throw exceptionHandler.constructAsmsException(messages.getString("TEACHING_SUBJECTS_NULL_CODE"),
+						messages.getString("TEACHING_SUBJECTS_NULL_MSG"));
+
+			if (null == subjectDetails.getClassName() || subjectDetails.getClassName().isEmpty())
+				throw exceptionHandler.constructAsmsException(messages.getString("CLASSNAME_NULL_CODE"),
+						messages.getString("CLASSNAME_NULL_MSG"));
+
+			if (null == subjectDetails.getSubject() || subjectDetails.getSubject().isEmpty())
+				throw exceptionHandler.constructAsmsException(messages.getString("SUBJECT_NULL_CODE"),
+						messages.getString("SUBJECT_NULL_MSG"));
+
+			if (null == subjectDetails.getSectionName() || subjectDetails.getSectionName().isEmpty())
+				throw exceptionHandler.constructAsmsException(messages.getString("SECTION_NULL_CODE"),
+						messages.getString("SECTION_NULL_MSG"));
 		}
 
 	}
+
 	// NonTeachingStaffDetails validation starts
 	public void validateNonTeachingStaffDetails(UserRequest request, ResourceBundle messages) throws AsmsException {
 		NonTeachingStaffDetails nonTeachingStaffDetails = request.getUserDetails().getNonTeachingStaffDetails();
@@ -434,12 +435,11 @@ public class Validator {
 					messages.getString("NON_TEACHING_STAFF_MARITAL_STATUS_NULL_MSG"));
 	}
 
-/*
- * Method: validateAdditionalUserDetails
- * input : request,messages
- * output : void 
- * 
- */
+	/*
+	 * Method: validateAdditionalUserDetails input : request,messages output :
+	 * void
+	 * 
+	 */
 	public void validateAdditionalUserDetails(UserRequest request, ResourceBundle messages) throws AsmsException {
 
 		if (null == request.getUserDetails().getUserId() || request.getUserDetails().getUserId().isEmpty()) {
@@ -474,64 +474,66 @@ public class Validator {
 						"session id: " + MDC.get("sessionId") + "  " + "invalid details: " + request.getDetailType());
 			}
 
-		} 
-		else if (request.getUserRole().equalsIgnoreCase(Constants.role_non_teaching_staff)) {
-			
+		} else if (request.getUserRole().equalsIgnoreCase(Constants.role_non_teaching_staff)) {
+
 			NonTeachingStaffDetails NonTeachingStaffDetails = request.getUserDetails().getNonTeachingStaffDetails();
-			
+
 			if (null == NonTeachingStaffDetails) {
-				throw exceptionHandler.constructAsmsException(messages.getString("NON_TEACHING_STAFF_DETAILS_NULL_CODE"),
+				throw exceptionHandler.constructAsmsException(
+						messages.getString("NON_TEACHING_STAFF_DETAILS_NULL_CODE"),
 						messages.getString("NON_TEACHING_STAFF_DETAILS_NULL_MSG"));
 			}
-			
 
 			if (request.getDetailType().equalsIgnoreCase(Constants.detail_address)) {
 				validateAddressDetails(NonTeachingStaffDetails.getAddressDetails(), messages);
-			} 
-			
+			}
+
 			if (request.getDetailType().equalsIgnoreCase(Constants.documents)) {
 				validateStaffDocumentDetails(NonTeachingStaffDetails.getStaffDocumentsDetails(), messages);
-			} 
+			}
 			if (request.getDetailType().equalsIgnoreCase(Constants.previous_info)) {
-				validateStaffPreviousInformationDetails(NonTeachingStaffDetails.getStaffPreviousInformationDetails(), messages);
+				validateStaffPreviousInformationDetails(NonTeachingStaffDetails.getStaffPreviousInformationDetails(),
+						messages);
 			}
 			if (request.getDetailType().equalsIgnoreCase(Constants.statutory_details)) {
 				validateStatutoryDetails(NonTeachingStaffDetails.getStaffStatutoryDetails(), messages);
 			}
-			
+
 			else {
-				logger.error("session id: " + MDC.get("sessionId") + "  " + "invalid details: " + request.getDetailType());
+				logger.error(
+						"session id: " + MDC.get("sessionId") + "  " + "invalid details: " + request.getDetailType());
 			}
-		
 
 		} else if (request.getUserRole().equalsIgnoreCase(Constants.role_teaching_staff)) {
-			
+
 			TeachingStaffDetails teachingStaffDetails = request.getUserDetails().getTeachingStaffDetails();
-			
+
 			if (null == teachingStaffDetails) {
 				throw exceptionHandler.constructAsmsException(messages.getString("TEACHING_STAFF_DETAILS_NULL_CODE"),
 						messages.getString("TEACHING_STAFF_DETAILS_NULL_MSG"));
 			}
 			if (request.getDetailType().equalsIgnoreCase(Constants.detail_address)) {
 				validateAddressDetails(teachingStaffDetails.getAddressDetails(), messages);
-			} 
-			
+			}
+
 			if (request.getDetailType().equalsIgnoreCase(Constants.documents)) {
 				validateStaffDocumentDetails(teachingStaffDetails.getStaffDocumentsDetails(), messages);
-			} 
+			}
 			if (request.getDetailType().equalsIgnoreCase(Constants.previous_info)) {
-				validateStaffPreviousInformationDetails(teachingStaffDetails.getStaffPreviousInformationDetails(), messages);
+				validateStaffPreviousInformationDetails(teachingStaffDetails.getStaffPreviousInformationDetails(),
+						messages);
 			}
 			if (request.getDetailType().equalsIgnoreCase(Constants.statutory_details)) {
 				validateStatutoryDetails(teachingStaffDetails.getStaffStatutoryDetails(), messages);
 			}
-			
+
 			else {
-				logger.error("session id: " + MDC.get("sessionId") + "  " + "invalid details: " + request.getDetailType());
+				logger.error(
+						"session id: " + MDC.get("sessionId") + "  " + "invalid details: " + request.getDetailType());
 			}
 			// validateManagementDetails(request, messages);
 
-		} 
+		}
 
 	}
 
@@ -543,8 +545,6 @@ public class Validator {
 	 * output: void
 	 * 
 	 */
-
-	
 
 	public void validateParentDetails(ParentDetails details, ResourceBundle messages) throws AsmsException {
 		if (null == details) {
@@ -604,11 +604,12 @@ public class Validator {
 					messages.getString("EMAIL_INVALID"));
 		}
 	}
-	/*Method : validateAddressDetails - > validates addressDetails fields
-	 * input : addressDetails, messages
-	 * ouput : void
+
+	/*
+	 * Method : validateAddressDetails - > validates addressDetails fields input
+	 * : addressDetails, messages ouput : void
 	 */
-	public void validateAddressDetails(AddressDetails addressDetails, ResourceBundle messages) throws AsmsException{
+	public void validateAddressDetails(AddressDetails addressDetails, ResourceBundle messages) throws AsmsException {
 		if (null == addressDetails) {
 			throw exceptionHandler.constructAsmsException(messages.getString("ADDRESS_DETAILS_TYPE_NULL_CODE"),
 					messages.getString("ADDRESS_DETAILS_TYPE_NULL_MSG"));
@@ -617,7 +618,7 @@ public class Validator {
 			throw exceptionHandler.constructAsmsException(messages.getString("ADDRESS_DETAILS_ADDRESSLINE1_NULL_CODE"),
 					messages.getString("ADDRESS_DETAILS_ADDRESSLINE1_NULL_MSG"));
 		}
-		
+
 		if (null == addressDetails.getAddressLine2() || addressDetails.getAddressLine2().trim().isEmpty()) {
 			throw exceptionHandler.constructAsmsException(messages.getString("ADDRESS_DETAILS_ADDRESSLINE2_NULL_MSG"),
 					messages.getString("ADDRESS_DETAILS_ADDRESSLINE2_NULL_CODE"));
@@ -626,12 +627,12 @@ public class Validator {
 			throw exceptionHandler.constructAsmsException(messages.getString("ADDRESS_DETAILS_COUNTRY_NULL_CODE"),
 					messages.getString("ADDRESS_DETAILS_COUNTRY_NULL_MSG"));
 		}
-		
+
 		if (null == addressDetails.getState() || addressDetails.getState().trim().isEmpty()) {
 			throw exceptionHandler.constructAsmsException(messages.getString("ADDRESS_DETAILS_STATE_NULL_CODE"),
 					messages.getString("ADDRESS_DETAILS_STATE_NULL_MSG"));
 		}
-		
+
 		if (null == addressDetails.getDistrict() || addressDetails.getDistrict().trim().isEmpty()) {
 			throw exceptionHandler.constructAsmsException(messages.getString("ADDRESS_DETAILS_DISTRICT_CODE"),
 					messages.getString("ADDRESS_DETAILS_DISTRICT_MSG"));
@@ -648,8 +649,6 @@ public class Validator {
 			throw exceptionHandler.constructAsmsException(messages.getString("ADDRESS_DETAILS_VILLAGE_CODE"),
 					messages.getString("ADDRESS_DETAILS_VILLAGE_MSG"));
 		}
-		
-
 
 	}
 
@@ -681,115 +680,152 @@ public class Validator {
 			throw exceptionHandler.constructAsmsException(messages.getString("SBIRTH_CERTIFICATE_NULL_CODE"),
 					messages.getString("SBIRTH_CERTIFICATE_NULL_MSG"));
 		}
-		
+
 	}
-	/*Method : validateStaffDocumentDetails - > validates DocumentsDetails fields
-	 * input : staffDocumentsDetails, messages
-	 * ouput : void
+	/*
+	 * Method : validateStaffDocumentDetails - > validates DocumentsDetails
+	 * fields input : staffDocumentsDetails, messages ouput : void
 	 */
-	
-	public void validateStaffDocumentDetails(StaffDocumentsDetails staffDocumentsDetails, ResourceBundle messages) throws AsmsException
-	{
+
+	public void validateStaffDocumentDetails(StaffDocumentsDetails staffDocumentsDetails, ResourceBundle messages)
+			throws AsmsException {
 		if (null == staffDocumentsDetails) {
 			throw exceptionHandler.constructAsmsException(messages.getString("STAFF_DOCUMENTS_TYPE_NULL_CODE"),
 					messages.getString("STAFF_DOCUMENTS_TYPE_NULL_MSG"));
 		}
-		if (null == staffDocumentsDetails.getNt_staff_10th_certificate() || staffDocumentsDetails.getNt_staff_10th_certificate().trim().isEmpty()) {
-			throw exceptionHandler.constructAsmsException(messages.getString("STAFF_DOCUMENTS_TEN10THCERTIFICATE_NULL_CODE"),
+		if (null == staffDocumentsDetails.getNt_staff_10th_certificate()
+				|| staffDocumentsDetails.getNt_staff_10th_certificate().trim().isEmpty()) {
+			throw exceptionHandler.constructAsmsException(
+					messages.getString("STAFF_DOCUMENTS_TEN10THCERTIFICATE_NULL_CODE"),
 					messages.getString("STAFF_DOCUMENTS_TEN10THCERTIFICATE_NULL_MSG"));
 		}
-		
-		if (null == staffDocumentsDetails.getNt_staff_12th_certificate() || staffDocumentsDetails.getNt_staff_12th_certificate().trim().isEmpty()) {
-			throw exceptionHandler.constructAsmsException(messages.getString("STAFF_DOCUMENTS_TWELVE12THCERTIFICATE_NULL_CODE"),
+
+		if (null == staffDocumentsDetails.getNt_staff_12th_certificate()
+				|| staffDocumentsDetails.getNt_staff_12th_certificate().trim().isEmpty()) {
+			throw exceptionHandler.constructAsmsException(
+					messages.getString("STAFF_DOCUMENTS_TWELVE12THCERTIFICATE_NULL_CODE"),
 					messages.getString("STAFF_DOCUMENTS_TWELVE12THCERTIFICATE_NULL_MSG"));
 		}
-		if (null == staffDocumentsDetails.getNt_staff_degree_certificate() || staffDocumentsDetails.getNt_staff_degree_certificate().trim().isEmpty()) {
-			throw exceptionHandler.constructAsmsException(messages.getString("STAFF_DOCUMENTS_DEGREECERTIFICATE_NULL_CODE"),
+		if (null == staffDocumentsDetails.getNt_staff_degree_certificate()
+				|| staffDocumentsDetails.getNt_staff_degree_certificate().trim().isEmpty()) {
+			throw exceptionHandler.constructAsmsException(
+					messages.getString("STAFF_DOCUMENTS_DEGREECERTIFICATE_NULL_CODE"),
 					messages.getString("STAFF_DOCUMENTS_DEGREECERTIFICATE_NULL_MSG"));
 		}
-		
-		if (null == staffDocumentsDetails.getNt_staff_pg_degree_certificate() || staffDocumentsDetails.getNt_staff_pg_degree_certificate().trim().isEmpty()) {
-			throw exceptionHandler.constructAsmsException(messages.getString("STAFF_DOCUMENTS_PGDEGREECERTIFICATE_NULL_CODE"),
+
+		if (null == staffDocumentsDetails.getNt_staff_pg_degree_certificate()
+				|| staffDocumentsDetails.getNt_staff_pg_degree_certificate().trim().isEmpty()) {
+			throw exceptionHandler.constructAsmsException(
+					messages.getString("STAFF_DOCUMENTS_PGDEGREECERTIFICATE_NULL_CODE"),
 					messages.getString("STAFF_DOCUMENTS_PGDEGREECERTIFICATE_NULL_MSG"));
 		}
-		
-		if (null == staffDocumentsDetails.getNt_staff_medical_fitness_certificate() || staffDocumentsDetails.getNt_staff_medical_fitness_certificate().trim().isEmpty()) {
-			throw exceptionHandler.constructAsmsException(messages.getString("STAFF_DOCUMENTS_MEDICALFITNESSCERTIFICATE_NULL_CODE"),
+
+		if (null == staffDocumentsDetails.getNt_staff_medical_fitness_certificate()
+				|| staffDocumentsDetails.getNt_staff_medical_fitness_certificate().trim().isEmpty()) {
+			throw exceptionHandler.constructAsmsException(
+					messages.getString("STAFF_DOCUMENTS_MEDICALFITNESSCERTIFICATE_NULL_CODE"),
 					messages.getString("STAFF_DOCUMENTS_MEDICALFITNESSCERTIFICATE_NULL_MSG"));
 		}
 	}
 
-	
-	
 	/**
 	 * @param staffPreviousInformationDetails
 	 * @param messages
 	 */
-	/*Method : validateStaffPreviousInformationDetails - > validates PreviousInformationDetails fields
-	 * input : staffPreviousInformationDetails, messages
-	 * ouput : void
+	/*
+	 * Method : validateStaffPreviousInformationDetails - > validates
+	 * PreviousInformationDetails fields input :
+	 * staffPreviousInformationDetails, messages ouput : void
 	 */
-	private void validateStaffPreviousInformationDetails(StaffPreviousInformationDetails staffPreviousInformationDetails,
-			ResourceBundle messages) throws AsmsException{
-		
+	private void validateStaffPreviousInformationDetails(
+			StaffPreviousInformationDetails staffPreviousInformationDetails, ResourceBundle messages)
+			throws AsmsException {
+
 		if (null == staffPreviousInformationDetails) {
-			throw exceptionHandler.constructAsmsException(messages.getString("STAFF_PREVIOUS_INFORMATION_TYPE_NULL_CODE"),
+			throw exceptionHandler.constructAsmsException(
+					messages.getString("STAFF_PREVIOUS_INFORMATION_TYPE_NULL_CODE"),
 					messages.getString("STAFF_PREVIOUS_INFORMATION_TYPE_MSG"));
 		}
-		/*if (staffPreviousInformationDetails.isExperienceFlag()) {
-			throw exceptionHandler.constructAsmsException(messages.getString("STAFF_PREVIOUS_INFORMATION_EXPERIENCEFLAG_NULL_CODE"),
-					messages.getString("STAFF_PREVIOUS_INFORMATION_EXPERIENCEFLAG_NULL_MSG"));
-		}
-		
-		if (null == staffPreviousInformationDetails.getLastWorkedOrganisation() || staffPreviousInformationDetails.getLastWorkedOrganisation().trim().isEmpty()) {
-			throw exceptionHandler.constructAsmsException(messages.getString("STAFF_PREVIOUS_INFORMATION_LASTWORKEDORGANISATION_NULL_CODE"),
-					messages.getString("STAFF_PREVIOUS_INFORMATION_LASTWORKEDORGANISATION_NULL_MSG"));
-		}
-		if (null == staffPreviousInformationDetails.getDateOfJoining().toString() ) {
-			throw exceptionHandler.constructAsmsException(messages.getString("STAFF_PREVIOUS_INFORMATION_DATEOFJOINING_NULL_CODE"),
-					messages.getString("STAFF_PREVIOUS_INFORMATION_DATEOFJOINING_NULL_MSG"));
-		}
-		
-		if (null == staffPreviousInformationDetails.getRelievingDate().toString() ) {
-		throw exceptionHandler.constructAsmsException(messages.getString("STAFF_PREVIOUS_INFORMATION_RELIEVINGDATE_NULL_CODE"),
-					messages.getString("STAFF_PREVIOUS_INFORMATION_RELIEVINGDATE_NULL_MSG"));
-		}
-		
-		if (null == staffPreviousInformationDetails.getExperienceCertificate() || staffPreviousInformationDetails.getExperienceCertificate().trim().isEmpty()) {
-			throw exceptionHandler.constructAsmsException(messages.getString("STAFF_PREVIOUS_INFORMATION_EXPERIENCECERTIFICATE_NULL_CODE"),
-					messages.getString("STAFF_PREVIOUS_INFORMATION_EXPERIENCECERTIFICATE_NULL_MSG"));
-		}
-		if (null == staffPreviousInformationDetails.getLastDrawnPayslip() || staffPreviousInformationDetails.getLastDrawnPayslip().trim().isEmpty()) {
-			throw exceptionHandler.constructAsmsException(messages.getString("STAFF_PREVIOUS_INFORMATION_LASTDRAWNPAYSLIP_NULL_CODE"),
-					messages.getString("STAFF_PREVIOUS_INFORMATION_LASTDRAWNPAYSLIP_NULL_MSG"));
-		}*/
-		if (null == staffPreviousInformationDetails.getResume() || staffPreviousInformationDetails.getResume().trim().isEmpty()) {
-			throw exceptionHandler.constructAsmsException(messages.getString("STAFF_PREVIOUS_INFORMATION_RESUME_NULL_CODE"),
+		/*
+		 * if (staffPreviousInformationDetails.isExperienceFlag()) { throw
+		 * exceptionHandler.constructAsmsException(messages.getString(
+		 * "STAFF_PREVIOUS_INFORMATION_EXPERIENCEFLAG_NULL_CODE"),
+		 * messages.getString(
+		 * "STAFF_PREVIOUS_INFORMATION_EXPERIENCEFLAG_NULL_MSG")); }
+		 * 
+		 * if (null ==
+		 * staffPreviousInformationDetails.getLastWorkedOrganisation() ||
+		 * staffPreviousInformationDetails.getLastWorkedOrganisation().trim().
+		 * isEmpty()) { throw
+		 * exceptionHandler.constructAsmsException(messages.getString(
+		 * "STAFF_PREVIOUS_INFORMATION_LASTWORKEDORGANISATION_NULL_CODE"),
+		 * messages.getString(
+		 * "STAFF_PREVIOUS_INFORMATION_LASTWORKEDORGANISATION_NULL_MSG")); } if
+		 * (null ==
+		 * staffPreviousInformationDetails.getDateOfJoining().toString() ) {
+		 * throw exceptionHandler.constructAsmsException(messages.getString(
+		 * "STAFF_PREVIOUS_INFORMATION_DATEOFJOINING_NULL_CODE"),
+		 * messages.getString(
+		 * "STAFF_PREVIOUS_INFORMATION_DATEOFJOINING_NULL_MSG")); }
+		 * 
+		 * if (null ==
+		 * staffPreviousInformationDetails.getRelievingDate().toString() ) {
+		 * throw exceptionHandler.constructAsmsException(messages.getString(
+		 * "STAFF_PREVIOUS_INFORMATION_RELIEVINGDATE_NULL_CODE"),
+		 * messages.getString(
+		 * "STAFF_PREVIOUS_INFORMATION_RELIEVINGDATE_NULL_MSG")); }
+		 * 
+		 * if (null ==
+		 * staffPreviousInformationDetails.getExperienceCertificate() ||
+		 * staffPreviousInformationDetails.getExperienceCertificate().trim().
+		 * isEmpty()) { throw
+		 * exceptionHandler.constructAsmsException(messages.getString(
+		 * "STAFF_PREVIOUS_INFORMATION_EXPERIENCECERTIFICATE_NULL_CODE"),
+		 * messages.getString(
+		 * "STAFF_PREVIOUS_INFORMATION_EXPERIENCECERTIFICATE_NULL_MSG")); } if
+		 * (null == staffPreviousInformationDetails.getLastDrawnPayslip() ||
+		 * staffPreviousInformationDetails.getLastDrawnPayslip().trim().isEmpty(
+		 * )) { throw
+		 * exceptionHandler.constructAsmsException(messages.getString(
+		 * "STAFF_PREVIOUS_INFORMATION_LASTDRAWNPAYSLIP_NULL_CODE"),
+		 * messages.getString(
+		 * "STAFF_PREVIOUS_INFORMATION_LASTDRAWNPAYSLIP_NULL_MSG")); }
+		 */
+		if (null == staffPreviousInformationDetails.getResume()
+				|| staffPreviousInformationDetails.getResume().trim().isEmpty()) {
+			throw exceptionHandler.constructAsmsException(
+					messages.getString("STAFF_PREVIOUS_INFORMATION_RESUME_NULL_CODE"),
 					messages.getString("STAFF_PREVIOUS_INFORMATION_RESUME_NULL_MSG"));
 		}
-		
-			
+
 	}
-	/*Method : validateStatutoryDetails - > validates StatutoryDetails fields
-	 * input : staffStatutoryDetails, messages
-	 * ouput : void
+
+	/*
+	 * Method : validateStatutoryDetails - > validates StatutoryDetails fields
+	 * input : staffStatutoryDetails, messages ouput : void
 	 */
-	public void validateStatutoryDetails(StaffStatutoryDetails staffStatutoryDetails, ResourceBundle messages) throws AsmsException{
+	public void validateStatutoryDetails(StaffStatutoryDetails staffStatutoryDetails, ResourceBundle messages)
+			throws AsmsException {
 		if (null == staffStatutoryDetails) {
 			throw exceptionHandler.constructAsmsException(messages.getString("STAFF_STATUTORY_DETAILS_TYPE_NULL_CODE"),
 					messages.getString("STAFF_STATUTORY_DETAILS_TYPE_NULL_MSG"));
 		}
-		
+
 		if (null == staffStatutoryDetails.getBankName() || staffStatutoryDetails.getBankName().trim().isEmpty()) {
-			throw exceptionHandler.constructAsmsException(messages.getString("STAFF_STATUTORY_DETAILS_BANKNAME_NULL_CODE"),
+			throw exceptionHandler.constructAsmsException(
+					messages.getString("STAFF_STATUTORY_DETAILS_BANKNAME_NULL_CODE"),
 					messages.getString("STAFF_STATUTORY_DETAILS_BANKNAME_NULL_MSG"));
 		}
-		if (null == staffStatutoryDetails.getBankAccountNo() || staffStatutoryDetails.getBankAccountNo().trim().isEmpty()) {
-			throw exceptionHandler.constructAsmsException(messages.getString("STAFF_STATUTORY_DETAILS_BANKACCOUNTNO_NULL_CODE"),
+		if (null == staffStatutoryDetails.getBankAccountNo()
+				|| staffStatutoryDetails.getBankAccountNo().trim().isEmpty()) {
+			throw exceptionHandler.constructAsmsException(
+					messages.getString("STAFF_STATUTORY_DETAILS_BANKACCOUNTNO_NULL_CODE"),
 					messages.getString("STAFF_STATUTORY_DETAILS_BANKACCOUNTNO_NULL_MSG"));
 		}
-		if (null == staffStatutoryDetails.getBankIfscCode() || staffStatutoryDetails.getBankIfscCode().trim().isEmpty()) {
-			throw exceptionHandler.constructAsmsException(messages.getString("STAFF_STATUTORY_DETAILS_BANKIFSCCODE_NULL_CODE"),
+		if (null == staffStatutoryDetails.getBankIfscCode()
+				|| staffStatutoryDetails.getBankIfscCode().trim().isEmpty()) {
+			throw exceptionHandler.constructAsmsException(
+					messages.getString("STAFF_STATUTORY_DETAILS_BANKIFSCCODE_NULL_CODE"),
 					messages.getString("STAFF_STATUTORY_DETAILS_BANKIFSCCODE_NULL_MSG"));
 		}
 		if (null == staffStatutoryDetails.getPanNo() || staffStatutoryDetails.getPanNo().trim().isEmpty()) {
@@ -797,22 +833,25 @@ public class Validator {
 					messages.getString("STAFF_STATUTORY_DETAILS_PANNO_NULL_MSG"));
 		}
 		if (null == staffStatutoryDetails.getPanCard() || staffStatutoryDetails.getPanCard().trim().isEmpty()) {
-			throw exceptionHandler.constructAsmsException(messages.getString("STAFF_STATUTORY_DETAILS_PANCARD_NULL_CODE"),
+			throw exceptionHandler.constructAsmsException(
+					messages.getString("STAFF_STATUTORY_DETAILS_PANCARD_NULL_CODE"),
 					messages.getString("STAFF_STATUTORY_DETAILS_PANCARD_NULL_MSG"));
 		}
 		if (null == staffStatutoryDetails.getAadhaarNo() || staffStatutoryDetails.getAadhaarNo().trim().isEmpty()) {
-			throw exceptionHandler.constructAsmsException(messages.getString("STAFF_STATUTORY_DETAILS_AADHAARNO_NULL_CODE"),
+			throw exceptionHandler.constructAsmsException(
+					messages.getString("STAFF_STATUTORY_DETAILS_AADHAARNO_NULL_CODE"),
 					messages.getString("STAFF_STATUTORY_DETAILS_AADHAARNO_NULL_MSG"));
 		}
 		if (null == staffStatutoryDetails.getAadhaarCard() || staffStatutoryDetails.getAadhaarCard().trim().isEmpty()) {
-			throw exceptionHandler.constructAsmsException(messages.getString("STAFF_STATUTORY_DETAILS_AADHAARCARD_NULL_CODE"),
+			throw exceptionHandler.constructAsmsException(
+					messages.getString("STAFF_STATUTORY_DETAILS_AADHAARCARD_NULL_CODE"),
 					messages.getString("STAFF_STATUTORY_DETAILS_AADHAARCARD_NULL_MSG"));
 		}
 		if (null == staffStatutoryDetails.getPfNo() || staffStatutoryDetails.getPfNo().trim().isEmpty()) {
 			throw exceptionHandler.constructAsmsException(messages.getString("STAFF_STATUTORY_DETAILS_PFNO_NULL_CODE"),
 					messages.getString("STAFF_STATUTORY_DETAILS_PFNO_NULL_MSG"));
 		}
-		
+
 	}
 
 	/*
@@ -987,25 +1026,55 @@ public class Validator {
 		}
 
 	}
-	 //ChangePasswordDetails validation starts
-		public void ChangePasswordDetails(UserRequest request, ResourceBundle messages) throws AsmsException {
-			ChangePasswordDetails changePasswordDetails = request.getUserDetails().getChangePasswordDetails();
-			if (null == changePasswordDetails)
-				throw exceptionHandler.constructAsmsException(messages.getString("CHANGEPASSWORD_DETAILS_NULL_CODE"),
-						messages.getString("CHANGEPASSWORD_DETAILS_NULL_MSG"));
-			
-			if(null == changePasswordDetails.getCurrentpassword()) {
-				throw exceptionHandler.constructAsmsException(messages.getString("CURRENTPASSWORD_DETAILS_NULL_CODE"),
-						messages.getString("CURRENTPASSWORD_DETAILS_NULL_MSG"));
-			}
-			if(null == changePasswordDetails.getNewpassword()) {
-				throw exceptionHandler.constructAsmsException(messages.getString("NEWPASSWORD_DETAILS_NULL_CODE"),
-						messages.getString("NEWPASSWORD_DETAILS_NULL_MSG"));
-			}
-			if(null == changePasswordDetails.getConfirmpassword()) {
-				throw exceptionHandler.constructAsmsException(messages.getString("CONFIRMPASSWORD_DETAILS_NULL_CODE"),
-						messages.getString("CONFIRMPASSWORD_DETAILS_NULL_MSG"));
-			}
-	 }
+
+	// ChangePasswordDetails validation starts
+	public void ChangePasswordDetails(UserRequest request, ResourceBundle messages) throws AsmsException {
+		ChangePasswordDetails changePasswordDetails = request.getUserDetails().getChangePasswordDetails();
+		if (null == changePasswordDetails)
+			throw exceptionHandler.constructAsmsException(messages.getString("CHANGEPASSWORD_DETAILS_NULL_CODE"),
+					messages.getString("CHANGEPASSWORD_DETAILS_NULL_MSG"));
+
+		if (null == changePasswordDetails.getCurrentpassword()) {
+			throw exceptionHandler.constructAsmsException(messages.getString("CURRENTPASSWORD_DETAILS_NULL_CODE"),
+					messages.getString("CURRENTPASSWORD_DETAILS_NULL_MSG"));
+		}
+		if (null == changePasswordDetails.getNewpassword()) {
+			throw exceptionHandler.constructAsmsException(messages.getString("NEWPASSWORD_DETAILS_NULL_CODE"),
+					messages.getString("NEWPASSWORD_DETAILS_NULL_MSG"));
+		}
+		if (null == changePasswordDetails.getConfirmpassword()) {
+			throw exceptionHandler.constructAsmsException(messages.getString("CONFIRMPASSWORD_DETAILS_NULL_CODE"),
+					messages.getString("CONFIRMPASSWORD_DETAILS_NULL_MSG"));
+		}
+	}
+
+	public void validateChangePasswordDetails(ChangePasswordDetails changePasswordDetails, ResourceBundle messages)
+			throws AsmsException {
+
+		if (null == changePasswordDetails)
+			throw exceptionHandler.constructAsmsException(messages.getString("CHANGEPASSWORD_DETAILS_NULL_CODE"),
+					messages.getString("CHANGEPASSWORD_DETAILS_NULL_MSG"));
+
+		if (null == changePasswordDetails.getCurrentpassword()
+				|| changePasswordDetails.getCurrentpassword().isEmpty()) {
+			throw exceptionHandler.constructAsmsException(messages.getString("CURRENTPASSWORD_DETAILS_NULL_CODE"),
+					messages.getString("CURRENTPASSWORD_DETAILS_NULL_MSG"));
+		}
+		if (null == changePasswordDetails.getNewpassword() || changePasswordDetails.getNewpassword().isEmpty()) {
+			throw exceptionHandler.constructAsmsException(messages.getString("NEWPASSWORD_DETAILS_NULL_CODE"),
+					messages.getString("NEWPASSWORD_DETAILS_NULL_MSG"));
+		}
+		if (null == changePasswordDetails.getConfirmpassword()
+				|| changePasswordDetails.getConfirmpassword().isEmpty()) {
+			throw exceptionHandler.constructAsmsException(messages.getString("CONFIRMPASSWORD_DETAILS_NULL_CODE"),
+					messages.getString("CONFIRMPASSWORD_DETAILS_NULL_MSG"));
+		}
+		
+		if (!changePasswordDetails.getNewpassword().equals(changePasswordDetails.getConfirmpassword())) {
+			throw exceptionHandler.constructAsmsException(
+					messages.getString("CURRENTPASSWORD_IS_SAMEAS_NEWPASSWORD_NULL_CODE"),
+					messages.getString("CURRENTPASSWORD_IS_SAMEAS_NEWPASSWORD_NULL_MSG"));
+		}
+	}
 
 }

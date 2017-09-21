@@ -35,6 +35,7 @@ import com.asms.usermgmt.entity.StudentType;
 import com.asms.usermgmt.entity.User;
 import com.asms.usermgmt.helper.PrincipalUser;
 import com.asms.usermgmt.helper.Validator;
+import com.asms.usermgmt.request.ChangePasswordDetails;
 import com.asms.usermgmt.request.UserDetails;
 import com.asms.usermgmt.request.UserRequest;
 import com.asms.usermgmt.response.GetUserResponse;
@@ -114,8 +115,9 @@ public class UserMgmtService extends BaseService {
 	 */
 
 	@Path("/studentType")
-	@GET @Consumes("application/json")
-	@Produces(MediaType.APPLICATION_JSON+";charset=utf-8")
+	@GET
+	@Consumes("application/json")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public Response getStudentType(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse) {
 		try {
 
@@ -232,18 +234,17 @@ public class UserMgmtService extends BaseService {
 	@GET
 	@Consumes("application/json")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	public Response getcastTypes(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse) 
-	{
+	public Response getcastTypes(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse) {
 		try {
-			
+
 			FailureResponse failureResponse = new FailureResponse();
 			// get bundles for error messages
 			HttpSession session = hRequest.getSession();
 			User user = (User) session.getAttribute("ap_user");
 			if (null != user) {
-			
+
 				List<CasteTypes> userObject = userMgmtDao.getCasteName();
-				
+
 				GetUserResponse getUserResponse = new GetUserResponse();
 				getUserResponse.setCasteTypes(userObject);
 				return Response.status(Status.OK).entity(getUserResponse).build();
@@ -256,7 +257,7 @@ public class UserMgmtService extends BaseService {
 			FailureResponse failureResponse = new FailureResponse(ex);
 			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
 		}
-	
+
 	}
 
 	// ----------------------------------------------------------
@@ -557,6 +558,41 @@ public class UserMgmtService extends BaseService {
 			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
 		}
 
+	}
+
+	@Path("/changepassword")
+	@POST
+	@Consumes("application/json")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public Response changepassword(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse,
+			ChangePasswordDetails changePasswordDetails, @QueryParam("tenantId") String tenant) {
+		RegistrationResponse rReponse = new RegistrationResponse();
+		ResourceBundle messages;
+		try {
+			// get bundles for error messages
+			messages = AsmsHelper.getMessageFromBundle();
+			// validate ChangePasswordDetails
+			validator.validateChangePasswordDetails(changePasswordDetails, messages);
+			// validate user details
+			HttpSession session = hRequest.getSession();
+			User user = (User) session.getAttribute("ap_user");
+			// authorize
+			if (null != user) {
+				userMgmtDao.changePassword(changePasswordDetails, user, tenant);
+				rReponse.setProgressPercentage(20);
+				return Response.status(Status.OK).entity(rReponse).build();
+			} else {
+				FailureResponse failureResponse = new FailureResponse();
+				failureResponse.setCode(Integer.parseInt(messages.getString("NOT_AUTHORIZED_CODE")));
+				failureResponse.setErrorDescription(messages.getString("NOT_AUTHORIZED"));
+				return Response.status(200).entity(failureResponse).build();
+			}
+
+		} catch (AsmsException ex) {
+			// construct failure response
+			FailureResponse failureResponse = new FailureResponse(ex);
+			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+		}
 	}
 
 }

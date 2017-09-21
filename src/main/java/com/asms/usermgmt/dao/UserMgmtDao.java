@@ -53,7 +53,9 @@ public interface UserMgmtDao {
 	public void updateUser(UserDetails userDetails, User user, String tenant) throws AsmsException;
 	public UserDetails getUserDetails(String userId, String tenant) throws AsmsException;
 	
-	public ChangePasswordDetails getchangePasswordDetails(HttpServletRequest request, HttpServletResponse response, String changePasswordDetails ,String tenant) throws AsmsException;
+	
+
+	public void changePassword(ChangePasswordDetails changePasswordDetails, User user, String tenant) throws AsmsException;
 
 	
 
