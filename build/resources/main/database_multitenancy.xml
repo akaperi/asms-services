@@ -10,6 +10,7 @@
 		<property name="hibernate.multiTenancy">NONE</property>
 		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
 		
+<<<<<<< HEAD
 		<property name="hibernate.connection.url">jdbc:mysql://localhost:3306/multitenancy</property>
 		<property name="hibernate.connection.username">root</property>
 		<property name="hibernate.connection.password">Admin</property>
@@ -41,6 +42,40 @@
 		<mapping class="com.asms.schoolmgmt.entity.Class" />
 		<mapping class="com.asms.schoolmgmt.entity.Section" />
 		<mapping class="com.asms.schoolmgmt.entity.AcademicYear" />
+=======
+		<property name="hibernate.connection.url">jdbc:mysql://10.10.10.6:3306/multitenancy</property>
+		<property name="hibernate.connection.username">mallikarjun.guranna</property>
+		<property name="hibernate.connection.password">Anitha12345@gmail.com</property>
+		<property name="hibernate.connection.url">jdbc:mysql://10.10.10.6:3306/multitenancy</property>
+		
+
+
+
+
+
+		
+		<mapping class="com.asms.schoolmgmt.entity.School" />
+		<mapping class="com.asms.usermgmt.entity.management.Management" />
+		<mapping class="com.asms.rolemgmt.entity.Role" />
+		<mapping class="com.asms.rolemgmt.entity.SubRole" />
+		<mapping class="com.asms.usermgmt.entity.User" />
+		<mapping class="com.asms.usermgmt.entity.student.Student" />
+		<mapping class="com.asms.usermgmt.entity.student.Parent" />
+		<mapping class="com.asms.usermgmt.entity.student.StudentAddress" />
+		<mapping class="com.asms.usermgmt.entity.student.StudentPreviousInfo" />
+		<mapping class="com.asms.usermgmt.entity.student.Sibling" />
+		<mapping class="com.asms.usermgmt.entity.student.StudentDocuments" />
+		<mapping class="com.asms.usermgmt.entity.student.StudentPreviousInfo" />
+		<mapping class="com.asms.usermgmt.entity.teachingStaff.TeachingStaff" />
+		<mapping class="com.asms.usermgmt.entity.nonTeachingStaff.NonTeachingStaff" />
+		<mapping class="com.asms.usermgmt.entity.teachingStaff.TeachingSubjects" />
+		<mapping class="com.asms.usermgmt.entity.student.StudentDocuments" />
+		
+		<mapping class="com.asms.schoolmgmt.entity.Class" />
+		<mapping class="com.asms.schoolmgmt.entity.Section" />
+		<mapping class="com.asms.schoolmgmt.entity.AcademicYear" />
+		<mapping class="com.asms.schoolmgmt.entity.AcademicYearClassMap" />
+>>>>>>> branch 'master' of https://github.com/akaperi/asms-services/
 		<mapping class="com.asms.schoolmgmt.entity.AdditionalSubjects" />
 		<mapping class="com.asms.schoolmgmt.entity.ClassSubjects" />
 		
