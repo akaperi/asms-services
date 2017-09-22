@@ -403,6 +403,34 @@ public class UserMgmtService extends BaseService {
 			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
 		}
 	}
+	
+	
+	@Path("/privileges-search")
+	@GET
+	@Consumes("application/json")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public Response searchUserForPrivileges(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse,
+			@QueryParam("role") String role, @QueryParam("subRole") String subRole,
+			@QueryParam("admissionNo") String id, 
+			@QueryParam("tenantId") String tenant) {
+		ResourceBundle messages;
+		try {
+			
+			// get bundles for error messages
+			messages = AsmsHelper.getMessageFromBundle();
+			validator.validateSerchForUserPrivileges(role, subRole, id, messages);
+			List<UserDetails> list = userMgmtDao.searchForPrivileges(role, subRole, id, tenant);
+			GetUserResponse getUserResponse = new GetUserResponse();
+			getUserResponse.setUserDetails(list);
+
+			return Response.status(Status.OK).entity(getUserResponse).build();
+		} catch (AsmsException ex) {
+			// construct failure response
+			FailureResponse failureResponse = new FailureResponse(ex);
+			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+		}
+	}
+
 
 	@Path("/register")
 	@POST

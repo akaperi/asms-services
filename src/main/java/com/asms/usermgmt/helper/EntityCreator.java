@@ -9,6 +9,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import com.asms.common.helper.Constants;
+import com.asms.usermgmt.entity.Admin;
 import com.asms.usermgmt.entity.User;
 import com.asms.usermgmt.entity.management.Management;
 import com.asms.usermgmt.entity.nonTeachingStaff.Address;
@@ -27,6 +29,7 @@ import com.asms.usermgmt.entity.teachingStaff.StaffDocuments1;
 import com.asms.usermgmt.entity.teachingStaff.StaffPreviousInformation1;
 import com.asms.usermgmt.entity.teachingStaff.StaffStatutory1;
 import com.asms.usermgmt.entity.teachingStaff.TeachingStaff;
+import com.asms.usermgmt.request.AdminDetails;
 import com.asms.usermgmt.request.UserDetails;
 import com.asms.usermgmt.request.management.ManagementDetails;
 import com.asms.usermgmt.request.nonTeachingStaff.AddressDetails;
@@ -71,7 +74,7 @@ public class EntityCreator {
 		student.setAdmissionDate(aLD);
 
 		student.setAdmissionNo(details.getAdmissionNo());
-		
+
 		student.setStudentAgeInYears(details.getStudentAgeInYears());
 		student.setStudentBirthplace(details.getStudentBirthplace());
 		student.setStudentCasteCategory(details.getStudentCasteCategory());
@@ -99,14 +102,12 @@ public class EntityCreator {
 		return student;
 	}
 
-	
 	/*
-	 * Method: createStudentDetail ->Create StudentDetailObject from The StudentObject 
-	 * input :  User
-	 * Returns : UserDetails
+	 * Method: createStudentDetail ->Create StudentDetailObject from The
+	 * StudentObject input : User Returns : UserDetails
 	 * 
 	 */
-	
+
 	public UserDetails createStudentDetail(User user) throws ParseException {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
 
@@ -144,7 +145,7 @@ public class EntityCreator {
 		sDetails.setStudentDob(dateFormat.format(student.getStudentDob()));
 
 		userDetails.setStudentDetails(sDetails);
-		
+
 		if (null != student.getStudentAddress()) {
 
 			StudentAddressDetails saDetails = new StudentAddressDetails();
@@ -168,7 +169,7 @@ public class EntityCreator {
 			saDetails.setpSubDivision(student.getStudentAddress().getpSubDivision());
 			saDetails.setcTehsil(student.getStudentAddress().getpTehsil());
 			saDetails.setpVillage(student.getStudentAddress().getpVillage());
-			
+
 			sDetails.setAddressDetails(saDetails);
 		}
 		if (null != student.getParentObject()) {
@@ -189,7 +190,7 @@ public class EntityCreator {
 			pDetails.setmOccupation(student.getParentObject().getmOccupation());
 			pDetails.setmQualification(student.getParentObject().getmQualification());
 			pDetails.setmIncome(student.getParentObject().getmIncome());
-			
+
 			sDetails.setParentDetails(pDetails);
 		}
 		if (null != student.getSibling()) {
@@ -199,7 +200,7 @@ public class EntityCreator {
 			sibDetails.setName(student.getSibling().getName());
 			sibDetails.setSchool(student.getSibling().getSchool());
 			sibDetails.setSiblingClass(student.getSibling().getStudentClass());
-			
+
 			sDetails.setSiblingDetails(sibDetails);
 		}
 
@@ -210,7 +211,7 @@ public class EntityCreator {
 			sdDetails.setBirthCirtificate(student.getStudentDocuments().getBirthCertificate());
 			sdDetails.setOtherCertificate(student.getStudentDocuments().getOtherCertificate());
 			sdDetails.setRemarks(student.getStudentDocuments().getRemarks());
-			
+
 			sDetails.setDocumentDetails(sdDetails);
 		}
 
@@ -221,7 +222,7 @@ public class EntityCreator {
 			spDetails.setPreviousClass(student.getStudentPreviousInfo().getPreviousClass());
 			spDetails.setTotalMarks(student.getStudentPreviousInfo().getTotalMarks());
 			spDetails.setObtainedMarks(student.getStudentPreviousInfo().getObtainedMarks());
-			
+
 			sDetails.setPreviousDetails(spDetails);
 		}
 
@@ -229,12 +230,10 @@ public class EntityCreator {
 
 	}
 
-	
-
 	/*
-	 * Method: createStudentDetails ->Create StudentDetailObjects from The StudentObject 
-	 * input : List Of User(List<User>)
-	 * Returns : List Of UserDetails(List<UserDetails>)
+	 * Method: createStudentDetails ->Create StudentDetailObjects from The
+	 * StudentObject input : List Of User(List<User>) Returns : List Of
+	 * UserDetails(List<UserDetails>)
 	 * 
 	 */
 	public List<UserDetails> createStudentDetails(List<User> users) throws ParseException {
@@ -273,69 +272,67 @@ public class EntityCreator {
 			sDetails.setStudentCreatedByWadmin(student.getStudentCreatedByWadmin());
 			sDetails.setStudentPhoto(student.getStudentPhoto());
 
-			
 			sDetails.setStudentDob(dateFormat.format(student.getStudentDob()));
 
 			userDetails.setStudentDetails(sDetails);
 
 			if (null != student.getStudentAddress()) {
-			StudentAddressDetails saDetails = new StudentAddressDetails();
-			saDetails.setcAddressLine1(student.getStudentAddress().getcAddressLine1());
-			saDetails.setcAddressLine2(student.getStudentAddress().getcAddressLine2());
-			saDetails.setcCountry(student.getStudentAddress().getcCountry());
-			saDetails.setcDistrict(student.getStudentAddress().getcDistrict());
-			saDetails.setcLocation(student.getStudentAddress().getcLocation());
-			saDetails.setcPincode(student.getStudentAddress().getcPincode());
-			saDetails.setcState(student.getStudentAddress().getcState());
-			saDetails.setcSubDivision(student.getStudentAddress().getcSubDivision());
-			saDetails.setcTehsil(student.getStudentAddress().getcTehsil());
-			saDetails.setcVillage(student.getStudentAddress().getcVillage());
-			saDetails.setpAddressLine1(student.getStudentAddress().getpAddressLine1());
-			saDetails.setpAddressLine2(student.getStudentAddress().getpAddressLine2());
-			saDetails.setpCountry(student.getStudentAddress().getpCountry());
-			saDetails.setpDistrict(student.getStudentAddress().getpDistrict());
-			saDetails.setcLocation(student.getStudentAddress().getpLocation());
-			saDetails.setpPincode(student.getStudentAddress().getpPincode());
-			saDetails.setpState(student.getStudentAddress().getpState());
-			saDetails.setpSubDivision(student.getStudentAddress().getpSubDivision());
-			saDetails.setcTehsil(student.getStudentAddress().getpTehsil());
-			saDetails.setpVillage(student.getStudentAddress().getpVillage());
-			
-			sDetails.setAddressDetails(saDetails);
+				StudentAddressDetails saDetails = new StudentAddressDetails();
+				saDetails.setcAddressLine1(student.getStudentAddress().getcAddressLine1());
+				saDetails.setcAddressLine2(student.getStudentAddress().getcAddressLine2());
+				saDetails.setcCountry(student.getStudentAddress().getcCountry());
+				saDetails.setcDistrict(student.getStudentAddress().getcDistrict());
+				saDetails.setcLocation(student.getStudentAddress().getcLocation());
+				saDetails.setcPincode(student.getStudentAddress().getcPincode());
+				saDetails.setcState(student.getStudentAddress().getcState());
+				saDetails.setcSubDivision(student.getStudentAddress().getcSubDivision());
+				saDetails.setcTehsil(student.getStudentAddress().getcTehsil());
+				saDetails.setcVillage(student.getStudentAddress().getcVillage());
+				saDetails.setpAddressLine1(student.getStudentAddress().getpAddressLine1());
+				saDetails.setpAddressLine2(student.getStudentAddress().getpAddressLine2());
+				saDetails.setpCountry(student.getStudentAddress().getpCountry());
+				saDetails.setpDistrict(student.getStudentAddress().getpDistrict());
+				saDetails.setcLocation(student.getStudentAddress().getpLocation());
+				saDetails.setpPincode(student.getStudentAddress().getpPincode());
+				saDetails.setpState(student.getStudentAddress().getpState());
+				saDetails.setpSubDivision(student.getStudentAddress().getpSubDivision());
+				saDetails.setcTehsil(student.getStudentAddress().getpTehsil());
+				saDetails.setpVillage(student.getStudentAddress().getpVillage());
+
+				sDetails.setAddressDetails(saDetails);
 			}
 
 			if (null != student.getParentObject()) {
-			ParentDetails pDetails = new ParentDetails();
-			pDetails.setfContactNumber(student.getParentObject().getfContactNumber());
-			pDetails.setfEmail(student.getParentObject().getfEmail());
-			pDetails.setfFirstName(student.getParentObject().getfFirstName());
-			pDetails.setfMiddleName(student.getParentObject().getfMiddleName());
-			pDetails.setfLastName(student.getParentObject().getfLastName());
-			pDetails.setfIncome(student.getParentObject().getfIncome());
-			pDetails.setfOccupation(student.getParentObject().getfOccupation());
-			pDetails.setfQualification(student.getParentObject().getfQualification());
-			pDetails.setmContactNumber(student.getParentObject().getmContactNumber());
-			pDetails.setmEmail(student.getParentObject().getmEmail());
-			pDetails.setmFirstName(student.getParentObject().getmFirstName());
-			pDetails.setmMiddleName(student.getParentObject().getmMiddleName());
-			pDetails.setmLastName(student.getParentObject().getmLastName());
-			pDetails.setmOccupation(student.getParentObject().getmOccupation());
-			pDetails.setmQualification(student.getParentObject().getmQualification());
-			pDetails.setmIncome(student.getParentObject().getmIncome());
-			
+				ParentDetails pDetails = new ParentDetails();
+				pDetails.setfContactNumber(student.getParentObject().getfContactNumber());
+				pDetails.setfEmail(student.getParentObject().getfEmail());
+				pDetails.setfFirstName(student.getParentObject().getfFirstName());
+				pDetails.setfMiddleName(student.getParentObject().getfMiddleName());
+				pDetails.setfLastName(student.getParentObject().getfLastName());
+				pDetails.setfIncome(student.getParentObject().getfIncome());
+				pDetails.setfOccupation(student.getParentObject().getfOccupation());
+				pDetails.setfQualification(student.getParentObject().getfQualification());
+				pDetails.setmContactNumber(student.getParentObject().getmContactNumber());
+				pDetails.setmEmail(student.getParentObject().getmEmail());
+				pDetails.setmFirstName(student.getParentObject().getmFirstName());
+				pDetails.setmMiddleName(student.getParentObject().getmMiddleName());
+				pDetails.setmLastName(student.getParentObject().getmLastName());
+				pDetails.setmOccupation(student.getParentObject().getmOccupation());
+				pDetails.setmQualification(student.getParentObject().getmQualification());
+				pDetails.setmIncome(student.getParentObject().getmIncome());
 
-			sDetails.setParentDetails(pDetails);
+				sDetails.setParentDetails(pDetails);
 			}
-			
+
 			if (null != student.getSibling()) {
-			SiblingDetails sibDetails = new SiblingDetails();
-			sibDetails.setAge(student.getSibling().getAge());
-			sibDetails.setGender(student.getSibling().getGender());
-			sibDetails.setName(student.getSibling().getName());
-			sibDetails.setSchool(student.getSibling().getSchool());
-			sibDetails.setSiblingClass(student.getSibling().getStudentClass());
-			
-			sDetails.setSiblingDetails(sibDetails);
+				SiblingDetails sibDetails = new SiblingDetails();
+				sibDetails.setAge(student.getSibling().getAge());
+				sibDetails.setGender(student.getSibling().getGender());
+				sibDetails.setName(student.getSibling().getName());
+				sibDetails.setSchool(student.getSibling().getSchool());
+				sibDetails.setSiblingClass(student.getSibling().getStudentClass());
+
+				sDetails.setSiblingDetails(sibDetails);
 			}
 
 			if (null != student.getStudentDocuments()) {
@@ -345,26 +342,85 @@ public class EntityCreator {
 				sdDetails.setBirthCirtificate(student.getStudentDocuments().getBirthCertificate());
 				sdDetails.setOtherCertificate(student.getStudentDocuments().getOtherCertificate());
 				sdDetails.setRemarks(student.getStudentDocuments().getRemarks());
-				
+
 				sDetails.setDocumentDetails(sdDetails);
 			}
-			
+
 			if (null != student.getStudentPreviousInfo()) {
 				StudentPreviousDetails spDetails = new StudentPreviousDetails();
 				spDetails.setSchool(student.getStudentPreviousInfo().getSchoolName());
-				
+
 				spDetails.setStudiedFrom(dateFormat.format(student.getStudentPreviousInfo().getStudiedFrom()));
-				
+
 				spDetails.setStudiedTo(dateFormat.format(student.getStudentPreviousInfo().getStudiedTo()));
-				
+
 				spDetails.setNoOfYears(student.getStudentPreviousInfo().getNoOfYears());
-				
+
 				spDetails.setPreviousClass(student.getStudentPreviousInfo().getPreviousClass());
 				spDetails.setTotalMarks(student.getStudentPreviousInfo().getTotalMarks());
 				spDetails.setObtainedMarks(student.getStudentPreviousInfo().getObtainedMarks());
-				
+
 				sDetails.setPreviousDetails(spDetails);
 			}
+			userDetailsList.add(userDetails);
+		}
+
+		return userDetailsList;
+	}
+
+	/*
+	 * Method: createUserDetails ->Create UserDetailObjects from The UserObject
+	 * input : List Of User(List<User>) Returns : List Of
+	 * UserDetails(List<UserDetails>)
+	 * 
+	 */
+	public List<UserDetails> createUserDetails(List<User> users) throws ParseException {
+		UserDetails userDetails;
+		List<UserDetails> userDetailsList = new ArrayList<UserDetails>();
+		for (User user : users) {
+
+			userDetails = new UserDetails();
+			userDetails.setEmail(user.getEmail());
+			userDetails.setRole(user.getRoleObject().getRoleName());
+			userDetails.setSubRole(user.getSubRoleObject().getSubRoleName());
+			userDetails.setUserId(user.getUserId());
+			if (user.getRoleObject().getRoleName().equalsIgnoreCase(Constants.role_admin)) {
+				Admin admin = (Admin) user;
+				AdminDetails adminDetails = new AdminDetails();
+				adminDetails.setName(admin.getName());
+				userDetails.setAdminDetails(adminDetails);
+			}
+			if (user.getRoleObject().getRoleName().equalsIgnoreCase(Constants.role_student)) {
+				Student student = (Student) user;
+				StudentDetails sDetails = new StudentDetails();
+				sDetails.setStudentFirstName(student.getStudentFirstName());
+				sDetails.setStudentMiddleName(student.getStudentMiddleName());
+				sDetails.setStudentLastName(student.getStudentLastName());
+
+				userDetails.setStudentDetails(sDetails);
+			}
+			if (user.getRoleObject().getRoleName().equalsIgnoreCase(Constants.role_management)) {
+				Management management = (Management) user;
+				ManagementDetails mDetails = new ManagementDetails();
+				mDetails.setMngmtFirstName(management.getMngmtFirstName());
+				mDetails.setMngmtLastName(management.getMngmtLastName());
+				userDetails.setManagementDetails(mDetails);
+			}
+			if (user.getRoleObject().getRoleName().equalsIgnoreCase(Constants.role_non_teaching_staff)) {
+				NonTeachingStaff nts = (NonTeachingStaff) user;
+				NonTeachingStaffDetails ntsDetails = new NonTeachingStaffDetails();
+				ntsDetails.setFirstName(nts.getFirstName());
+				ntsDetails.setLastName(nts.getLastName());
+				userDetails.setNonTeachingStaffDetails(ntsDetails);
+			}
+			if (user.getRoleObject().getRoleName().equalsIgnoreCase(Constants.role_teaching_staff)) {
+				TeachingStaff ts = (TeachingStaff) user;
+				TeachingStaffDetails tsDetails = new TeachingStaffDetails();
+				tsDetails.setFirstName(ts.getFirstName());
+				tsDetails.setLastName(ts.getLastName());
+				userDetails.setTeachingStaffDetails(tsDetails);
+			}
+
 			userDetailsList.add(userDetails);
 		}
 
@@ -490,24 +546,24 @@ public class EntityCreator {
 	 * 
 	 */
 
-	public StudentPreviousInfo createPreviousDetails(StudentPreviousDetails details, User user) throws ParseException  {
-		
+	public StudentPreviousInfo createPreviousDetails(StudentPreviousDetails details, User user) throws ParseException {
+
 		StudentPreviousInfo info = new StudentPreviousInfo();
 		info.setNoOfYears(details.getNoOfYears());
 		info.setObtainedMarks(details.getObtainedMarks());
 		info.setPreviousClass(details.getPreviousClass());
 		info.setSchoolName(details.getSchool());
-		
+
 		String sDate1 = details.getStudiedFrom();
 		DateFormat edtFormat = new SimpleDateFormat("yyyy-mm-dd");
 		Date aLD = edtFormat.parse(sDate1);
 		info.setStudiedFrom((aLD));
-		
+
 		String sDate = details.getStudiedTo();
 		DateFormat edtFormat1 = new SimpleDateFormat("yyyy-mm-dd");
 		Date aLD1 = edtFormat1.parse(sDate);
 		info.setStudiedTo(aLD1);
-		
+
 		info.setTotalMarks(details.getTotalMarks());
 		return info;
 	}
@@ -535,7 +591,8 @@ public class EntityCreator {
 	 * TeachingStaffDetails return : TeachingStaff
 	 * 
 	 */
-	public TeachingStaff createTeachingStaff(TeachingStaffDetails teachingStaffDetails, User user) throws ParseException {
+	public TeachingStaff createTeachingStaff(TeachingStaffDetails teachingStaffDetails, User user)
+			throws ParseException {
 
 		TeachingStaff teachingStaff = new TeachingStaff();
 
@@ -543,13 +600,13 @@ public class EntityCreator {
 		teachingStaff.setFirstName(teachingStaffDetails.getFirstName());
 		teachingStaff.setMiddleName(teachingStaffDetails.getMiddleName());
 		teachingStaff.setLastName(teachingStaffDetails.getMiddleName());
-		
-		//teachingStaff.setDob(teachingStaffDetails.getDateOfBirth());
+
+		// teachingStaff.setDob(teachingStaffDetails.getDateOfBirth());
 		String sDate1 = teachingStaffDetails.getDateOfBirth();
 		DateFormat edtFormat = new SimpleDateFormat("yyyy-mm-dd");
 		Date aLD = edtFormat.parse(sDate1);
 		teachingStaff.setDob(aLD);
-		
+
 		teachingStaff.setGender(teachingStaffDetails.getGender());
 		teachingStaff.setAgeInYears(teachingStaffDetails.getAgeInYears());
 		teachingStaff.setContactNo(teachingStaffDetails.getContactNo());
@@ -562,10 +619,10 @@ public class EntityCreator {
 		teachingStaff.setSpouseContactNo(teachingStaffDetails.getSpouseContactNo());
 		// hard coded values
 		teachingStaff.setCreatedByWadmin(user.getUserId());
-		//teachingStaff.setCreationTime(new Date());
-		
+		// teachingStaff.setCreationTime(new Date());
+
 		teachingStaff.setCreationTime(new Date());
-		
+
 		teachingStaff.setAcStatus("Incomplete");
 
 		/*
@@ -577,37 +634,34 @@ public class EntityCreator {
 
 		return teachingStaff;
 	}
-	
+
 	/*
-	 * Method: createTeachingStaffDetails ->Creates TeachingDetailObjects from The TeachingObject 
-	 * input : List Of User(List<User>)
-	 * Returns : List Of UserDetails(List<UserDetails>)
+	 * Method: createTeachingStaffDetails ->Creates TeachingDetailObjects from
+	 * The TeachingObject input : List Of User(List<User>) Returns : List Of
+	 * UserDetails(List<UserDetails>)
 	 * 
 	 */
-	public List<UserDetails> createTeachingStaffDetails(List<User> users)
-	{
+	public List<UserDetails> createTeachingStaffDetails(List<User> users) {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
 		UserDetails userDetails;
-	
+
 		List<UserDetails> userDetailsList = new ArrayList<UserDetails>();
-			for (User user : users) {
-            
+		for (User user : users) {
+
 			userDetails = new UserDetails();
 			userDetails.setEmail(user.getEmail());
 			userDetails.setRole(user.getRoleObject().getRoleName());
 			userDetails.setSubRole(user.getSubRoleObject().getSubRoleName());
 			userDetails.setUserId(user.getUserId());
-			
+
 			TeachingStaff teachingStaff = (TeachingStaff) user;
 			TeachingStaffDetails tDetails = new TeachingStaffDetails();
-
-			
 
 			tDetails.setDesignation(teachingStaff.getDesignation());
 			tDetails.setFirstName(teachingStaff.getFirstName());
 			tDetails.setMiddleName(teachingStaff.getMiddleName());
 			tDetails.setLastName(teachingStaff.getLastName());
-			
+
 			tDetails.setDateOfBirth(dateFormat.format(teachingStaff.getDob()));
 			tDetails.setGender(teachingStaff.getGender());
 			tDetails.setAgeInYears(teachingStaff.getAgeInYears());
@@ -621,66 +675,67 @@ public class EntityCreator {
 			tDetails.setSpouseContactNo(teachingStaff.getSpouseContactNo());
 			tDetails.setCreatedByWadmin(teachingStaff.getCreatedByWadmin());
 			tDetails.setCreationTime(dateFormat.format(teachingStaff.getCreationTime()));
-			
-			
+
 			userDetails.setTeachingStaffDetails(tDetails);
 
 			if (null != teachingStaff.getAddress()) {
-		AddressDetails1 taDetails =  new AddressDetails1();
-		taDetails.setAddressLine1(teachingStaff.getAddress().getAddressLine1());
-			taDetails.setAddressLine2(teachingStaff.getAddress().getAddressLine2());
-			taDetails.setCountry(teachingStaff.getAddress().getCountry());
-			taDetails.setState(teachingStaff.getAddress().getState());
-			taDetails.setDistrict(teachingStaff.getAddress().getDistrict());
-			taDetails.setSubDivision(teachingStaff.getAddress().getSubDivision());
-			taDetails.setTehsil(teachingStaff.getAddress().getTehsil());
-			taDetails.setVillage(teachingStaff.getAddress().getVillage());
-			taDetails.setPincode(teachingStaff.getAddress().getPincode());
-			
-			tDetails.setAddressDetails1(taDetails);
+				AddressDetails1 taDetails = new AddressDetails1();
+				taDetails.setAddressLine1(teachingStaff.getAddress().getAddressLine1());
+				taDetails.setAddressLine2(teachingStaff.getAddress().getAddressLine2());
+				taDetails.setCountry(teachingStaff.getAddress().getCountry());
+				taDetails.setState(teachingStaff.getAddress().getState());
+				taDetails.setDistrict(teachingStaff.getAddress().getDistrict());
+				taDetails.setSubDivision(teachingStaff.getAddress().getSubDivision());
+				taDetails.setTehsil(teachingStaff.getAddress().getTehsil());
+				taDetails.setVillage(teachingStaff.getAddress().getVillage());
+				taDetails.setPincode(teachingStaff.getAddress().getPincode());
+
+				tDetails.setAddressDetails1(taDetails);
 			}
 
 			if (null != teachingStaff.getStaffDocuments()) {
-			StaffDocumentsDetails1 details1 =  new StaffDocumentsDetails1();
-			details1.setNt_staff_10th_certificate(teachingStaff.getStaffDocuments().getTen10thCertificate());
-			details1.setNt_staff_12th_certificate(teachingStaff.getStaffDocuments().getTwelve12thCertificate());
-			details1.setNt_staff_degree_certificate(teachingStaff.getStaffDocuments().getDegreeCertificate());
-			details1.setNt_staff_pg_degree_certificate(teachingStaff.getStaffDocuments().getPgDegreeCertificate());
-			details1.setNt_staff_medical_fitness_certificate(teachingStaff.getStaffDocuments().getMedicalFitnessCertificate());
-			tDetails.setStaffDocumentsDetails1(details1);
+				StaffDocumentsDetails1 details1 = new StaffDocumentsDetails1();
+				details1.setNt_staff_10th_certificate(teachingStaff.getStaffDocuments().getTen10thCertificate());
+				details1.setNt_staff_12th_certificate(teachingStaff.getStaffDocuments().getTwelve12thCertificate());
+				details1.setNt_staff_degree_certificate(teachingStaff.getStaffDocuments().getDegreeCertificate());
+				details1.setNt_staff_pg_degree_certificate(teachingStaff.getStaffDocuments().getPgDegreeCertificate());
+				details1.setNt_staff_medical_fitness_certificate(
+						teachingStaff.getStaffDocuments().getMedicalFitnessCertificate());
+				tDetails.setStaffDocumentsDetails1(details1);
 			}
-			
+
 			if (null != teachingStaff.getStaffPreviousInformation()) {
-			StaffPreviousInformationDetails1 spDetails = new StaffPreviousInformationDetails1();
-			spDetails.setExperienceFlag(teachingStaff.getStaffPreviousInformation().isExperienceFlag());
-			spDetails.setLastWorkedOrganisation(teachingStaff.getStaffPreviousInformation().getLastWorkedOrganisation());
-			
-			//spDetails.setDateOfJoining(dateFormat.format(teachingStaff.getStaffPreviousInformation().getDateOfJoining()));
-			
-			//spDetails.setRelievingDate(dateFormat.format(teachingStaff.getStaffPreviousInformation().getRelievingDate()));
-			
-			spDetails.setExperienceCertificate(teachingStaff.getStaffPreviousInformation().getExperienceCertificate());
-			spDetails.setLastDrawnPayslip(teachingStaff.getStaffPreviousInformation().getLastDrawnPayslip());
-			spDetails.setResume(teachingStaff.getStaffPreviousInformation().getResume());
-			tDetails.setStaffPreviousInformationDetails1(spDetails);;
+				StaffPreviousInformationDetails1 spDetails = new StaffPreviousInformationDetails1();
+				spDetails.setExperienceFlag(teachingStaff.getStaffPreviousInformation().isExperienceFlag());
+				spDetails.setLastWorkedOrganisation(
+						teachingStaff.getStaffPreviousInformation().getLastWorkedOrganisation());
+
+				// spDetails.setDateOfJoining(dateFormat.format(teachingStaff.getStaffPreviousInformation().getDateOfJoining()));
+
+				// spDetails.setRelievingDate(dateFormat.format(teachingStaff.getStaffPreviousInformation().getRelievingDate()));
+
+				spDetails.setExperienceCertificate(
+						teachingStaff.getStaffPreviousInformation().getExperienceCertificate());
+				spDetails.setLastDrawnPayslip(teachingStaff.getStaffPreviousInformation().getLastDrawnPayslip());
+				spDetails.setResume(teachingStaff.getStaffPreviousInformation().getResume());
+				tDetails.setStaffPreviousInformationDetails1(spDetails);
+				;
 			}
 
 			if (null != teachingStaff.getStaffStatutory()) {
-				StaffStatutoryDetails1  ssDetails = new StaffStatutoryDetails1();
+				StaffStatutoryDetails1 ssDetails = new StaffStatutoryDetails1();
 				ssDetails.setBankName(teachingStaff.getStaffStatutory().getBankName());
 				ssDetails.setBankAccountNo(teachingStaff.getStaffStatutory().getBankAccountNo());
 				ssDetails.setBankIfscCode(teachingStaff.getStaffStatutory().getBankIfscCode());
 				ssDetails.setPanNo(teachingStaff.getStaffStatutory().getPanNo());
 				ssDetails.setPanCard(teachingStaff.getStaffStatutory().getPanCard());
-				
+
 				ssDetails.setAadhaarNo(teachingStaff.getStaffStatutory().getAadhaarNo());
 				ssDetails.setAadhaarCard(teachingStaff.getStaffStatutory().getAadhaarCard());
 				ssDetails.setPfNo(teachingStaff.getStaffStatutory().getPfNo());
 				tDetails.setStatutoryDetails1(ssDetails);
 			}
-			
-			
-			
+
 			userDetailsList.add(userDetails);
 		}
 
@@ -688,27 +743,26 @@ public class EntityCreator {
 
 	}
 
-
 	/*
 	 * Method: createNonTeachingStaff -> maps ui values to entity input :
 	 * NonTeachingStaffDetails return : NonTeachingStaff
 	 * 
 	 */
-	public NonTeachingStaff createNonTeachingStaff(NonTeachingStaffDetails nonTeachingStaffDetails, User user) throws ParseException {
+	public NonTeachingStaff createNonTeachingStaff(NonTeachingStaffDetails nonTeachingStaffDetails, User user)
+			throws ParseException {
 		NonTeachingStaff nonTeachingStaff = new NonTeachingStaff();
 
 		nonTeachingStaff.setDesignation(nonTeachingStaffDetails.getDesignation());
 		nonTeachingStaff.setFirstName(nonTeachingStaffDetails.getFirstName());
 		nonTeachingStaff.setMiddleName(nonTeachingStaffDetails.getMiddleName());
 		nonTeachingStaff.setLastName(nonTeachingStaffDetails.getLastName());
-		//nonTeachingStaff.setDob(nonTeachingStaffDetails.getDob());
+		// nonTeachingStaff.setDob(nonTeachingStaffDetails.getDob());
 		String sDate1 = nonTeachingStaffDetails.getDob();
 
 		DateFormat edtFormat = new SimpleDateFormat("yyyy-mm-dd");
 		Date aLD = edtFormat.parse(sDate1);
 		nonTeachingStaff.setDob(aLD);
 
-		
 		nonTeachingStaff.setGender(nonTeachingStaffDetails.getGender());
 		nonTeachingStaff.setAgeInYears(nonTeachingStaffDetails.getAgeInYears());
 		nonTeachingStaff.setContactNo(nonTeachingStaffDetails.getContactNo());
@@ -720,9 +774,8 @@ public class EntityCreator {
 		nonTeachingStaff.setSpouseName(nonTeachingStaffDetails.getSpouseName());
 		nonTeachingStaff.setSpouseContactNo(nonTeachingStaffDetails.getSpouseContactNo());
 		nonTeachingStaff.setCreatedByWadmin(user.getUserId());
-		//nonTeachingStaff.setCreationTime(new Date());
-		
-		
+		// nonTeachingStaff.setCreationTime(new Date());
+
 		nonTeachingStaff.setCreationTime(new Date());
 		// hard coded values
 		/*
@@ -734,39 +787,35 @@ public class EntityCreator {
 		return nonTeachingStaff;
 
 	}
-	
-	
+
 	/*
-	 * Method: createNonTeachingStaffDetails ->Creates NonTeachingDetailObjects from The NonTeachingObject 
-	 * input : List Of User(List<User>)
-	 * Returns : List Of UserDetails(List<UserDetails>)
+	 * Method: createNonTeachingStaffDetails ->Creates NonTeachingDetailObjects
+	 * from The NonTeachingObject input : List Of User(List<User>) Returns :
+	 * List Of UserDetails(List<UserDetails>)
 	 * 
 	 */
-	public List<UserDetails> createNonTeachingStaffDetails(List<User> users)
-	{
+	public List<UserDetails> createNonTeachingStaffDetails(List<User> users) {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
 		UserDetails userDetails;
-	
+
 		List<UserDetails> userDetailsList = new ArrayList<UserDetails>();
-		
-			for (User user : users) {
-            
+
+		for (User user : users) {
+
 			userDetails = new UserDetails();
 			userDetails.setEmail(user.getEmail());
 			userDetails.setRole(user.getRoleObject().getRoleName());
 			userDetails.setSubRole(user.getSubRoleObject().getSubRoleName());
 			userDetails.setUserId(user.getUserId());
-			
+
 			NonTeachingStaff nonTeachingStaff = (NonTeachingStaff) user;
 			NonTeachingStaffDetails ntDetails = new NonTeachingStaffDetails();
-
-			
 
 			ntDetails.setDesignation(nonTeachingStaff.getDesignation());
 			ntDetails.setFirstName(nonTeachingStaff.getFirstName());
 			ntDetails.setMiddleName(nonTeachingStaff.getMiddleName());
 			ntDetails.setLastName(nonTeachingStaff.getLastName());
-			
+
 			ntDetails.setDob(dateFormat.format(nonTeachingStaff.getDob()));
 			ntDetails.setGender(nonTeachingStaff.getGender());
 			ntDetails.setAgeInYears(nonTeachingStaff.getAgeInYears());
@@ -780,73 +829,74 @@ public class EntityCreator {
 			ntDetails.setSpouseContactNo(nonTeachingStaff.getSpouseContactNo());
 			ntDetails.setCreatedByWadmin(nonTeachingStaff.getCreatedByWadmin());
 			ntDetails.setCreationTime(dateFormat.format(nonTeachingStaff.getCreationTime()));
-			
-			
+
 			userDetails.setNonTeachingStaffDetails(ntDetails);
 
 			if (null != nonTeachingStaff.getAddress()) {
-		AddressDetails ntaDetails =  new AddressDetails();
-		ntaDetails.setAddressLine1(nonTeachingStaff.getAddress().getAddressLine1());
-			ntaDetails.setAddressLine2(nonTeachingStaff.getAddress().getAddressLine2());
-			ntaDetails.setCountry(nonTeachingStaff.getAddress().getCountry());
-			ntaDetails.setState(nonTeachingStaff.getAddress().getState());
-			ntaDetails.setDistrict(nonTeachingStaff.getAddress().getDistrict());
-			ntaDetails.setSubDivision(nonTeachingStaff.getAddress().getSubDivision());
-			ntaDetails.setTehsil(nonTeachingStaff.getAddress().getTehsil());
-			ntaDetails.setVillage(nonTeachingStaff.getAddress().getVillage());
-			ntaDetails.setPincode(nonTeachingStaff.getAddress().getPincode());
-			
-			ntDetails.setAddressDetails(ntaDetails);
+				AddressDetails ntaDetails = new AddressDetails();
+				ntaDetails.setAddressLine1(nonTeachingStaff.getAddress().getAddressLine1());
+				ntaDetails.setAddressLine2(nonTeachingStaff.getAddress().getAddressLine2());
+				ntaDetails.setCountry(nonTeachingStaff.getAddress().getCountry());
+				ntaDetails.setState(nonTeachingStaff.getAddress().getState());
+				ntaDetails.setDistrict(nonTeachingStaff.getAddress().getDistrict());
+				ntaDetails.setSubDivision(nonTeachingStaff.getAddress().getSubDivision());
+				ntaDetails.setTehsil(nonTeachingStaff.getAddress().getTehsil());
+				ntaDetails.setVillage(nonTeachingStaff.getAddress().getVillage());
+				ntaDetails.setPincode(nonTeachingStaff.getAddress().getPincode());
+
+				ntDetails.setAddressDetails(ntaDetails);
 			}
 
 			if (null != nonTeachingStaff.getStaffDocuments()) {
-			StaffDocumentsDetails nsdetails1 =  new StaffDocumentsDetails();
-			nsdetails1.setNt_staff_10th_certificate(nonTeachingStaff.getStaffDocuments().getTen10thCertificate());
-			nsdetails1.setNt_staff_12th_certificate(nonTeachingStaff.getStaffDocuments().getTwelve12thCertificate());
-			nsdetails1.setNt_staff_degree_certificate(nonTeachingStaff.getStaffDocuments().getDegreeCertificate());
-			nsdetails1.setNt_staff_pg_degree_certificate(nonTeachingStaff.getStaffDocuments().getPgDegreeCertificate());
-			nsdetails1.setNt_staff_medical_fitness_certificate(nonTeachingStaff.getStaffDocuments().getMedicalFitnessCertificate());
-			ntDetails.setStaffDocumentsDetails(nsdetails1);
+				StaffDocumentsDetails nsdetails1 = new StaffDocumentsDetails();
+				nsdetails1.setNt_staff_10th_certificate(nonTeachingStaff.getStaffDocuments().getTen10thCertificate());
+				nsdetails1
+						.setNt_staff_12th_certificate(nonTeachingStaff.getStaffDocuments().getTwelve12thCertificate());
+				nsdetails1.setNt_staff_degree_certificate(nonTeachingStaff.getStaffDocuments().getDegreeCertificate());
+				nsdetails1.setNt_staff_pg_degree_certificate(
+						nonTeachingStaff.getStaffDocuments().getPgDegreeCertificate());
+				nsdetails1.setNt_staff_medical_fitness_certificate(
+						nonTeachingStaff.getStaffDocuments().getMedicalFitnessCertificate());
+				ntDetails.setStaffDocumentsDetails(nsdetails1);
 			}
-			
+
 			if (null != nonTeachingStaff.getStaffPreviousInformation()) {
-			StaffPreviousInformationDetails spDetails = new StaffPreviousInformationDetails();
-			spDetails.setExperienceFlag(nonTeachingStaff.getStaffPreviousInformation().isExperienceFlag());
-			spDetails.setLastWorkedOrganisation(nonTeachingStaff.getStaffPreviousInformation().getLastWorkedOrganisation());
-			
-			//spDetails.setDateOfJoining(dateFormat.format(teachingStaff.getStaffPreviousInformation().getDateOfJoining()));
-			
-			//spDetails.setRelievingDate(dateFormat.format(teachingStaff.getStaffPreviousInformation().getRelievingDate()));
-			
-			spDetails.setExperienceCertificate(nonTeachingStaff.getStaffPreviousInformation().getExperienceCertificate());
-			spDetails.setLastDrawnPayslip(nonTeachingStaff.getStaffPreviousInformation().getLastDrawnPayslip());
-			spDetails.setResume(nonTeachingStaff.getStaffPreviousInformation().getResume());
-			ntDetails.setStaffPreviousInformationDetails(spDetails);
+				StaffPreviousInformationDetails spDetails = new StaffPreviousInformationDetails();
+				spDetails.setExperienceFlag(nonTeachingStaff.getStaffPreviousInformation().isExperienceFlag());
+				spDetails.setLastWorkedOrganisation(
+						nonTeachingStaff.getStaffPreviousInformation().getLastWorkedOrganisation());
+
+				// spDetails.setDateOfJoining(dateFormat.format(teachingStaff.getStaffPreviousInformation().getDateOfJoining()));
+
+				// spDetails.setRelievingDate(dateFormat.format(teachingStaff.getStaffPreviousInformation().getRelievingDate()));
+
+				spDetails.setExperienceCertificate(
+						nonTeachingStaff.getStaffPreviousInformation().getExperienceCertificate());
+				spDetails.setLastDrawnPayslip(nonTeachingStaff.getStaffPreviousInformation().getLastDrawnPayslip());
+				spDetails.setResume(nonTeachingStaff.getStaffPreviousInformation().getResume());
+				ntDetails.setStaffPreviousInformationDetails(spDetails);
 			}
 
 			if (null != nonTeachingStaff.getStaffStatutory()) {
-				StaffStatutoryDetails  ssDetails = new StaffStatutoryDetails();
+				StaffStatutoryDetails ssDetails = new StaffStatutoryDetails();
 				ssDetails.setBankName(nonTeachingStaff.getStaffStatutory().getBankName());
 				ssDetails.setBankAccountNo(nonTeachingStaff.getStaffStatutory().getBankAccountNo());
 				ssDetails.setBankIfscCode(nonTeachingStaff.getStaffStatutory().getBankIfscCode());
 				ssDetails.setPanNo(nonTeachingStaff.getStaffStatutory().getPanNo());
 				ssDetails.setPanCard(nonTeachingStaff.getStaffStatutory().getPanCard());
-				
+
 				ssDetails.setAadhaarNo(nonTeachingStaff.getStaffStatutory().getAadhaarNo());
 				ssDetails.setAadhaarCard(nonTeachingStaff.getStaffStatutory().getAadhaarCard());
 				ssDetails.setPfNo(nonTeachingStaff.getStaffStatutory().getPfNo());
 				ntDetails.setStaffStatutoryDetails(ssDetails);
 			}
-			
-			
-			
+
 			userDetailsList.add(userDetails);
 		}
 
 		return userDetailsList;
 
 	}
-
 
 	/*
 	 * Method: createAddressDetails -> maps ui values to entity input :
@@ -894,12 +944,12 @@ public class EntityCreator {
 
 		staffPreviousInformation.setExperienceFlag(staffPreviousInformationDetails.isExperienceFlag());
 		staffPreviousInformation.setLastWorkedOrganisation(staffPreviousInformationDetails.getLastWorkedOrganisation());
-		//staffPreviousInformation.setDateOfJoining(staffPreviousInformationDetails.getRelievingDate());
+		// staffPreviousInformation.setDateOfJoining(staffPreviousInformationDetails.getRelievingDate());
 		String sDate1 = staffPreviousInformationDetails.getDateOfJoining();
 		DateFormat edtFormat = new SimpleDateFormat("yyyy-mm-dd");
 		Date aLD = edtFormat.parse(sDate1);
 		staffPreviousInformation.setDateOfJoining(aLD);
-		
+
 		String sDate = staffPreviousInformationDetails.getRelievingDate();
 		DateFormat edtFormat1 = new SimpleDateFormat("yyyy-mm-dd");
 		Date aLD1 = edtFormat1.parse(sDate);
@@ -975,12 +1025,12 @@ public class EntityCreator {
 
 		staffPreviousInformation.setExperienceFlag(staffPreviousInformationDetails.isExperienceFlag());
 		staffPreviousInformation.setLastWorkedOrganisation(staffPreviousInformationDetails.getLastWorkedOrganisation());
-		//staffPreviousInformation.setDateOfJoining(staffPreviousInformationDetails.getRelievingDate());
+		// staffPreviousInformation.setDateOfJoining(staffPreviousInformationDetails.getRelievingDate());
 		String sDate1 = staffPreviousInformationDetails.getDateOfJoining();
 		DateFormat edtFormat = new SimpleDateFormat("yyyy-mm-dd");
 		Date aLD = edtFormat.parse(sDate1);
 		staffPreviousInformation.setDateOfJoining(aLD);
-		
+
 		String sDate = staffPreviousInformationDetails.getRelievingDate();
 		DateFormat edtFormat1 = new SimpleDateFormat("yyyy-mm-dd");
 		Date aLD1 = edtFormat1.parse(sDate);

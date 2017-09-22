@@ -34,6 +34,8 @@ public class UserDetails {
 	
 	private String subRole;
 	
+	private AdminDetails adminDetails;
+	
 	private StudentDetails studentDetails;
 	
 	private ParentDetails parentDetails;
@@ -257,6 +259,14 @@ public class UserDetails {
 
 	public void setChangePasswordDetails(ChangePasswordDetails changePasswordDetails) {
 		this.changePasswordDetails = changePasswordDetails;
+	}
+
+	public AdminDetails getAdminDetails() {
+		return adminDetails;
+	}
+
+	public void setAdminDetails(AdminDetails adminDetails) {
+		this.adminDetails = adminDetails;
 	}
 	
 }

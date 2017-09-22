@@ -1392,9 +1392,7 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 						messages.getString("TENANT_INVALID_CODE_MSG"));
 			}
 
-		} catch (
-
-		Exception e) {
+		} catch (Exception e) {
 			if (session.isOpen()) {
 				session.close();
 			}
@@ -1409,6 +1407,56 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 			}
 		}
 
+	}
+
+	/*
+	 * Method: searchForPrivileges ->This Method is used to search Userds Based
+	 * On role,subrole Returns : List Of UserDetails(List<UserDetails>)
+	 * 
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<UserDetails> searchForPrivileges(String role, String subRole, String id, String tenant)
+			throws AsmsException {
+		Session session = null;
+		try {
+			messages = AsmsHelper.getMessageFromBundle();
+			String schema = multitenancyDao.getSchema(tenant);
+			if (null != schema) {
+				session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
+				String hql = "from User S  where S.roleObject.roleName = '" + role + "'";
+				if (null != subRole && !subRole.isEmpty()) {
+					hql = hql + " and S.subRoleObject.subRoleName = '" + subRole + "'";
+
+				}
+				if (Constants.role_student.equalsIgnoreCase(role)) {
+					hql = hql + " and S.admissionNo='" + id + "'";
+				}
+
+				List<User> users = new ArrayList<User>();
+
+				users = session.createQuery(hql).list();
+
+				return entityCreator.createUserDetails(users);
+
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("TENANT_INVALID_CODE"),
+						messages.getString("TENANT_INVALID_CODE_MSG"));
+			}
+		} catch (Exception e) {
+			if (session.isOpen()) {
+				session.close();
+			}
+			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
+					+ "searchForPrivileges()" + "   ", e);
+			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
+			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+					messages.getString("SYSTEM_EXCEPTION"));
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
+		}
 	}
 
 	@Override

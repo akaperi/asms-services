@@ -1076,5 +1076,24 @@ public class Validator {
 					messages.getString("CURRENTPASSWORD_IS_SAMEAS_NEWPASSWORD_NULL_MSG"));
 		}
 	}
+	
+	
+	public void validateSerchForUserPrivileges(String role, String subrole, String id, ResourceBundle messages) throws AsmsException {
+
+		if (null == role || role.isEmpty()) {
+			throw exceptionHandler.constructAsmsException(
+					messages.getString("ROLE_NULL_CODE"),
+					messages.getString("ROLE_NULL_MSG"));
+		}
+		
+		if(Constants.role_student.equalsIgnoreCase(role)){
+			if(null == id || id.isEmpty()){
+				throw exceptionHandler.constructAsmsException(
+						messages.getString("STUDENT_ID_NULL_CODE"),
+						messages.getString("STUDENT_ID_NULL_MSG"));
+			}
+		}
+		
+	}
 
 }
