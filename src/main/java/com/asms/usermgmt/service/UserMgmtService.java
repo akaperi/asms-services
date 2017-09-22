@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 
 import com.asms.Exception.AsmsException;
 import com.asms.common.helper.AsmsHelper;
+import com.asms.common.helper.Constants;
 import com.asms.common.response.FailureResponse;
 import com.asms.common.service.BaseService;
 import com.asms.multitenancy.entity.SuperAdmin;
@@ -283,8 +284,8 @@ public class UserMgmtService extends BaseService {
 			// authorize
 
 			// check if logged in user has got rights to create user
-			PrincipalUser pUser = privilegesManager.isPrivileged(user, userRequest.getUserRole(),
-					userRequest.getRequestType());
+			PrincipalUser pUser = privilegesManager.isPrivileged(user, Constants.admin_category_userManagement,
+					Constants.privileges.update_check.toString());
 			if (pUser.isPrivileged()) {
 				UserDetails userDetails = userRequest.getUserDetails();
 				userDetails.setRole(userRequest.getUserRole());
@@ -423,8 +424,8 @@ public class UserMgmtService extends BaseService {
 			// authorize
 
 			// check if logged in user has got rights to create user
-			PrincipalUser pUser = privilegesManager.isPrivileged(user, userRequest.getUserRole(),
-					userRequest.getRequestType());
+			PrincipalUser pUser = privilegesManager.isPrivileged(user, Constants.admin_category_userManagement,
+					Constants.privileges.create_check.toString());
 			if (pUser.isPrivileged()) {
 				UserDetails userDetails = userRequest.getUserDetails();
 				userDetails.setRole(userRequest.getUserRole());
@@ -477,8 +478,8 @@ public class UserMgmtService extends BaseService {
 			// authorize
 
 			// check if loggedin user has got rights to create user
-			PrincipalUser pUser = privilegesManager.isPrivileged(user, userRequest.getUserRole(),
-					userRequest.getRequestType());
+			PrincipalUser pUser = privilegesManager.isPrivileged(user, Constants.admin_category_userManagement,
+					Constants.privileges.create_check.toString());
 			if (pUser.isPrivileged()) {
 				UserDetails userDetails = userRequest.getUserDetails();
 				userDetails.setRole(userRequest.getUserRole());

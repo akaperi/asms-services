@@ -43,6 +43,7 @@ import com.asms.schoolmgmt.request.ClassDetails;
 import com.asms.schoolmgmt.request.SchoolDetails;
 import com.asms.schoolmgmt.request.SectionDetails;
 import com.asms.schoolmgmt.request.SubjectDetails;
+import com.asms.usermgmt.dao.UserMgmtDao;
 import com.asms.usermgmt.entity.Admin;
 
 @Service
@@ -62,6 +63,9 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 
 	@Autowired
 	private MultitenancyDao multitenancyDao;
+	
+	@Autowired
+	private UserMgmtDao userMgmtDao;
 	
 	@Autowired
 	private EmailSender emailSender;
@@ -328,6 +332,7 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 
 			session.save(school);
 			Admin admin = createAdmin(school);
+			userMgmtDao.createDefaultPrivileges(Constants.role_admin, admin);
 			admin.setRoleObject(role);
 			admin.setSubRoleObject(sRole);
 
@@ -366,6 +371,7 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 		admin.setUserId(generateUserId());
 		admin.setUserPassword("password");
 		admin.setSchoolId(school.getSerialNo());
+		
 		return admin;
 
 	}

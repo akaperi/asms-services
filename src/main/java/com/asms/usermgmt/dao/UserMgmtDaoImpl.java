@@ -27,6 +27,8 @@ import com.asms.Exception.ExceptionHandler;
 import com.asms.common.helper.AsmsHelper;
 import com.asms.common.helper.Constants;
 import com.asms.multitenancy.dao.MultitenancyDao;
+import com.asms.multitenancy.entity.Activity;
+import com.asms.multitenancy.entity.DefaultActivities;
 import com.asms.multitenancy.entity.SuperAdmin;
 import com.asms.multitenancy.entity.Tenant;
 import com.asms.rolemgmt.entity.Role;
@@ -35,6 +37,7 @@ import com.asms.schoolmgmt.dao.SchoolMgmtDao;
 import com.asms.schoolmgmt.entity.Class;
 import com.asms.schoolmgmt.entity.School;
 import com.asms.schoolmgmt.entity.Section;
+import com.asms.usermgmt.entity.Privilege;
 import com.asms.usermgmt.entity.StudentType;
 import com.asms.usermgmt.entity.User;
 import com.asms.usermgmt.entity.management.Management;
@@ -416,6 +419,7 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 					student.setStatus("Complete");
 					student.setUserPassword(userDetails.getUserPassword());
 					student.setSchoolId(school.getSerialNo());
+					createDefaultPrivileges(Constants.role_student, student);
 					insertStudent(student, schema);
 				} else {
 
@@ -433,6 +437,7 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 					management.setSubRoleObject(sRole);
 					management.setUserPassword(userDetails.getUserPassword());
 					management.setSchoolId(school.getSerialNo());
+					createDefaultPrivileges(Constants.role_management, management);
 					insertManagement(management, schema);
 
 				} else {
@@ -454,7 +459,7 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 					teachingStaff.setSubRoleObject(sRole);
 					teachingStaff.setSchoolId(school.getSerialNo());
 					teachingStaff.setTeachingSubjects(getTeachingSubjects(userDetails, teachingStaff, schema));
-
+					createDefaultPrivileges(Constants.role_teaching_staff, teachingStaff);
 					insertTeachingStaff(teachingStaff, schema);
 				} else {
 					logger.debug("role not matched");
@@ -473,6 +478,7 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 					nonTeachingStaff.setRoleObject(role);
 					nonTeachingStaff.setSubRoleObject(sRole);
 					nonTeachingStaff.setSchoolId(school.getSerialNo());
+					createDefaultPrivileges(Constants.role_non_teaching_staff, nonTeachingStaff);
 					insertNonTeachingStaff(nonTeachingStaff, schema);
 				} else {
 					logger.debug("role not matched");
@@ -674,11 +680,16 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 					User user = (User) session.createQuery(hql).setParameter(0, email).setParameter(1, password)
 							.uniqueResult();
 					session.close();
-
-					HttpSession httpSession = request.getSession(false);
-					httpSession.setAttribute("ap_user", user);
-					// user = (User)httpSession.getAttribute("ap_user");
-					return true;
+					if (null == user) {
+						logger.info("Session Id: " + MDC.get("sessionId") + "   " + "Method: "
+								+ this.getClass().getName() + "." + "authenticate()" + "   ", "Authentication failed");
+						return false;
+					} else {
+						HttpSession httpSession = request.getSession(false);
+						httpSession.setAttribute("ap_user", user);
+						// user = (User)httpSession.getAttribute("ap_user");
+						return true;
+					}
 				}
 			}
 
@@ -2645,6 +2656,53 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 			}
 		} finally {
 			if (null != session && session.isOpen()) {
+				session.close();
+			}
+		}
+
+	}
+
+	@Override
+	public void createDefaultPrivileges(String role, User user) throws AsmsException {
+		Session session = null;
+		try {
+			session = sessionFactory.withOptions().tenantIdentifier(dbProperties.getProperty("default_schema"))
+					.openSession();
+			String hql = "from DefaultActivities DA where DA.role = ? ";
+
+			// get default activities for user
+			@SuppressWarnings("unchecked")
+			List<DefaultActivities> defaultActivities = session.createQuery(hql).setParameter(0, role).list();
+
+			hql = "from Activity A ";
+
+			@SuppressWarnings("unchecked")
+			List<Activity> activities = session.createQuery(hql).list();
+			Privilege pr;
+			for (int i = 0; i < activities.size(); i++) {
+				pr = new Privilege();
+				pr.setActivityCategory(activities.get(i).getCategory());
+				pr.setActivityName(activities.get(i).getName());
+				pr.setCreateCheck(defaultActivities.get(i).getCreateCheck());
+				pr.setDeleteCheck(defaultActivities.get(i).getDeleteCheck());
+				pr.setRetrieveCheck(defaultActivities.get(i).getRetrieveCheck());
+				pr.setUpdateCheck(defaultActivities.get(i).getUpdateCheck());
+				pr.setUserObject(user);
+				user.getPrivileges().add(pr);
+			}
+			session.close();
+
+		} catch (Exception e) {
+			if (session.isOpen()) {
+				session.close();
+			}
+			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
+					+ "getAll()" + "   ", e);
+			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
+			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+					messages.getString("SYSTEM_EXCEPTION"));
+		} finally {
+			if (session.isOpen()) {
 				session.close();
 			}
 		}

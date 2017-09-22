@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import com.asms.Exception.AsmsException;
 import com.asms.common.helper.AsmsHelper;
+import com.asms.common.helper.Constants;
 import com.asms.common.response.FailureResponse;
 import com.asms.common.service.BaseService;
 import com.asms.multitenancy.dao.MultitenancyDao;
@@ -191,8 +192,8 @@ public class SchoolMgmtService extends BaseService {
 			HttpSession session = hRequest.getSession();
 			Object user = session.getAttribute("ap_user");
 			
-			PrincipalUser pUser = privilegesManager.isPrivileged((User)user, userRequest.getUserRole(),
-					userRequest.getRequestType());
+			PrincipalUser pUser = privilegesManager.isPrivileged((User)user, Constants.admin_category_setup,
+					Constants.privileges.create_check.toString());
 			if (pUser.isPrivileged()) {
 					SetupSchoolDetails setupSchoolDetails = userRequest.getSetupSchoolDetails();
 					schoolMgmtDao.setupSchool(setupSchoolDetails,tenant);
@@ -357,8 +358,8 @@ public class SchoolMgmtService extends BaseService {
 			User user = (User) session.getAttribute("ap_user");
 			
 			
-			PrincipalUser pUser = privilegesManager.isPrivileged((User)user, userRequest.getUserRole(),
-					userRequest.getRequestType());
+			PrincipalUser pUser = privilegesManager.isPrivileged((User)user, Constants.academics_category_broadcastMessages,
+					Constants.privileges.create_check.toString());
 			if (pUser.isPrivileged()) {
 				
 				BroadCasteSearchTypesDetails searchTypesDetails =  userRequest.getBroadCasteSearchTypesDetails();

@@ -52,10 +52,13 @@ public interface UserMgmtDao {
 
 	public void updateUser(UserDetails userDetails, User user, String tenant) throws AsmsException;
 	public UserDetails getUserDetails(String userId, String tenant) throws AsmsException;
+	public void createDefaultPrivileges(String role, User user) throws AsmsException ;
 	
 	
 
 	public void changePassword(ChangePasswordDetails changePasswordDetails, User user, String tenant) throws AsmsException;
+
+	
 
 	
 

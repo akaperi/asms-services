@@ -1,7 +1,12 @@
 package com.asms.usermgmt.entity;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -9,11 +14,16 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.asms.rolemgmt.entity.Role;
 import com.asms.rolemgmt.entity.SubRole;
+import com.asms.usermgmt.entity.student.StudentAddress;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /* user class is the base class for all roles
@@ -68,6 +78,10 @@ public class User {
 	@ManyToOne
 	@JoinColumn(name = "sub_role_id")
 	private SubRole subRoleObject;	
+	
+	@XmlElement
+	@OneToMany(mappedBy="userObject", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<Privilege> privileges = new HashSet<Privilege>();
 
 
 	public String getUserId() {
@@ -127,6 +141,16 @@ public class User {
 	public void setIsNew(String isNew) {
 		this.isNew = isNew;
 	}
+
+	public Set<Privilege> getPrivileges() {
+		return privileges;
+	}
+
+	public void setPrivileges(Set<Privilege> privileges) {
+		this.privileges = privileges;
+	}
+
+	
 
 	
 	
