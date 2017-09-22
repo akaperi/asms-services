@@ -1,4 +1,8 @@
 package com.asms.usermgmt.request;
+import java.util.Set;
+
+import com.asms.common.helper.Constants.privileges;
+import com.asms.usermgmt.entity.Privilege;
 import com.asms.usermgmt.entity.nonTeachingStaff.Address;
 import com.asms.usermgmt.entity.student.StudentAddress;
 import com.asms.usermgmt.entity.student.StudentPreviousInfo;
@@ -16,6 +20,7 @@ import com.asms.usermgmt.request.teachingStaff.StaffDocumentsDetails1;
 import com.asms.usermgmt.request.teachingStaff.StaffPreviousInformationDetails1;
 import com.asms.usermgmt.request.teachingStaff.StaffStatutoryDetails1;
 import com.asms.usermgmt.request.teachingStaff.TeachingStaffDetails;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /* UserDetails class represents the user create request object
  * for user management operations 
@@ -73,8 +78,19 @@ public class UserDetails {
 	
 	private ChangePasswordDetails changePasswordDetails;
 	
+	private Set<Privilege> privileges;
 	
 	
+	
+
+	public Set<Privilege> getPrivileges() {
+		return privileges;
+	}
+
+	public void setPrivileges(Set<Privilege> privileges) {
+		this.privileges = privileges;
+	}
+
 	public String getUserId() {
 		return userId;
 	}

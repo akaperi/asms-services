@@ -384,6 +384,7 @@ public class EntityCreator {
 			userDetails.setRole(user.getRoleObject().getRoleName());
 			userDetails.setSubRole(user.getSubRoleObject().getSubRoleName());
 			userDetails.setUserId(user.getUserId());
+			userDetails.setPrivileges(user.getPrivileges());
 			if (user.getRoleObject().getRoleName().equalsIgnoreCase(Constants.role_admin)) {
 				Admin admin = (Admin) user;
 				AdminDetails adminDetails = new AdminDetails();

@@ -28,6 +28,7 @@ import com.asms.Exception.AsmsException;
 import com.asms.common.helper.AsmsHelper;
 import com.asms.common.helper.Constants;
 import com.asms.common.response.FailureResponse;
+import com.asms.common.response.SuccessResponse;
 import com.asms.common.service.BaseService;
 import com.asms.multitenancy.entity.SuperAdmin;
 import com.asms.usermgmt.auth.PrivilegesManager;
@@ -403,25 +404,39 @@ public class UserMgmtService extends BaseService {
 			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
 		}
 	}
-	
-	
+
 	@Path("/privileges-search")
 	@GET
 	@Consumes("application/json")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	public Response searchUserForPrivileges(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse,
-			@QueryParam("role") String role, @QueryParam("subRole") String subRole,
-			@QueryParam("admissionNo") String id, 
+	public Response searchUserForPrivileges(@Context HttpServletRequest hRequest,
+			@Context HttpServletResponse hResponse, @QueryParam("role") String role,
+			@QueryParam("subRole") String subRole, @QueryParam("admissionNo") String id,
 			@QueryParam("tenantId") String tenant) {
 		ResourceBundle messages;
 		try {
-			
+
 			// get bundles for error messages
 			messages = AsmsHelper.getMessageFromBundle();
 			validator.validateSerchForUserPrivileges(role, subRole, id, messages);
-			List<UserDetails> list = userMgmtDao.searchForPrivileges(role, subRole, id, tenant);
+			HttpSession session = hRequest.getSession();
+			User user = (User) session.getAttribute("ap_user");
+			// authorize
+
+			// check if logged in user has got rights to create user
+			PrincipalUser pUser = privilegesManager.isPrivileged(user, Constants.admin_category_assignPermissions,
+					Constants.privileges.create_check.toString());
 			GetUserResponse getUserResponse = new GetUserResponse();
-			getUserResponse.setUserDetails(list);
+			if (pUser.isPrivileged()) {
+				List<UserDetails> list = userMgmtDao.searchForPrivileges(role, subRole, id, tenant);
+
+				getUserResponse.setUserDetails(list);
+			} else {
+				FailureResponse failureResponse = new FailureResponse();
+				failureResponse.setCode(Integer.parseInt(messages.getString("NOT_AUTHORIZED_CODE")));
+				failureResponse.setErrorDescription(messages.getString("NOT_AUTHORIZED"));
+				return Response.status(200).entity(failureResponse).build();
+			}
 
 			return Response.status(Status.OK).entity(getUserResponse).build();
 		} catch (AsmsException ex) {
@@ -430,7 +445,6 @@ public class UserMgmtService extends BaseService {
 			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
 		}
 	}
-
 
 	@Path("/register")
 	@POST
@@ -620,6 +634,55 @@ public class UserMgmtService extends BaseService {
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
+			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+		}
+	}
+
+	/*
+	 * api : /user/privileges/assign request type :POST
+	 * 
+	 * Method : assignPrivileges -> This method does assigning privileges input
+	 * : UserRequest object outbut: Response object
+	 * 
+	 * 
+	 */
+
+	@Path("/privileges/assign")
+	@POST
+	@Consumes("application/json")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public Response assignPrivileges(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse,
+			UserDetails userDetails, @QueryParam("tenantId") String tenant) {
+		FailureResponse failureResponse = new FailureResponse();
+		SuccessResponse sResponse = new SuccessResponse();
+		try {
+			// get bundles for error messages
+			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
+			// validate request
+			validator.validateUserPrivileges(userDetails, messages);
+			
+			HttpSession session = hRequest.getSession();
+			User user = (User) session.getAttribute("ap_user");
+			// authorize
+
+			// check if loggedin user has got rights to assign privileges user
+			PrincipalUser pUser = privilegesManager.isPrivileged(user, Constants.admin_category_assignPermissions,
+					Constants.privileges.create_check.toString());
+			if (pUser.isPrivileged()) {
+			
+				userMgmtDao.assignPrivileges(userDetails, tenant);
+				return Response.status(Status.OK).entity(sResponse).build();
+
+			} else {
+				
+				failureResponse.setCode(Integer.parseInt(messages.getString("NOT_AUTHORIZED_CODE")));
+				failureResponse.setErrorDescription(messages.getString("NOT_AUTHORIZED"));
+				return Response.status(200).entity(failureResponse).build();
+			}
+
+		} catch (AsmsException ex) {
+			// construct failure response
+			
 			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
 		}
 	}

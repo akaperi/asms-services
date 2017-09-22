@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -2746,6 +2747,63 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 			}
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
 					+ "getAll()" + "   ", e);
+			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
+			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+					messages.getString("SYSTEM_EXCEPTION"));
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
+		}
+
+	}
+
+	@Override
+	public void assignPrivileges(UserDetails details, String tenant) throws AsmsException {
+		Session session = null;
+
+		Transaction tx = null;
+		try {
+			String schema = multitenancyDao.getSchema(tenant);
+			if (null == schema) {
+				throw exceptionHandler.constructAsmsException(messages.getString("TENANT_INVALID_CODE"),
+						messages.getString("TENANT_INVALID_CODE_MSG"));
+
+			}
+			Set<Privilege> privileges = details.getPrivileges();
+			User user = getUserById(details.getUserId(), schema);
+			session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
+			tx = session.beginTransaction();
+
+			user = (User) session.load(User.class, user.getSerialNo());
+			Set<Privilege> userPrs = user.getPrivileges();
+			String name;
+			for (Privilege p : userPrs) {
+				name = p.getActivityName();
+				for (Privilege p1 : privileges) {
+					 if(p1.getActivityName().equalsIgnoreCase(name)){
+						 p.setCreateCheck(p1.getCreateCheck());
+						 p.setUpdateCheck(p1.getUpdateCheck());
+						 p.setRetrieveCheck(p1.getRetrieveCheck());
+						 p.setDeleteCheck(p1.getDeleteCheck());
+					 }
+					
+				}
+				
+			}
+			session.update(user);
+			tx.commit();
+			session.close();
+
+		} catch (Exception e) {
+			if (tx != null) {
+				tx.rollback();
+			}
+			if (session.isOpen()) {
+				session.close();
+			}
+			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
+					+ "assignPrivileges()" + "   ", e);
 			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
 			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
 					messages.getString("SYSTEM_EXCEPTION"));

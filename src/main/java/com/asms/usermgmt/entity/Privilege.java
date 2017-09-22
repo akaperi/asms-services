@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 
@@ -63,7 +64,7 @@ public class Privilege
 	private User userObject;
 
 	
-
+	@JsonIgnore
 	public User getUserObject() {
 		return userObject;
 	}

@@ -59,6 +59,8 @@ public interface UserMgmtDao {
 	public void changePassword(ChangePasswordDetails changePasswordDetails, User user, String tenant) throws AsmsException;
 
 	public List<UserDetails> searchForPrivileges(String role, String subRole, String id, String tenant) throws AsmsException;
+	
+	public void assignPrivileges(UserDetails details, String tenant) throws AsmsException;
 
 	
 

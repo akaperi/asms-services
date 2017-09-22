@@ -142,6 +142,7 @@ public class User {
 		this.isNew = isNew;
 	}
 
+	@JsonIgnore
 	public Set<Privilege> getPrivileges() {
 		return privileges;
 	}

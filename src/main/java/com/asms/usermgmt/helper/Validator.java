@@ -15,6 +15,7 @@ import com.asms.Exception.ExceptionHandler;
 import com.asms.common.helper.Constants;
 import com.asms.usermgmt.request.ChangePasswordDetails;
 import com.asms.usermgmt.request.TeachingSubjectDetails;
+import com.asms.usermgmt.request.UserDetails;
 import com.asms.usermgmt.request.UserRequest;
 import com.asms.usermgmt.request.management.ManagementDetails;
 import com.asms.usermgmt.request.nonTeachingStaff.AddressDetails;
@@ -1095,5 +1096,19 @@ public class Validator {
 		}
 		
 	}
+	
+	public void validateUserPrivileges(UserDetails details, ResourceBundle messages) throws AsmsException {
+
+		if (null == details) {
+			throw exceptionHandler.constructAsmsException(messages.getString("USER_OBJECT_NULL_CODE"),
+					messages.getString("USER_OBJECT_NULL"));
+		}
+		if (null == details.getUserId() || details.getUserId().isEmpty()) {
+			throw exceptionHandler.constructAsmsException(messages.getString("USERID_NULL_CODE"),
+					messages.getString("USERID_NULL_MSG"));
+		}
+		
+	}
+
 
 }
