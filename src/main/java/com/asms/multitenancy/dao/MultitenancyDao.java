@@ -4,6 +4,7 @@ import java.util.List;
 import com.asms.Exception.AsmsException;
 import com.asms.multitenancy.entity.Trust;
 import com.asms.multitenancy.request.TrustDetails;
+import com.asms.schoolmgmt.entity.AcademicYear;
 
 public interface MultitenancyDao {
 	
@@ -48,4 +49,14 @@ public interface MultitenancyDao {
 	 * @throws AsmsException
 	 */
 	public List<Trust> getTrust(String schema) throws AsmsException;
+	
+	
+	/**
+	 * @param schema 
+	 * @param 
+	 * @return List of AcademicYear 
+	 * @throws AsmsException
+	 */
+
+	public List<AcademicYear> getAcademicYear(String tenantId) throws AsmsException;
 }

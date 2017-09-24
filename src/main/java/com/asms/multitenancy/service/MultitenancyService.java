@@ -13,6 +13,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -33,8 +34,11 @@ import com.asms.multitenancy.entity.Trust;
 import com.asms.multitenancy.helper.TrustValidator;
 import com.asms.multitenancy.request.TrustDetails;
 import com.asms.schoolmgmt.request.UserRequest;
+import com.asms.usermgmt.entity.User;
 import com.asms.usermgmt.response.GetUserResponse;
 import com.asms.usermgmt.response.RegistrationResponse;
+import com.asms.schoolmgmt.entity.AcademicYear;
+import com.asms.common.helper.CommonReponse;
 
 
 @Service
@@ -148,5 +152,48 @@ public class MultitenancyService extends BaseService{
 			FailureResponse failureResponse = new FailureResponse(ex);
 			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
 		}
+	}
+	
+	
+	
+	
+	
+	/*
+	 * api : /common/AcademicYear  Request type :GET
+	 * 
+	 * Method :register -> This method is used to get AcademicYear Details. Input:No
+	 * input Output: Response object *
+	 * 
+	 * 
+	 */
+	
+	@Path("/academicYears")
+	@GET
+	@Consumes("application/json")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public Response AcademicYear(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse, @QueryParam("tenantId") String tenant) {
+
+		try {
+			FailureResponse failureResponse = new FailureResponse();
+			// get bundles for error messages
+			HttpSession session = hRequest.getSession();
+			User user = (User) session.getAttribute("ap_user");
+
+			if (null != user) {
+				List<AcademicYear> academicYears = multitenancyDao.getAcademicYear(tenant);
+				CommonReponse commonreponse = new CommonReponse();
+				commonreponse.setAcademicYear(academicYears);
+				return Response.status(Status.OK).entity(commonreponse).build();
+
+			} else {
+				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			}
+
+		} catch (AsmsException ex) {
+			// construct failure response
+			FailureResponse failureResponse = new FailureResponse(ex);
+			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+		}
+
 	}
 }

@@ -28,6 +28,7 @@ import com.asms.multitenancy.entity.Tenant;
 import com.asms.multitenancy.entity.Trust;
 import com.asms.multitenancy.request.TrustDetails;
 import com.asms.rolemgmt.dao.RoleMgmtDao;
+import com.asms.schoolmgmt.entity.AcademicYear;
 
 @Service
 @Component
@@ -289,6 +290,56 @@ public class MultitenancyDaoImpl implements MultitenancyDao {
 			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
 					messages.getString("SYSTEM_EXCEPTION"));
 		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
+		}
+		
+	}
+	
+	
+	/*
+	 * getAcademicYear : This method retrieves AcademicYear from database 
+	 * 
+	 * parameters: 
+	 * 
+	 * return List Of AcademicYear
+	 * 
+	 * 
+	 */
+	
+	@Override
+	public List<AcademicYear> getAcademicYear(String tenantId) throws AsmsException {
+		Session session = null;
+		try {
+			
+			String schema = getSchema(tenantId);
+			if (null != schema) {
+				session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
+				String hql = "from AcademicYear A";
+			@SuppressWarnings("unchecked")
+			List<AcademicYear> academicYear = session.createQuery(hql).list();
+			
+			session.close();
+			return academicYear;
+
+			
+			}else {
+				throw exceptionHandler.constructAsmsException(messages.getString("TENANT_INVALID_CODE"),
+						messages.getString("TENANT_INVALID_CODE_MSG"));
+			}
+			}
+		catch (Exception e) {
+			if (session.isOpen()) {
+				session.close();
+			}
+			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
+					+ "getAcademicYear()" + "   ", e);
+			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
+			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+					messages.getString("SYSTEM_EXCEPTION"));
+		} finally {
+			
 			if (session.isOpen()) {
 				session.close();
 			}
