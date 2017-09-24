@@ -28,7 +28,7 @@ public class GetUserResponse extends SuccessResponse {
 
 	private List<String> boardNames;
 
-	private List<Class> class1;
+	private List<Class> classes;
 
 	private List<UserDetails> userDetails;
 
@@ -82,12 +82,14 @@ public class GetUserResponse extends SuccessResponse {
 		this.boardNames = boardNames;
 	}
 
-	public List<Class> getClass1() {
-		return class1;
+	
+
+	public List<Class> getClasses() {
+		return classes;
 	}
 
-	public void setClass1(List<Class> class1) {
-		this.class1 = class1;
+	public void setClasses(List<Class> classes) {
+		this.classes = classes;
 	}
 
 	public List<Integer> getListOfStateId() {
