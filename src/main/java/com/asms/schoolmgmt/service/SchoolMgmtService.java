@@ -339,42 +339,7 @@ public class SchoolMgmtService extends BaseService {
 		}
 	}
 
-	@Path("/broadCasteMessages")
-	@POST
-	@Consumes("application/json")
-	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	public Response getbroadCasteMessages(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse,
-			@QueryParam("tenantId") String tenant, @QueryParam("parentDetails") boolean parent,
-			@QueryParam("managementDetails") boolean management, @QueryParam("studentDetails") boolean student,
-			UserRequest userRequest) {
-		try {
-			FailureResponse failureResponse = new FailureResponse();
-			// get bundles for error messages
-			HttpSession session = hRequest.getSession();
-			User user = (User) session.getAttribute("ap_user");
-
-			PrincipalUser pUser = privilegesManager.isPrivileged((User) user,
-					Constants.academics_category_broadcastMessages, Constants.privileges.create_check.toString());
-			if (pUser.isPrivileged()) {
-
-				BroadCasteSearchTypesDetails searchTypesDetails = userRequest.getBroadCasteSearchTypesDetails();
-
-				List<String> emails = schoolMgmtDao.get(searchTypesDetails, tenant);
-
-				GetUserResponse getUserResponse = new GetUserResponse();
-				getUserResponse.setEmails(emails);
-				return Response.status(Status.OK).entity(getUserResponse).build();
-
-			} else {
-				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
-			}
-
-		} catch (AsmsException ex) {
-			// construct failure response
-			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
-		}
-	}
+	
 
 	@Path("/broadCasteMessages")
 	@POST
