@@ -2,6 +2,8 @@ package com.asms.schoolmgmt.request;
 
 public class BroadCasteSearchTypesDetails {
 
+	
+	
 	private boolean allStudents;
 	
 	private boolean allParents;
@@ -10,11 +12,16 @@ public class BroadCasteSearchTypesDetails {
 	
 	private boolean allNonTeaching;
 	
+	private boolean allTeachingStaff;
+	
+	
+	
+	private String dateOfIssue;
+	
 	private String subject;
 
 	private String message;
 	
-	private String fromEmail;
 	
 	
 	public String getMessage() {
@@ -29,12 +36,7 @@ public class BroadCasteSearchTypesDetails {
 	public void setSubject(String subject) {
 		this.subject = subject;
 	}
-	public String getFromEmail() {
-		return fromEmail;
-	}
-	public void setFromEmail(String fromEmail) {
-		this.fromEmail = fromEmail;
-	}
+	
 	public boolean isAllStudents() {
 		return allStudents;
 	}
@@ -59,6 +61,22 @@ public class BroadCasteSearchTypesDetails {
 	public void setAllNonTeaching(boolean allNonTeaching) {
 		this.allNonTeaching = allNonTeaching;
 	}
+	
+	
+	public boolean isAllTeachingStaff() {
+		return allTeachingStaff;
+	}
+	public void setAllTeachingStaff(boolean allTeachingStaff) {
+		this.allTeachingStaff = allTeachingStaff;
+	}
+	
+	public String getDateOfIssue() {
+		return dateOfIssue;
+	}
+	public void setDateOfIssue(String dateOfIssue) {
+		this.dateOfIssue = dateOfIssue;
+	}
+	
 	
 	
 	

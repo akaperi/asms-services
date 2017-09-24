@@ -1,5 +1,7 @@
 package com.asms.schoolmgmt.dao;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -63,10 +65,10 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 
 	@Autowired
 	private MultitenancyDao multitenancyDao;
-	
+
 	@Autowired
 	private UserMgmtDao userMgmtDao;
-	
+
 	@Autowired
 	private EmailSender emailSender;
 
@@ -371,7 +373,7 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 		admin.setUserId(generateUserId());
 		admin.setUserPassword("password");
 		admin.setSchoolId(school.getSerialNo());
-		
+
 		return admin;
 
 	}
@@ -422,8 +424,8 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 	public void setupSchool(SetupSchoolDetails setupSchoolDetail, String tenant) throws AsmsException {
 		// TODO Auto-generated method stub
 		/**
-<<<<<<< HEAD
-<<<<<<< HEAD
+		 * <<<<<<< HEAD <<<<<<< HEAD
+		 * 
 		 * @{author} mallikarjun.guranna 13-Sep-2017
 		 */
 
@@ -442,8 +444,7 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 			classes = new Class();
 			classes.setName(cd.getName());
 			classes.setBoardId(cd.getBoardId());
-			
-			
+
 			List<SectionDetails> sectionDetails = cd.getSectionDetails();
 			if (null != sectionDetails) {
 				for (SectionDetails se : sectionDetails) {
@@ -475,7 +476,7 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 
 					section.setClassObject(classes);
 					classes.getSectionObjects().add(section);
-					
+
 				}
 			}
 			academicYear.getClasses().add(classes);
@@ -518,8 +519,6 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 			}
 		}
 
-		
-		
 	}
 
 	/*
@@ -529,60 +528,82 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 	 * com.asms.schoolmgmt.dao.SchoolMgmtDao#get(com.asms.schoolmgmt.request.
 	 * BroadCasteSearchTypesDetails, java.lang.String)
 	 */
-	
+
 	@Override
-	public List<String> get(BroadCasteSearchTypesDetails searchTypesDetails,String tenantId) throws AsmsException {
+	public List<String> createBoradCasteMessage(BroadCasteSearchTypesDetails searchTypesDetails, String tenantId)
+			throws AsmsException {
 		Session session = null;
-		try{
+		String sDate1 = searchTypesDetails.getDateOfIssue();
+		DateFormat edtFormat = new SimpleDateFormat("yyyy-mm-dd");
+
+		try {
+			Date aLD = edtFormat.parse(sDate1);
 			String schema = multitenancyDao.getSchema(tenantId);
-			if(null!=schema)
+			if (null != schema) {
 				session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
-		String hql="";
-			if (searchTypesDetails.isAllParents()==true) {
-		   	hql = hql+"select fEmail from Parent";
+
+				List<String> toEmailIdQry = new ArrayList<>();
+
+				String hql = "select S.name from School S";
+				String school = (String) session.createQuery(hql).uniqueResult();
+
+				if (searchTypesDetails.isAllParents() == true) {
+					toEmailIdQry.add("select fEmail from Parent");
+				}
+				if (searchTypesDetails.isAllStudents() == true) {
+					toEmailIdQry.add("select studentCreatedByWadmin from Student");
+				}
+
+				if (searchTypesDetails.isAllStudents() == true && searchTypesDetails.isAllParents() == true
+						&& searchTypesDetails.isAllManagement() == false) {
+					toEmailIdQry.add("select studentCreatedByWadmin from Student");
+				}
+				if (searchTypesDetails.isAllManagement() == true && searchTypesDetails.isAllParents() == true
+						&& searchTypesDetails.isAllStudents() == true) {
+					toEmailIdQry.add("select mngmtCreatedByWadmin from Management");
+				}
+				if (searchTypesDetails.isAllNonTeaching() == true) {
+					toEmailIdQry.add("select createdByWadmin from NonTeachingStaff");
+				}
+
+				if (searchTypesDetails.isAllTeachingStaff() == true) {
+					toEmailIdQry.add("select createdByWadmin from TeachingStaff");
+				}
+
+				for (String qry : toEmailIdQry) {
+					List<String> emails = session.createQuery(qry).list();
+
+					for (String email : emails) {
+
+						emailSender.send(school, email, "devendrasignh77@gmail.com", searchTypesDetails.getSubject(),
+								searchTypesDetails.getMessage(), "text/html", aLD);
+					}
+
+				}
+				session.close();
+
 			}
-			else if(searchTypesDetails.isAllStudents()==true)
-			{
-				hql = hql+"select email from Student";
-			}
-			else if(searchTypesDetails.isAllManagement()==true){
-				hql=hql+"select email from Management";
-			}
-			
-			@SuppressWarnings("unchecked")
-			List<String> emails= session.createQuery(hql).list();
-			session.close();
-			
-			for (String email : emails) {
-				
-				emailSender.send(email,searchTypesDetails.getFromEmail(),searchTypesDetails.getSubject(),searchTypesDetails.getMessage(), "text/html");
-			}
-			
-			return emails;
-			
-			} catch (Exception e) {
+		}
+
+		catch (Exception e) {
 			if (session.isOpen()) {
 				session.close();
 			}
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
-					+ "get" + "   ", e);
+					+ "createBoradCasteMessage" + "   ", e);
 			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
 			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
 					messages.getString("SYSTEM_EXCEPTION"));
+
 		} finally {
 			if (session.isOpen()) {
 				session.close();
 			}
 		}
-	
-	
-	
+		return null;
+
 	}
 
-	/* (non-Javadoc)
-	 * @see com.asms.schoolmgmt.dao.SchoolMgmtDao#get(com.asms.schoolmgmt.request.BroadCasteSearchTypesDetails, java.lang.String)
-	 */
 
-	
 
 }

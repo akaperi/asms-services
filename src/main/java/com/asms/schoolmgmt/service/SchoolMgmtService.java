@@ -50,7 +50,6 @@ import com.asms.usermgmt.helper.PrincipalUser;
 import com.asms.usermgmt.response.GetUserResponse;
 import com.asms.usermgmt.response.RegistrationResponse;
 
-
 /*
  * SchoolMgmtService.java handles school registration, update , get and delete 
  * functionalities
@@ -72,14 +71,11 @@ public class SchoolMgmtService extends BaseService {
 
 	@Autowired
 	private MultitenancyDao multitenancyDao;
-	
+
 	@Resource(name = "asmsdbProperties")
 	private Properties dbProperties;
-	
-	
 
 	private static final Logger logger = LoggerFactory.getLogger(SchoolMgmtService.class);
-
 
 	/*
 	 * api : /school/names request type :GET
@@ -149,9 +145,9 @@ public class SchoolMgmtService extends BaseService {
 				boolean result = multitenancyDao.createSchema(schema);
 				if (result) {
 					SchoolDetails school = userRequest.getSchoolDetails();
-					schoolMgmtDao.createSchool(school,schema);
+					schoolMgmtDao.createSchool(school, schema);
 					return Response.status(Status.OK).entity(rReponse).build();
-				}else{
+				} else {
 					FailureResponse failureResponse = new FailureResponse();
 					failureResponse.setCode(Integer.parseInt(messages.getString("NOT_AUTHORIZED_CODE")));
 					failureResponse.setErrorDescription(messages.getString("NOT_AUTHORIZED"));
@@ -170,16 +166,15 @@ public class SchoolMgmtService extends BaseService {
 			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
 		}
 	}
-	
-	
-	//setup school code goes here
-	//------------------------------------
+
+	// setup school code goes here
+	// ------------------------------------
 	@Path("/setup")
 	@POST
 	@Consumes("application/json")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public Response setupSchool(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse,
-			UserRequest userRequest,@QueryParam("tenantId") String tenant) {
+			UserRequest userRequest, @QueryParam("tenantId") String tenant) {
 		RegistrationResponse rReponse = new RegistrationResponse();
 		ResourceBundle messages;
 		try {
@@ -191,20 +186,19 @@ public class SchoolMgmtService extends BaseService {
 			// validator.validateUserDetails(userRequest, messages);
 			HttpSession session = hRequest.getSession();
 			Object user = session.getAttribute("ap_user");
-			
-			PrincipalUser pUser = privilegesManager.isPrivileged((User)user, Constants.admin_category_setup,
+
+			PrincipalUser pUser = privilegesManager.isPrivileged((User) user, Constants.admin_category_setup,
 					Constants.privileges.create_check.toString());
 			if (pUser.isPrivileged()) {
-					SetupSchoolDetails setupSchoolDetails = userRequest.getSetupSchoolDetails();
-					schoolMgmtDao.setupSchool(setupSchoolDetails,tenant);
-					return Response.status(Status.OK).entity(rReponse).build();
-				}else{
-					FailureResponse failureResponse = new FailureResponse();
-					failureResponse.setCode(Integer.parseInt(messages.getString("NOT_AUTHORIZED_CODE")));
-					failureResponse.setErrorDescription(messages.getString("NOT_AUTHORIZED"));
-					return Response.status(200).entity(failureResponse).build();
-				}
-			
+				SetupSchoolDetails setupSchoolDetails = userRequest.getSetupSchoolDetails();
+				schoolMgmtDao.setupSchool(setupSchoolDetails, tenant);
+				return Response.status(Status.OK).entity(rReponse).build();
+			} else {
+				FailureResponse failureResponse = new FailureResponse();
+				failureResponse.setCode(Integer.parseInt(messages.getString("NOT_AUTHORIZED_CODE")));
+				failureResponse.setErrorDescription(messages.getString("NOT_AUTHORIZED"));
+				return Response.status(200).entity(failureResponse).build();
+			}
 
 		} catch (AsmsException ex) {
 			// construct failure response
@@ -213,12 +207,11 @@ public class SchoolMgmtService extends BaseService {
 		}
 	}
 
-	
 	/*
 	 * api : /school/classes request type :GET
 	 * 
-	 * Method : getNamesOfBoard -> This method is used for Drop Down. Input:tenantId
-	 * input Output: Response object *
+	 * Method : getNamesOfBoard -> This method is used for Drop Down.
+	 * Input:tenantId input Output: Response object *
 	 * 
 	 * 
 	 */
@@ -226,7 +219,8 @@ public class SchoolMgmtService extends BaseService {
 	@GET
 	@Consumes("application/json")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	public Response getClass(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse, @QueryParam("tenantId") String tenant) {
+	public Response getClass(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse,
+			@QueryParam("tenantId") String tenant) {
 
 		try {
 			FailureResponse failureResponse = new FailureResponse();
@@ -299,12 +293,11 @@ public class SchoolMgmtService extends BaseService {
 		}
 	}
 
-	
 	/*
 	 * api : /school/classSubjects request type :GET
 	 * 
-	 * Method : getClassSubjectsByClassId -> This method is used for Drop Down. Input:classId
-	 * input Output: Response object *
+	 * Method : getClassSubjectsByClassId -> This method is used for Drop Down.
+	 * Input:classId input Output: Response object *
 	 * 
 	 * 
 	 */
@@ -313,7 +306,8 @@ public class SchoolMgmtService extends BaseService {
 	@Consumes("application/json")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public Response getClassSubjectsByClassId(@Context HttpServletRequest hRequest,
-			@Context HttpServletResponse hResponse, @QueryParam("classId") int classId,@QueryParam("tenantId") String tenant) {
+			@Context HttpServletResponse hResponse, @QueryParam("classId") int classId,
+			@QueryParam("tenantId") String tenant) {
 		ResourceBundle messages;
 		try {
 			FailureResponse failureResponse = new FailureResponse();
@@ -330,7 +324,7 @@ public class SchoolMgmtService extends BaseService {
 			User user = (User) session.getAttribute("ap_user");
 
 			if (user != null) {
-				List<String> list = schoolMgmtDao.getClassSujects(classId,tenant);
+				List<String> list = schoolMgmtDao.getClassSujects(classId, tenant);
 				SchoolSuccessResponse countrySuccessResponse = new SchoolSuccessResponse();
 				countrySuccessResponse.setClassNames(list);
 				return Response.status(Status.OK).entity(countrySuccessResponse).build();
@@ -344,27 +338,28 @@ public class SchoolMgmtService extends BaseService {
 			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
 		}
 	}
-	
+
 	@Path("/broadCasteMessages")
 	@POST
 	@Consumes("application/json")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	public Response getbroadCasteMessages(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse,@QueryParam("tenantId") 
-	String tenant,@QueryParam("parentDetails") boolean parent,@QueryParam("managementDetails") boolean management,@QueryParam("studentDetails") boolean student,UserRequest userRequest) 
-	{	try {
+	public Response getbroadCasteMessages(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse,
+			@QueryParam("tenantId") String tenant, @QueryParam("parentDetails") boolean parent,
+			@QueryParam("managementDetails") boolean management, @QueryParam("studentDetails") boolean student,
+			UserRequest userRequest) {
+		try {
 			FailureResponse failureResponse = new FailureResponse();
 			// get bundles for error messages
 			HttpSession session = hRequest.getSession();
 			User user = (User) session.getAttribute("ap_user");
-			
-			
-			PrincipalUser pUser = privilegesManager.isPrivileged((User)user, Constants.academics_category_broadcastMessages,
-					Constants.privileges.create_check.toString());
+
+			PrincipalUser pUser = privilegesManager.isPrivileged((User) user,
+					Constants.academics_category_broadcastMessages, Constants.privileges.create_check.toString());
 			if (pUser.isPrivileged()) {
-				
-				BroadCasteSearchTypesDetails searchTypesDetails =  userRequest.getBroadCasteSearchTypesDetails();
-				
-				List<String> emails =schoolMgmtDao.get(searchTypesDetails,tenant);
+
+				BroadCasteSearchTypesDetails searchTypesDetails = userRequest.getBroadCasteSearchTypesDetails();
+
+				List<String> emails = schoolMgmtDao.get(searchTypesDetails, tenant);
 
 				GetUserResponse getUserResponse = new GetUserResponse();
 				getUserResponse.setEmails(emails);
@@ -381,7 +376,40 @@ public class SchoolMgmtService extends BaseService {
 		}
 	}
 
-	
+	@Path("/broadCasteMessages")
+	@POST
+	@Consumes("application/json")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public Response createbroadCasteMessages(@Context HttpServletRequest hRequest,
+			@Context HttpServletResponse hResponse, @QueryParam("tenantId") String tenant, UserRequest userRequest) {
+		try {
+			FailureResponse failureResponse = new FailureResponse();
+			// get bundles for error messages
+			HttpSession session = hRequest.getSession();
+			User user = (User) session.getAttribute("ap_user");
 
-	
+			PrincipalUser pUser = privilegesManager.isPrivileged((User) user,
+					Constants.academics_category_broadcastMessages.toString(),
+					Constants.privileges.create_check.toString());
+			if (pUser.isPrivileged()) {
+
+				BroadCasteSearchTypesDetails searchTypesDetails = userRequest.getBroadCasteSearchTypesDetails();
+
+				List<String> emails = schoolMgmtDao.createBoradCasteMessage(searchTypesDetails, tenant);
+
+				SchoolSuccessResponse schoolSuccessResponse = new SchoolSuccessResponse();
+				// schoolSuccessResponse.setDetails(emails);
+				return Response.status(Status.OK).entity(schoolSuccessResponse).build();
+
+			} else {
+				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			}
+
+		} catch (AsmsException ex) {
+			// construct failure response
+			FailureResponse failureResponse = new FailureResponse(ex);
+			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+		}
+	}
+
 }
