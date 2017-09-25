@@ -233,7 +233,7 @@ public class SchoolMgmtService extends BaseService {
 				List<Class> class1 = schoolMgmtDao.getClasses(tenant);
 
 				GetUserResponse getUserResponse = new GetUserResponse();
-				getUserResponse.setClass1(class1);
+				getUserResponse.setClasses(class1);
 				return Response.status(Status.OK).entity(getUserResponse).build();
 
 			} else {
