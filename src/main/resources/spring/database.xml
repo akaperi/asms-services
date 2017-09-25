@@ -6,12 +6,12 @@
 		destroy-method="close">
 		<beans:property name="driverClassName" value="${driver_class_name}" />
 		<beans:property name="url" value="${db_url}" />
-		
+
 		<beans:property name="connectionProperties"
 			value="useUnicode=yes;characterEncoding=utf8;" />
 		<beans:property name="username" value="${username}" />
 		<beans:property name="password" value="${password}" />
-		
+
 	</beans:bean>
 
 	<!-- Hibernate 4 SessionFactory Bean definition -->
@@ -25,7 +25,7 @@
 				<beans:value>com.asms.CountryMgmt.Entity.Country</beans:value>
 				<beans:value>com.asms.schoolmgmt.entity.School</beans:value>
 
-				
+
 				<beans:value>com.asms.usermgmt.entity.management.Management
 				</beans:value>
 
@@ -46,7 +46,8 @@
 
 				<beans:value>com.asms.schoolmgmt.entity.Class</beans:value>
 				<beans:value>com.asms.schoolmgmt.entity.Section</beans:value>
-				<beans:value>com.asms.schoolmgmt.entity.AdditionalSubjects</beans:value>
+				<beans:value>com.asms.schoolmgmt.entity.AdditionalSubjects
+				</beans:value>
 				<beans:value>com.asms.schoolmgmt.entity.AcademicYear</beans:value>
 				<beans:value>com.asms.schoolmgmt.entity.ClassSubjects</beans:value>
 
@@ -86,19 +87,24 @@
 				<beans:value>com.asms.CountryMgmt.Entity.SubDivision</beans:value>
 				<beans:value>com.asms.schoolmgmt.entity.BoardSubjectMaster
 				</beans:value>
-				<beans:value>com.asms.usermgmt.service.QualificationType</beans:value>
+				<beans:value>com.asms.usermgmt.service.QualificationType
+				</beans:value>
 				<beans:value>com.asms.usermgmt.service.ReligionTypes</beans:value>
 				<beans:value>com.asms.usermgmt.service.CasteTypes</beans:value>
-				
-				
+				<beans:value>com.asms.schoolmgmt.entity.ClassGroup</beans:value>
+
 				<beans:value>com.asms.schoolmgmt.entity.ClassSubjects</beans:value>
 				<beans:value>com.asms.multitenancy.entity.Trust</beans:value>
 				<beans:value>com.asms.multitenancy.entity.Activity</beans:value>
-				<beans:value>com.asms.multitenancy.entity.DefaultActivities</beans:value>
-				<beans:value>com.asms.multitenancy.entity.DefaultActivities</beans:value>
+				<beans:value>com.asms.multitenancy.entity.DefaultActivities
+				</beans:value>
+				<beans:value>com.asms.multitenancy.entity.DefaultActivities
+				</beans:value>
 				<beans:value>com.asms.schoolmgmt.entity.SchoolBoard</beans:value>
 				<beans:value>com.asms.usermgmt.entity.Admin</beans:value>
 				<beans:value>com.asms.usermgmt.entity.Privilege	</beans:value>
+				<beans:value>com.asms.schoolmgmt.entity.Breaks</beans:value>
+				
 
 			</beans:list>
 		</beans:property>

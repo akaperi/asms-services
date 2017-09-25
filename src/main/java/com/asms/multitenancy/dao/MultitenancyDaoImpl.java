@@ -94,7 +94,56 @@ public class MultitenancyDaoImpl implements MultitenancyDao {
 			// construct failure response
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
 
-					+ "createTenantId()" + "   ", ex);
+					+ "createSchema()" + "   ", ex);
+
+			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
+			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+					messages.getString("SYSTEM_EXCEPTION"));
+		}
+
+	}
+	
+	
+	/**
+	 * @param id
+	 * @param name
+	 * @return
+	 * @throws AsmsException
+	 */
+
+	@Override
+	public boolean updateSchema(String name) throws AsmsException {
+		try {
+
+			Configuration _configuration = new Configuration();
+			_configuration.configure("database_multitenancy.xml");
+			// Get a local configuration to configure
+			final Configuration tenantConfig = _configuration;
+
+			// Set the properties for this configuration
+			Properties props = new Properties();
+			props.put(Environment.DEFAULT_SCHEMA, name);
+			tenantConfig.addProperties(props);
+			Class.forName("com.mysql.jdbc.Driver");
+			// Get connection
+			Connection connection = DriverManager.getConnection(dbProperties.getProperty("db_url_multitenancy"),
+					dbProperties.getProperty("username"), dbProperties.getProperty("password"));
+
+			// Create the schema
+			connection.createStatement().execute("USE " + name + "");
+
+			// Run the schema update from configuration
+			SchemaUpdate schemaUpdate = new SchemaUpdate(tenantConfig);
+			schemaUpdate.execute(true, true);
+
+			
+			return true;
+
+		} catch (Exception ex) {
+			// construct failure response
+			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
+
+					+ "updateSchema()" + "   ", ex);
 
 			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
 			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),

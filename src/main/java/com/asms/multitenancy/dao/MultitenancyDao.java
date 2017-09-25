@@ -59,4 +59,6 @@ public interface MultitenancyDao {
 	 */
 
 	public List<AcademicYear> getAcademicYear(String tenantId) throws AsmsException;
+
+	public boolean updateSchema(String name) throws AsmsException;
 }

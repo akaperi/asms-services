@@ -37,6 +37,7 @@ import com.asms.schoolmgmt.entity.Class;
 import com.asms.schoolmgmt.entity.SetupSchoolDetails;
 import com.asms.schoolmgmt.helper.SchoolValidator;
 import com.asms.schoolmgmt.request.BroadCasteSearchTypesDetails;
+import com.asms.schoolmgmt.request.GroupDetails;
 import com.asms.schoolmgmt.request.SchoolDetails;
 import com.asms.schoolmgmt.request.UserRequest;
 import com.asms.schoolmgmt.response.SchoolSuccessResponse;
@@ -376,5 +377,91 @@ public class SchoolMgmtService extends BaseService {
 			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
 		}
 	}
+	
+	
+	
+	// grouping classes code goes here
+		// ------------------------------------
+		@Path("/groups/create")
+		@POST
+		@Consumes("application/json")
+		@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+		public Response createGroups(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse,
+				GroupDetails details, @QueryParam("tenantId") String tenant) {
+			RegistrationResponse rReponse = new RegistrationResponse();
+			ResourceBundle messages;
+			try {
+				// get bundles for error messages
+				messages = AsmsHelper.getMessageFromBundle();
+				// validate request
+				//schoolValidator.validateSetupSchoolRequest(userRequest, messages, "create");
+				// validate user details
+				// validator.validateUserDetails(userRequest, messages);
+				HttpSession session = hRequest.getSession();
+				Object user = session.getAttribute("ap_user");
+
+				PrincipalUser pUser = privilegesManager.isPrivileged((User) user, Constants.admin_category_setup,
+						Constants.privileges.create_check.toString());
+				if (pUser.isPrivileged()) {
+					//SetupSchoolDetails setupSchoolDetails = userRequest.getSetupSchoolDetails();
+					//schoolMgmtDao.setupSchool(setupSchoolDetails, tenant);
+					return Response.status(Status.OK).entity(rReponse).build();
+				} else {
+					FailureResponse failureResponse = new FailureResponse();
+					failureResponse.setCode(Integer.parseInt(messages.getString("NOT_AUTHORIZED_CODE")));
+					failureResponse.setErrorDescription(messages.getString("NOT_AUTHORIZED"));
+					return Response.status(200).entity(failureResponse).build();
+				}
+
+			} catch (AsmsException ex) {
+				// construct failure response
+				FailureResponse failureResponse = new FailureResponse(ex);
+				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			}
+		}
+		
+		
+		@Path("/schema/update")
+		@POST
+		@Consumes("application/json")
+		@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+		public Response updateSchema(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse,
+				@QueryParam("schema") String schema) {
+			RegistrationResponse rReponse = new RegistrationResponse();
+			ResourceBundle messages;
+			try {
+				// get bundles for error messages
+				messages = AsmsHelper.getMessageFromBundle();
+			
+				HttpSession session = hRequest.getSession();
+				Object user = session.getAttribute("ap_user");
+				if (user instanceof SuperAdmin) {
+
+					// create schema
+					
+					boolean result = multitenancyDao.updateSchema(schema);
+					if (result) {
+						
+						return Response.status(Status.OK).entity(rReponse).build();
+					} else {
+						FailureResponse failureResponse = new FailureResponse();
+						failureResponse.setCode(Integer.parseInt(messages.getString("NOT_AUTHORIZED_CODE")));
+						failureResponse.setErrorDescription(messages.getString("NOT_AUTHORIZED"));
+						return Response.status(200).entity(failureResponse).build();
+					}
+				} else {
+					FailureResponse failureResponse = new FailureResponse();
+					failureResponse.setCode(Integer.parseInt(messages.getString("NOT_AUTHORIZED_CODE")));
+					failureResponse.setErrorDescription(messages.getString("NOT_AUTHORIZED"));
+					return Response.status(200).entity(failureResponse).build();
+				}
+
+			} catch (AsmsException ex) {
+				// construct failure response
+				FailureResponse failureResponse = new FailureResponse(ex);
+				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			}
+		}
+
 
 }

@@ -12,7 +12,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
@@ -47,6 +49,21 @@ public class Class {
 	
 	@Column(name = "class_name")
 	private String name;
+	
+	
+	@ManyToOne
+	@JoinColumn(name = "group_id")
+	private ClassGroup classGroupObbject;
+
+
+	@JsonIgnore
+	public ClassGroup getClassGroupObbject() {
+		return classGroupObbject;
+	}
+
+	public void setClassGroupObbject(ClassGroup classGroupObbject) {
+		this.classGroupObbject = classGroupObbject;
+	}
 
 	@OneToMany(mappedBy = "classObject")
 	private List<TeachingSubjects> teachingSubjects = new ArrayList<TeachingSubjects>();
@@ -57,6 +74,10 @@ public class Class {
 
 	@ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER, mappedBy = "classes")
 	private Set<AcademicYear> academicYears = new HashSet<AcademicYear>();
+	
+	
+
+	
 
 	@JsonIgnore
 	public List<Section> getSectionObjects() {
