@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -34,6 +35,7 @@ import com.asms.rolemgmt.entity.Role;
 import com.asms.rolemgmt.entity.SubRole;
 import com.asms.schoolmgmt.entity.AcademicYear;
 import com.asms.schoolmgmt.entity.AdditionalSubjects;
+import com.asms.schoolmgmt.entity.Breaks;
 import com.asms.schoolmgmt.entity.Class;
 import com.asms.schoolmgmt.entity.ClassGroup;
 import com.asms.schoolmgmt.entity.ClassSubjects;
@@ -628,50 +630,85 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 		List<ClassGroup> classGroups = new ArrayList<ClassGroup>();
 		ClassGroup classGroup = null;
 		String hql = null;
-		String startTime = null;
-		String endTime = null;
-		if (null != schema) {
-			// session =
-			// sessionFactory.withOptions().tenantIdentifier(schema).openSession();
+		List<String> breakDetails = null;
+		Breaks breakes = null;
+		try {
+			if (null != schema) {
+				session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
 
-			/*
-			 * for (GroupDetails gd : details) { classNames =
-			 * gd.getClassnames(); for(String c : classNames){
-			 * 
-			 * hql = " from Class C where C.name = ?"; classObject = (Class)
-			 * session.createQuery(hql).setParameter(0, c).uniqueResult();
-			 * if(null != classObject){ classGroup = new ClassGroup();
-			 * classGroup.getClasses().add(classObject);
-			 * 
-			 * } if(! classGroup.getClasses().isEmpty()){
-			 * 
-			 * }
-			 * 
-			 * }
-			 * 
-			 * /*try { for (Class C : classObjects) { session =
-			 * sessionFactory.withOptions().tenantIdentifier(schema).openSession
-			 * (); tx = session.beginTransaction();
-			 * 
-			 * session.save(C);
-			 * 
-			 * tx.commit(); session.close(); } } catch (Exception ex) { if
-			 * (session.isOpen()) { session.close(); } logger.error(
-			 * "Session Id: " + MDC.get("sessionId") + "   " + "Method: " +
-			 * this.getClass().getName() + "."
-			 * 
-			 * + "setupSchool()" + "   ", ex);
-			 * 
-			 * ResourceBundle messages = AsmsHelper.getMessageFromBundle();
-			 * throw exceptionHandler.constructAsmsException(messages.getString(
-			 * "SYSTEM_EXCEPTION_CODE"),
-			 * messages.getString("SYSTEM_EXCEPTION"));
-			 * 
-			 * } finally { if (session.isOpen()) { session.close(); } }
-			 */
-		} else {
-			throw exceptionHandler.constructAsmsException(messages.getString("TENANT_INVALID_CODE"),
-					messages.getString("TENANT_INVALID_CODE_MSG"));
+				for (GroupDetails gd : details) {
+					classNames = gd.getClassnames();
+					for (String c : classNames) {
+
+						hql = " from Class C where C.name = ?";
+						classObject = (Class) session.createQuery(hql).setParameter(0, c).uniqueResult();
+						if (null != classObject) {
+							classGroup = new ClassGroup();
+							classGroup.getClasses().add(classObject);
+
+						}
+						if (!classGroup.getClasses().isEmpty()) {
+							classGroup.setStartTime(gd.getStartTime());
+							classGroup.setEndTime(gd.getEndTime());
+							breakDetails = gd.getBreaks();
+							for(String b : breakDetails){
+								StringTokenizer time = new StringTokenizer(gd.getEndTime(), "-");
+								breakes = new Breaks();
+								
+								while (time.hasMoreElements()) {
+									if (time.countTokens() == 1){
+										breakes.setEndTime(time.nextToken());
+									}
+									else{
+										breakes.setStartTime(time.nextToken());
+									}
+									
+								}
+								
+								breakes.setClassGroup(classGroup);
+								classGroup.getBreaks().add(breakes);
+								
+							}
+							classGroups.add(classGroup);
+							classGroup.setPeriodDuration(gd.getPeriodDuration());
+						}
+
+					}
+				}
+				
+				
+				
+				for(ClassGroup cg : classGroups){
+					tx = session.beginTransaction();
+
+					session.save(cg);
+
+					tx.commit();
+					session.close();
+				}
+				
+			}
+
+			else {
+				throw exceptionHandler.constructAsmsException(messages.getString("TENANT_INVALID_CODE"),
+						messages.getString("TENANT_INVALID_CODE_MSG"));
+			}
+		} catch (Exception ex) {
+			if (session.isOpen()) {
+				session.close();
+			}
+			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
+
+					+ "setupSchool()" + "   ", ex);
+
+			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
+			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+					messages.getString("SYSTEM_EXCEPTION"));
+
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 
 		// TODO Auto-generated method stub
@@ -684,11 +721,12 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 		Transaction tx = null;
 
 		// academicYear.getClasses().addAll(class1);
-		String schema = multitenancyDao.getSchema(tenantId);
-		AcademicYear academicYear = new AcademicYear();
-		academicYear.setAcademicYearFromTo(academicyear);
-		if (null != schema) {
-			try {
+		try {
+			String schema = multitenancyDao.getSchema(tenantId);
+			AcademicYear academicYear = new AcademicYear();
+			academicYear.setAcademicYearFromTo(academicyear);
+			if (null != schema) {
+
 				List<Class> classes = getClasses(tenantId);
 				for (Class c : classes) {
 					session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
@@ -701,28 +739,27 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 					tx.commit();
 					session.close();
 				}
-			} catch (Exception ex) {
-				if (session.isOpen()) {
-					session.close();
-				}
-				logger.error(
-						"Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
 
-								+ "setupSchoolCopy()" + "   ",
-						ex);
-
-				ResourceBundle messages = AsmsHelper.getMessageFromBundle();
-				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
-						messages.getString("SYSTEM_EXCEPTION"));
-
-			} finally {
-				if (session.isOpen()) {
-					session.close();
-				}
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("TENANT_INVALID_CODE"),
+						messages.getString("TENANT_INVALID_CODE_MSG"));
 			}
-		} else {
-			throw exceptionHandler.constructAsmsException(messages.getString("TENANT_INVALID_CODE"),
-					messages.getString("TENANT_INVALID_CODE_MSG"));
+		} catch (Exception ex) {
+			if (session.isOpen()) {
+				session.close();
+			}
+			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
+
+					+ "setupSchool()" + "   ", ex);
+
+			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
+			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+					messages.getString("SYSTEM_EXCEPTION"));
+
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 
 	}
