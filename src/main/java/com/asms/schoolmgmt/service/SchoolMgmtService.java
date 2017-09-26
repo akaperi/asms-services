@@ -401,9 +401,8 @@ public class SchoolMgmtService extends BaseService {
 			PrincipalUser pUser = privilegesManager.isPrivileged((User) user, Constants.admin_category_setup,
 					Constants.privileges.create_check.toString());
 			if (pUser.isPrivileged()) {
-				// SetupSchoolDetails setupSchoolDetails =
-				// userRequest.getSetupSchoolDetails();
-				// schoolMgmtDao.setupSchool(setupSchoolDetails, tenant);
+				
+				 schoolMgmtDao.createGroups(details, tenant);
 				return Response.status(Status.OK).entity(rReponse).build();
 			} else {
 				FailureResponse failureResponse = new FailureResponse();

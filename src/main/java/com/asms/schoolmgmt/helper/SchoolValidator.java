@@ -212,6 +212,11 @@ public class SchoolValidator {
 	public void validateCreateGroupsRequest(List<GroupDetails> details, ResourceBundle messages, String type)
 			throws AsmsException {
 		// .matches("[0-9]+"
+		
+		if (null == details) {
+			throw exceptionHandler.constructAsmsException(messages.getString("REQUEST_NULL_CODE"),
+					messages.getString("REQUEST_NULL"));
+		}
 
 		for (GroupDetails gd : details) {
 
@@ -248,8 +253,7 @@ public class SchoolValidator {
 			}
 
 			// check break time format
-			for (String b : gd.getBreaks()) {
-				time = new StringTokenizer(b, "-");
+			/*for (Breaks b : gd.getBreaks()) {
 				while (time.hasMoreElements()) {
 					StringTokenizer time1 = new StringTokenizer(time.nextElement().toString(), ":");
 					while (time1.hasMoreElements()) {
@@ -262,7 +266,7 @@ public class SchoolValidator {
 					}
 				}
 
-			}
+			}*/
 
 		}
 

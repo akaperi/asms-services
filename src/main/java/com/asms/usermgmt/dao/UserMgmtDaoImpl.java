@@ -2698,7 +2698,7 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 			ResourceBundle message = AsmsHelper.getMessageFromBundle();
 			if (e instanceof AsmsException) {
 				throw exceptionHandler.constructAsmsException(((AsmsException) e).getCode(),
-						((AsmsException) e).getMessage());
+						((AsmsException) e).getDescription());
 			} else {
 				throw exceptionHandler.constructAsmsException(message.getString("SYSTEM_EXCEPTION_CODE"),
 						message.getString("SYSTEM_EXCEPTION"));

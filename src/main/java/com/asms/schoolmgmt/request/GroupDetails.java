@@ -6,26 +6,30 @@ package com.asms.schoolmgmt.request;
 
 import java.util.List;
 
+import com.asms.schoolmgmt.entity.Breaks;
+
 public class GroupDetails {
 	/**
 	 * @{author} gayithri.hg 25-Sep-2017
 	 */
 
 	private String requestType;
-	private List<String> classnames;
+	private List<ClassDetails> classDetails;
 	private String startTime;
 	private String endTime;
 	private String periodDuration;
 
 
-	private List<String> breaks; // in the form of 09:00-09:30
+	private List<Breaks> breaks; 
 
-	public List<String> getClassnames() {
-		return classnames;
+	
+
+	public List<ClassDetails> getClassDetails() {
+		return classDetails;
 	}
 
-	public void setClassnames(List<String> classnames) {
-		this.classnames = classnames;
+	public void setClassDetails(List<ClassDetails> classDetails) {
+		this.classDetails = classDetails;
 	}
 
 	public String getStartTime() {
@@ -44,11 +48,13 @@ public class GroupDetails {
 		this.endTime = endTime;
 	}
 
-	public List<String> getBreaks() {
+	
+
+	public List<Breaks> getBreaks() {
 		return breaks;
 	}
 
-	public void setBreaks(List<String> breaks) {
+	public void setBreaks(List<Breaks> breaks) {
 		this.breaks = breaks;
 	}
 
