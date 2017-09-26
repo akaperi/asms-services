@@ -34,7 +34,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 @XmlRootElement
 @Entity
-@Table(name = "ClassGroup")
+@Table(name = "Class_Group")
 public class ClassGroup {
 	/**
 	 * @{author} Gayithri.Hg
@@ -50,6 +50,12 @@ public class ClassGroup {
 	
 	@Column(name = "end_time")
 	private String endTime;
+	
+	@Column(name = "period_duration")
+	private String periodDuration;
+
+	
+
 
 	@XmlElement
 	@OneToMany(mappedBy="classGroupObbject", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -112,7 +118,14 @@ public class ClassGroup {
 	}
 	
 	
-	
+	public String getPeriodDuration() {
+		return periodDuration;
+	}
+
+
+	public void setPeriodDuration(String periodDuration) {
+		this.periodDuration = periodDuration;
+	}
 	
 
 

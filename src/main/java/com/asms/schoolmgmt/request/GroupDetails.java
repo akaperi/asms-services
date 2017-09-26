@@ -11,9 +11,13 @@ public class GroupDetails {
 	 * @{author} gayithri.hg 25-Sep-2017
 	 */
 
+	private String requestType;
 	private List<String> classnames;
 	private String startTime;
 	private String endTime;
+	private String periodDuration;
+
+
 	private List<String> breaks; // in the form of 09:00-09:30
 
 	public List<String> getClassnames() {
@@ -47,5 +51,22 @@ public class GroupDetails {
 	public void setBreaks(List<String> breaks) {
 		this.breaks = breaks;
 	}
+
+	public String getRequestType() {
+		return requestType;
+	}
+
+	public void setRequestType(String requestType) {
+		this.requestType = requestType;
+	}
+	
+	public String getPeriodDuration() {
+		return periodDuration;
+	}
+
+	public void setPeriodDuration(String periodDuration) {
+		this.periodDuration = periodDuration;
+	}
+	
 
 }
