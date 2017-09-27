@@ -12,6 +12,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -46,7 +47,7 @@ public class AcademicYear {
 	@Column(name = "academicYear_FromTo")
 	private String academicYearFromTo;
 
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
 	@JoinTable(name = "AcademicYearClassMap", joinColumns = {
 			@JoinColumn(name = "academicYear_Id", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "class_id", nullable = false, updatable = false) })

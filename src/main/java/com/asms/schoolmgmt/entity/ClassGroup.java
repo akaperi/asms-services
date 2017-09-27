@@ -58,12 +58,12 @@ public class ClassGroup {
 
 
 	@XmlElement
-	@OneToMany(mappedBy="classGroupObbject", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy="classGroupObject", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<Breaks> breaks = new HashSet<Breaks>();
 	
 	
 	@XmlElement
-	@OneToMany(mappedBy="classGroupObbject",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy="classGroupObject",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<Class> classes = new HashSet<Class>();
 
 
