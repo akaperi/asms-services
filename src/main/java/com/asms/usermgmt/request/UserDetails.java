@@ -81,7 +81,6 @@ public class UserDetails {
 	private Set<Privilege> privileges;
 	
 	
-	
 
 	public Set<Privilege> getPrivileges() {
 		return privileges;
@@ -284,5 +283,6 @@ public class UserDetails {
 	public void setAdminDetails(AdminDetails adminDetails) {
 		this.adminDetails = adminDetails;
 	}
-	
+
+
 }

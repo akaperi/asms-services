@@ -1,5 +1,7 @@
 package com.asms.rolemgmt.dao;
 
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.ResourceBundle;
@@ -20,6 +22,7 @@ import com.asms.Exception.AsmsException;
 import com.asms.Exception.ExceptionHandler;
 import com.asms.common.helper.AsmsHelper;
 import com.asms.common.helper.Constants;
+import com.asms.multitenancy.dao.MultitenancyDao;
 import com.asms.rolemgmt.entity.Role;
 import com.asms.rolemgmt.entity.SubRole;
 import com.asms.usermgmt.service.UserMgmtService;
@@ -51,6 +54,7 @@ public class RoleMgmtDaoImpl implements RoleMgmtDao {
 	private static final Logger logger = LoggerFactory.getLogger(UserMgmtService.class);
 
 	
+
 	/*
 	 * Method : createRole :insert role
 	 * 
@@ -239,6 +243,60 @@ public class RoleMgmtDaoImpl implements RoleMgmtDao {
 			
 		}
 
+
+	/*
+	 * insertSubRole : This method inserts subRole in the  database.
+	 * 
+	 * 
+	 * parameters: String roleName , String subRoleName
+	 * 
+	 * return: void
+	 * 
+	 * 
+	 */
+	@Override
+	public void insertSubRole(String roleName, String subRoleName, String tenantId) throws AsmsException {
+		Session session = null;
+		Transaction tx = null;
+		
+		
+		try {
+		String schema=	multitenancyDao.getSchema(tenantId);
+				session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
+		String hqry="from Role  where roleName='"+roleName+"'";
+		Role role = (Role) session.createQuery(hqry).uniqueResult();
+	
+		SubRole subRole = new SubRole();
+		
+		// subRole.setRoleObject(role);
+		subRole.setSubRoleName(subRoleName);
+		
+		subRole.getRoleObject().setRoleName(subRoleName);
+		role.getSubRoleObjectList().add(subRole);
+            
+
+		tx = session.beginTransaction();
+		session.save(subRole);
+		tx.commit();
+		session.close();
+		} catch (Exception e) {
+			if (tx != null) {
+				tx.rollback();
+			}
+			if (session.isOpen()) {
+				session.close();
+			}
+			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
+					+ "insertSubRole()" + "   ", e);
+			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
+			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+					messages.getString("SYSTEM_EXCEPTION"));
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
+		}
+	}
 	
 	@Override
 	public List<SubRole> getSubRole(String Role, String tenant) throws AsmsException {

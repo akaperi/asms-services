@@ -9,7 +9,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import com.asms.Exception.AsmsException;
 import com.asms.common.helper.Constants;
+import com.asms.rolemgmt.entity.SubRole;
 import com.asms.usermgmt.entity.Admin;
 import com.asms.usermgmt.entity.User;
 import com.asms.usermgmt.entity.management.Management;
@@ -1060,5 +1062,15 @@ public class EntityCreator {
 		staffStatutory.setPfNo(staffStatutoryDetails.getPfNo());
 		return staffStatutory;
 	}
+	
+	
+	
+	
+	/*
+	 * Method: createSubRoleDetails -> maps ui values to entity input :
+	 * SubRoleDetails return : SubRole
+	 * 
+	 */
+
 
 }

@@ -13,6 +13,14 @@ import com.asms.schoolmgmt.request.SchoolDetails;
 
 public interface SchoolMgmtDao {
 
+
+	public List<Section> getSections(String tenantId) throws AsmsException;
+	
+
+	
+	 
+
+
 	public Class getClassByName(String name, String tenantId) throws AsmsException;
 
 	public Section getSectionByName(String className, String sectionName, String tenantId) throws AsmsException;
@@ -26,6 +34,7 @@ public interface SchoolMgmtDao {
 	public List<String> getClassSujects(int classId, String tenantId) throws AsmsException;
 
 	public School getSchool(String schema) throws AsmsException;
+
 
 	/**
 	 * @param schoolDetails
