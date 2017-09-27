@@ -28,6 +28,7 @@ public interface SchoolMgmtDao {
 	public School getSchool(String schema) throws AsmsException;
 
 
+	public List<Section> getSections(String tenantId) throws AsmsException;
 	
 
 	

@@ -6,6 +6,8 @@ package com.asms.schoolmgmt.request;
 
 
 import com.asms.multitenancy.request.TrustDetails;
+import com.asms.rolemgmt.entity.Role;
+import com.asms.rolemgmt.entity.SubRole;
 import com.asms.schoolmgmt.entity.SetupSchoolDetails;
 
 public class UserRequest {
@@ -22,12 +24,18 @@ public class UserRequest {
 	private String subRole;
 
 	private SchoolDetails schoolDetails;
+	
 	private SetupSchoolDetails setupSchoolDetails;
 	
 	
 	private TrustDetails trustDetails;
 	
 	private BroadCasteSearchTypesDetails broadCasteSearchTypesDetails;
+	
+	
+private Role role;
+
+private SubRole subRole2;
 
 	public String getRequestType() {
 		return requestType;
@@ -83,6 +91,22 @@ public class UserRequest {
 
 	public void setBroadCasteSearchTypesDetails(BroadCasteSearchTypesDetails broadCasteSearchTypesDetails) {
 		this.broadCasteSearchTypesDetails = broadCasteSearchTypesDetails;
+	}
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
+	public SubRole getSubRole2() {
+		return subRole2;
+	}
+
+	public void setSubRole2(SubRole subRole2) {
+		this.subRole2 = subRole2;
 	}
 
 	

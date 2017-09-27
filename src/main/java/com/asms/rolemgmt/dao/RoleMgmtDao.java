@@ -11,4 +11,7 @@ public interface RoleMgmtDao {
 	 */
 	public void createDefaultRoles(String schema) throws AsmsException;
 	
+	
+	public void insertSubRole(String roleName, String subRoleName,String tenantId) throws AsmsException;
+	
 }

@@ -34,6 +34,7 @@ import com.asms.multitenancy.dao.MultitenancyDao;
 import com.asms.multitenancy.entity.SuperAdmin;
 import com.asms.schoolmgmt.dao.SchoolMgmtDao;
 import com.asms.schoolmgmt.entity.Class;
+import com.asms.schoolmgmt.entity.Section;
 import com.asms.schoolmgmt.entity.SetupSchoolDetails;
 import com.asms.schoolmgmt.helper.SchoolValidator;
 import com.asms.schoolmgmt.request.BroadCasteSearchTypesDetails;
@@ -341,6 +342,14 @@ public class SchoolMgmtService extends BaseService {
 
 	
 
+	/*
+	 * api : /school/broadCasteMessages request type :POST
+	 * 
+	 * Method : createbroadCasteMessages -> This method is used to send the emails .
+	 * Input:UserRequest  Output: Response object *
+	 * 
+	 * 
+	 */
 	@Path("/broadCasteMessages")
 	@POST
 	@Consumes("application/json")
@@ -375,6 +384,50 @@ public class SchoolMgmtService extends BaseService {
 			FailureResponse failureResponse = new FailureResponse(ex);
 			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
 		}
+	}
+	
+	
+	
+	
+	/*
+	 * api : /school/sections request type :GET
+	 * 
+	 * Method : getSections -> This method is used for Drop Down.
+	 * Input: tenantId    input Output: Response object *
+	 * 
+	 * 
+	 */
+	
+	@Path("/sections")
+	@GET
+	@Consumes("application/json")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public Response getSections(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse, @QueryParam("tenantId") String tenant) {
+
+		try {
+			FailureResponse failureResponse = new FailureResponse();
+			// get bundles for error messages
+			HttpSession session = hRequest.getSession();
+			User user = (User) session.getAttribute("ap_user");
+
+			if (null != user) {
+
+				List<Section> sections = schoolMgmtDao.getSections(tenant);
+
+				SchoolSuccessResponse schoolSuccessResponse = new SchoolSuccessResponse();
+				schoolSuccessResponse.setSections(sections);
+				return Response.status(Status.OK).entity(schoolSuccessResponse).build();
+
+			} else {
+				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			}
+
+		} catch (AsmsException ex) {
+			// construct failure response
+			FailureResponse failureResponse = new FailureResponse(ex);
+			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+		}
+
 	}
 
 }

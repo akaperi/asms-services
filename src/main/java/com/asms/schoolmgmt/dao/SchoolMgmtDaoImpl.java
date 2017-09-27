@@ -525,7 +525,7 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.asms.schoolmgmt.dao.SchoolMgmtDao#get(com.asms.schoolmgmt.request.
+	 * com.asms.schoolmgmt.dao.SchoolMgmtDao#createBoradCasteMessage(com.asms.schoolmgmt.request.
 	 * BroadCasteSearchTypesDetails, java.lang.String)
 	 */
 
@@ -602,6 +602,50 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 		}
 		return null;
 
+	}
+
+	
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.asms.schoolmgmt.dao.SchoolMgmtDao#getSections()
+	 */
+	@Override
+	public List<Section> getSections(String tenantId) throws AsmsException {
+		Session session = null;
+		try {
+
+			messages = AsmsHelper.getMessageFromBundle();
+			String schema = multitenancyDao.getSchema(tenantId);
+			if (null != schema) {
+				session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
+				String hql = "from Section S";
+
+				@SuppressWarnings("unchecked")
+				List<Section> sections = session.createQuery(hql).list();
+				session.close();
+				return sections;
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("TENANT_INVALID_CODE"),
+						messages.getString("TENANT_INVALID_CODE_MSG"));
+			}
+
+		} catch (Exception e) {
+			if (session.isOpen()) {
+				session.close();
+			}
+			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
+					+ "getSections()" + "   ", e);
+			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
+			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+					messages.getString("SYSTEM_EXCEPTION"));
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
+		}
 	}
 
 
