@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -34,7 +35,9 @@ import com.asms.rolemgmt.entity.Role;
 import com.asms.rolemgmt.entity.SubRole;
 import com.asms.schoolmgmt.entity.AcademicYear;
 import com.asms.schoolmgmt.entity.AdditionalSubjects;
+import com.asms.schoolmgmt.entity.Breaks;
 import com.asms.schoolmgmt.entity.Class;
+import com.asms.schoolmgmt.entity.ClassGroup;
 import com.asms.schoolmgmt.entity.ClassSubjects;
 import com.asms.schoolmgmt.entity.School;
 import com.asms.schoolmgmt.entity.Section;
@@ -42,6 +45,7 @@ import com.asms.schoolmgmt.entity.SetupSchoolDetails;
 import com.asms.schoolmgmt.request.AdditionalSubjectsDetails;
 import com.asms.schoolmgmt.request.BroadCasteSearchTypesDetails;
 import com.asms.schoolmgmt.request.ClassDetails;
+import com.asms.schoolmgmt.request.GroupDetails;
 import com.asms.schoolmgmt.request.SchoolDetails;
 import com.asms.schoolmgmt.request.SectionDetails;
 import com.asms.schoolmgmt.request.SubjectDetails;
@@ -437,70 +441,81 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 		Set<ClassSubjects> subList;
 		AcademicYear academicYear;
 		Set<AdditionalSubjects> addSubsList;
-		List<Class> classObjects = new ArrayList<Class>();
+		Set<Class> classObjects = new HashSet<Class>();
 		academicYear = new AcademicYear();
 		academicYear.setAcademicYearFromTo(setupSchoolDetail.getCurrentAcademicYear());
-		for (ClassDetails cd : classDetails) {
-			classes = new Class();
-			classes.setName(cd.getName());
-			classes.setBoardId(cd.getBoardId());
-
-			List<SectionDetails> sectionDetails = cd.getSectionDetails();
-			if (null != sectionDetails) {
-				for (SectionDetails se : sectionDetails) {
-					section = new Section();
-					section.setName(se.getName());
-
-					List<SubjectDetails> subjectDetails = se.getSubjectDetails();
-					if (null != subjectDetails) {
-						subList = new HashSet<ClassSubjects>();
-						for (SubjectDetails sd : subjectDetails) {
-							sub = new ClassSubjects();
-							sub.setName(sd.getName());
-							sub.setSectionObject(section);
-							subList.add(sub);
-						}
-						section.setSubjects(subList);
-					}
-					List<AdditionalSubjectsDetails> addSubjectDetails = se.getAdditionalSubjectsDetails();
-					addSubsList = new HashSet<AdditionalSubjects>();
-					if (null != addSubjectDetails) {
-						for (AdditionalSubjectsDetails asd : addSubjectDetails) {
-							addSubs = new AdditionalSubjects();
-							addSubs.setName(asd.getName());
-							addSubs.setSectionObject(section);
-							addSubsList.add(addSubs);
-						}
-						section.setAdditionalSubjects(addSubsList);
-					}
-
-					section.setClassObject(classes);
-					classes.getSectionObjects().add(section);
-
-				}
-			}
-			academicYear.getClasses().add(classes);
-			classes.getAcademicYears().add(academicYear);
-
-			classObjects.add(classes);
-
-		}
-
-		String schema = multitenancyDao.getSchema(tenant);
-
 		Session session = null;
 		Transaction tx = null;
-
+		ResourceBundle messages = AsmsHelper.getMessageFromBundle();
 		try {
-			for (Class C : classObjects) {
+			
+			String schema = multitenancyDao.getSchema(tenant);
+			session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
+			String hql = "from AcademicYear A where A.academicYearFromTo = ?";
+			AcademicYear aYearInDB = (AcademicYear) session.createQuery(hql).setParameter(0,
+					setupSchoolDetail.getCurrentAcademicYear()).uniqueResult();
+			session.close();
+			if (null == aYearInDB) {
+
+				for (ClassDetails cd : classDetails) {
+					classes = new Class();
+					classes.setName(cd.getName().trim());
+					classes.setBoardId(cd.getBoardId());
+
+					List<SectionDetails> sectionDetails = cd.getSectionDetails();
+					if (null != sectionDetails) {
+						for (SectionDetails se : sectionDetails) {
+							section = new Section();
+							section.setName(se.getName().trim());
+
+							List<SubjectDetails> subjectDetails = se.getSubjectDetails();
+							if (null != subjectDetails) {
+								subList = new HashSet<ClassSubjects>();
+								for (SubjectDetails sd : subjectDetails) {
+									sub = new ClassSubjects();
+									sub.setName(sd.getName().trim());
+									sub.setSectionObject(section);
+									subList.add(sub);
+								}
+								section.setSubjects(subList);
+							}
+							List<AdditionalSubjectsDetails> addSubjectDetails = se.getAdditionalSubjectsDetails();
+							addSubsList = new HashSet<AdditionalSubjects>();
+							if (null != addSubjectDetails) {
+								for (AdditionalSubjectsDetails asd : addSubjectDetails) {
+									addSubs = new AdditionalSubjects();
+									addSubs.setName(asd.getName());
+									addSubs.setSectionObject(section);
+									addSubsList.add(addSubs);
+								}
+								section.setAdditionalSubjects(addSubsList);
+							}
+
+							section.setClassObject(classes);
+							classes.getSectionObjects().add(section);
+
+						}
+					}
+					// academicYear.getClasses().add(classes);
+					// classes.getAcademicYears().add(academicYear);
+
+					classObjects.add(classes);
+					academicYear.setClasses(classObjects);
+
+				}
+
 				session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
 				tx = session.beginTransaction();
 
-				session.save(C);
+				session.save(academicYear);
 
 				tx.commit();
 				session.close();
+			} else {
+				throw exceptionHandler.constructAsmsException("11",
+						messages.getString("setup already done"));
 			}
+
 		} catch (Exception ex) {
 			if (session.isOpen()) {
 				session.close();
@@ -509,9 +524,13 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 
 					+ "setupSchool()" + "   ", ex);
 
-			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
-			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
-					messages.getString("SYSTEM_EXCEPTION"));
+			if (ex instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) ex).getCode(),
+						((AsmsException) ex).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
 
 		} finally {
 			if (session.isOpen()) {
@@ -604,6 +623,7 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 
 	}
 
+
 	
 	
 	/*
@@ -648,6 +668,176 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 		}
 	}
 
+	/**
+	 * method : createGroups : creates classes in groups according start time
+	 * and end time and breaks
+	 * 
+	 * @param List<GroupDetails>
+	 *            details
+	 * @return
+	 * @throws AsmsException
+	 */
 
+
+	@Override
+	public void createGroups(List<GroupDetails> details, String tenant) throws AsmsException {
+
+		Session session = null;
+		Transaction tx = null;
+
+		List<ClassDetails> classDetailsList;
+		Class classObject = null;
+		List<ClassGroup> classGroups = new ArrayList<ClassGroup>();
+		ClassGroup classGroup = null;
+		String hql = null;
+		List<Breaks> breakDetails = null;
+		String className = null;
+		Breaks breakes = null;
+		try {
+			String schema = multitenancyDao.getSchema(tenant);
+			messages = AsmsHelper.getMessageFromBundle();
+			if (null != schema) {
+				session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
+
+				for (GroupDetails gd : details) {
+					classDetailsList = gd.getClassDetails();
+					if (null != classDetailsList) {
+						for (ClassDetails cd : classDetailsList) {
+							className = cd.getName();
+
+							hql = " from Class C where C.name = ?";
+							classObject = (Class) session.createQuery(hql).setParameter(0, className).uniqueResult();
+							if (null != classObject) {
+								classGroup = new ClassGroup();
+								classGroup.getClasses().add(classObject);
+
+							}
+							if (!classGroup.getClasses().isEmpty()) {
+								classGroup.setStartTime(gd.getStartTime());
+								classGroup.setEndTime(gd.getEndTime());
+								breakDetails = gd.getBreaks();
+								if (null != breakDetails) {
+									for (Breaks b : breakDetails) {
+
+										breakes = new Breaks();
+
+										breakes.setStartTime(b.getStartTime());
+										breakes.setEndTime(b.getEndTime());
+
+										breakes.setClassGroup(classGroup);
+										classGroup.getBreaks().add(breakes);
+
+									}
+									classGroup.setPeriodDuration(gd.getPeriodDuration());
+									classGroup.setStartTime(gd.getStartTime());
+									classGroup.setEndTime(gd.getEndTime());
+									classGroups.add(classGroup);
+
+								} else {
+									throw exceptionHandler.constructAsmsException(messages.getString("BREAK_NULL_CODE"),
+											messages.getString("BREAK_NULL_MSG"));
+								}
+							}
+
+						}
+					} else {
+						throw exceptionHandler.constructAsmsException(messages.getString("CLASSGROUPS_NULL_CODE"),
+								messages.getString("CLASSGROUPS_NULL_MSG"));
+					}
+				}
+
+				for (ClassGroup cg : classGroups) {
+					tx = session.beginTransaction();
+
+					session.save(cg);
+
+					tx.commit();
+					session.close();
+				}
+
+			}
+
+			else {
+				throw exceptionHandler.constructAsmsException(messages.getString("TENANT_INVALID_CODE"),
+						messages.getString("TENANT_INVALID_CODE_MSG"));
+			}
+		} catch (Exception ex) {
+			if (session.isOpen()) {
+				session.close();
+			}
+			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
+
+					+ "createGroups()" + "   ", ex);
+
+			if (ex instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) ex).getCode(),
+						((AsmsException) ex).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
+
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
+		}
+
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void setupSchoolCopy(String academicyear, String tenantId) throws AsmsException {
+		Session session = null;
+		Transaction tx = null;
+
+		ResourceBundle messages = AsmsHelper.getMessageFromBundle();
+		try {
+
+			String schema = multitenancyDao.getSchema(tenantId);
+			AcademicYear academicYear = new AcademicYear();
+			academicYear.setAcademicYearFromTo(academicyear);
+			if (null != schema) {
+
+				List<Class> classes = getClasses(tenantId);
+				academicYear.setClasses(new HashSet<>(classes));
+
+				session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
+
+				tx = session.beginTransaction();
+
+				session.save(academicyear);
+
+				tx.commit();
+				session.close();
+
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("TENANT_INVALID_CODE"),
+						messages.getString("TENANT_INVALID_CODE_MSG"));
+			}
+		} catch (Exception ex) {
+			if (session.isOpen()) {
+				session.close();
+			}
+			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
+
+					+ "setupSchool()" + "   ", ex);
+
+			if (ex instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) ex).getCode(),
+						((AsmsException) ex).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
+
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
+		}
+
+	}
 
 }

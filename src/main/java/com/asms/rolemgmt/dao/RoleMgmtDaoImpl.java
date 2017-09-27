@@ -1,5 +1,6 @@
 package com.asms.rolemgmt.dao;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -24,32 +25,35 @@ import com.asms.common.helper.Constants;
 import com.asms.multitenancy.dao.MultitenancyDao;
 import com.asms.rolemgmt.entity.Role;
 import com.asms.rolemgmt.entity.SubRole;
+import com.asms.usermgmt.service.UserMgmtService;
+import com.asms.multitenancy.dao.MultitenancyDao;
+
+
 
 @Service
 @Component
 public class RoleMgmtDaoImpl implements RoleMgmtDao {
-
+	
 	@Autowired
-	private SessionFactory sessionFactory;	
+	private SessionFactory sessionFactory;
 
 	@Autowired
 	private ExceptionHandler exceptionHandler;
 
-	private static final Logger logger = LoggerFactory.getLogger(RoleMgmtDaoImpl.class);
-	
-	@Resource(name = "asmsdbProperties")
-	private Properties dbProperties;
-
 	@Resource(name = "asmsProperties")
 	private Properties properties;
 
-	
+	@Resource(name = "asmsdbProperties")
+	private Properties dbProperties;
+
 	@Autowired
 	private MultitenancyDao multitenancyDao;
-	
-	
+
 	ResourceBundle messages;
 
+	private static final Logger logger = LoggerFactory.getLogger(UserMgmtService.class);
+
+	
 
 	/*
 	 * Method : createRole :insert role
@@ -200,6 +204,44 @@ public class RoleMgmtDaoImpl implements RoleMgmtDao {
 		}
 		
 	}
+	
+	@Override
+	public List<Role> getRole(String tenantId) throws AsmsException {
+			Session session = null;
+			try {
+				
+				String schema = multitenancyDao.getSchema(tenantId);
+				if (null != schema) {
+					session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
+					String hql = "from Role";
+				@SuppressWarnings("unchecked")
+				List<Role> roles = session.createQuery(hql).list();
+				
+				session.close();
+				return roles;
+				
+				}else {
+					throw exceptionHandler.constructAsmsException(messages.getString("TENANT_INVALID_CODE"),
+							messages.getString("TENANT_INVALID_CODE_MSG"));
+				}
+				}
+			catch (Exception e) {
+				if (session.isOpen()) {
+					session.close();
+				}
+				logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
+						+ "getRole()" + "   ", e);
+				ResourceBundle messages = AsmsHelper.getMessageFromBundle();
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			} finally {
+				
+				if (session.isOpen()) {
+					session.close();
+				}
+			}
+			
+		}
 
 
 	/*
@@ -256,6 +298,37 @@ public class RoleMgmtDaoImpl implements RoleMgmtDao {
 		}
 	}
 	
+	@Override
+	public List<SubRole> getSubRole(String Role, String tenant) throws AsmsException {
+		Session session = null;
+		try {
+			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
+			String schema = multitenancyDao.getSchema(tenant);
+			if (null != schema) {
+				session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
+				String hql = "from SubRole S where S.roleObject.roleName=?";
+				List<SubRole> subrole =  session.createQuery(hql).setParameter(0, Role).list();
+				session.close();
+				return subrole;
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("TENANT_INVALID_CODE"),
+						messages.getString("TENANT_INVALID_CODE_MSG"));
+			}
+		} catch (Exception e) {
+			if (session.isOpen()) {
+				session.close();
+			}
+			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
+					+ "getSubRole()" + "   ", e);
+			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
+			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+					messages.getString("SYSTEM_EXCEPTION"));
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
+		}
+	}
 
-	
+
 }

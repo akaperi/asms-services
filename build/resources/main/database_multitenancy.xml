@@ -6,7 +6,7 @@
 <hibernate-configuration>
 	<session-factory>
 		<property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
-		<property name="hibernate.hbm2ddl.auto">CREATE</property>
+		<property name="hibernate.hbm2ddl.auto">UPDATE</property>
 		<property name="hibernate.multiTenancy">NONE</property>
 		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
 		
@@ -37,7 +37,7 @@
 		<mapping class="com.asms.usermgmt.entity.nonTeachingStaff.NonTeachingStaff" />
 		<mapping class="com.asms.usermgmt.entity.teachingStaff.TeachingSubjects" />
 		<mapping class="com.asms.usermgmt.entity.student.StudentDocuments" />
-		
+		<mapping class="com.asms.schoolmgmt.entity.ClassGroup" />
 		<mapping class="com.asms.schoolmgmt.entity.Class" />
 		<mapping class="com.asms.schoolmgmt.entity.Section" />
 		<mapping class="com.asms.schoolmgmt.entity.AcademicYear" />
@@ -61,6 +61,8 @@
 		<mapping class="com.asms.schoolmgmt.entity.SchoolBoard" />
 		<mapping class="com.asms.usermgmt.entity.Admin" />
 		<mapping class="com.asms.usermgmt.entity.Privilege" />
+		<mapping class="com.asms.schoolmgmt.entity.Breaks" />
+		
 
 
 
