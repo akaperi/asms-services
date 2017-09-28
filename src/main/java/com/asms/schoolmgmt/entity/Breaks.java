@@ -42,7 +42,7 @@ public class Breaks {
 
 	@ManyToOne
 	@JoinColumn(name = "group_id")
-	private ClassGroup classGroupObbject;
+	private ClassGroup classGroupObject;
 
 	public int getSerialNo() {
 		return serialNo;
@@ -70,11 +70,11 @@ public class Breaks {
 
 	@JsonIgnore
 	public ClassGroup getClassGroup() {
-		return classGroupObbject;
+		return classGroupObject;
 	}
 
-	public void setClassGroup(ClassGroup classGroupObbject) {
-		this.classGroupObbject = classGroupObbject;
+	public void setClassGroup(ClassGroup classGroupObject) {
+		this.classGroupObject = classGroupObject;
 	}	
 	
 	

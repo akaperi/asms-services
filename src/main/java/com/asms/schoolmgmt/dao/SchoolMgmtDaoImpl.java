@@ -51,6 +51,7 @@ import com.asms.schoolmgmt.request.SectionDetails;
 import com.asms.schoolmgmt.request.SubjectDetails;
 import com.asms.usermgmt.dao.UserMgmtDao;
 import com.asms.usermgmt.entity.Admin;
+import com.asms.usermgmt.entity.student.Student;
 
 @Service
 @Component
@@ -187,6 +188,39 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 				throw exceptionHandler.constructAsmsException(messages.getString("TENANT_INVALID_CODE"),
 						messages.getString("TENANT_INVALID_CODE_MSG"));
 			}
+
+		} catch (Exception e) {
+			if (session.isOpen()) {
+				session.close();
+			}
+			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
+					+ "getClasses()" + "   ", e);
+			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
+			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+					messages.getString("SYSTEM_EXCEPTION"));
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
+		}
+
+	}
+
+	private Set<Class> getAcademicYearClasses(String academicYear, String schema) throws AsmsException {
+		Session session = null;
+		Set<Class> classes = null;
+		try {
+
+			session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
+			String hql = "from AcademicYear A where A.academicYearFromTo = ?";
+
+			@SuppressWarnings("unchecked")
+			AcademicYear aYear = (AcademicYear) session.createQuery(hql).setParameter(0, academicYear).uniqueResult();
+			session.close();
+			if (null != aYear) {
+				classes = aYear.getClasses();
+			}
+			return classes;
 
 		} catch (Exception e) {
 			if (session.isOpen()) {
@@ -448,12 +482,12 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 		Transaction tx = null;
 		ResourceBundle messages = AsmsHelper.getMessageFromBundle();
 		try {
-			
+
 			String schema = multitenancyDao.getSchema(tenant);
 			session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
 			String hql = "from AcademicYear A where A.academicYearFromTo = ?";
-			AcademicYear aYearInDB = (AcademicYear) session.createQuery(hql).setParameter(0,
-					setupSchoolDetail.getCurrentAcademicYear()).uniqueResult();
+			AcademicYear aYearInDB = (AcademicYear) session.createQuery(hql)
+					.setParameter(0, setupSchoolDetail.getCurrentAcademicYear()).uniqueResult();
 			session.close();
 			if (null == aYearInDB) {
 
@@ -512,8 +546,7 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 				tx.commit();
 				session.close();
 			} else {
-				throw exceptionHandler.constructAsmsException("11",
-						messages.getString("setup already done"));
+				throw exceptionHandler.constructAsmsException("11", "setup already done");
 			}
 
 		} catch (Exception ex) {
@@ -701,6 +734,7 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 
 				for (GroupDetails gd : details) {
 					classDetailsList = gd.getClassDetails();
+					classGroup = new ClassGroup();
 					if (null != classDetailsList) {
 						for (ClassDetails cd : classDetailsList) {
 							className = cd.getName();
@@ -708,37 +742,38 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 							hql = " from Class C where C.name = ?";
 							classObject = (Class) session.createQuery(hql).setParameter(0, className).uniqueResult();
 							if (null != classObject) {
-								classGroup = new ClassGroup();
+
 								classGroup.getClasses().add(classObject);
 
 							}
-							if (!classGroup.getClasses().isEmpty()) {
+
+						}
+						if (!classGroup.getClasses().isEmpty()) {
+							classGroup.setStartTime(gd.getStartTime());
+							classGroup.setEndTime(gd.getEndTime());
+							classGroup.setPeriodDuration(gd.getPeriodDuration());
+							breakDetails = gd.getBreaks();
+							if (null != breakDetails) {
+								for (Breaks b : breakDetails) {
+
+									breakes = new Breaks();
+
+									breakes.setStartTime(b.getStartTime());
+									breakes.setEndTime(b.getEndTime());
+
+									breakes.setClassGroup(classGroup);
+									classGroup.getBreaks().add(breakes);
+
+								}
+
 								classGroup.setStartTime(gd.getStartTime());
 								classGroup.setEndTime(gd.getEndTime());
-								breakDetails = gd.getBreaks();
-								if (null != breakDetails) {
-									for (Breaks b : breakDetails) {
+								classGroups.add(classGroup);
 
-										breakes = new Breaks();
-
-										breakes.setStartTime(b.getStartTime());
-										breakes.setEndTime(b.getEndTime());
-
-										breakes.setClassGroup(classGroup);
-										classGroup.getBreaks().add(breakes);
-
-									}
-									classGroup.setPeriodDuration(gd.getPeriodDuration());
-									classGroup.setStartTime(gd.getStartTime());
-									classGroup.setEndTime(gd.getEndTime());
-									classGroups.add(classGroup);
-
-								} else {
-									throw exceptionHandler.constructAsmsException(messages.getString("BREAK_NULL_CODE"),
-											messages.getString("BREAK_NULL_MSG"));
-								}
+							} else {
+								throw exceptionHandler.constructAsmsException(messages.getString("BREAK_NULL_CODE"),
+										messages.getString("BREAK_NULL_MSG"));
 							}
-
 						}
 					} else {
 						throw exceptionHandler.constructAsmsException(messages.getString("CLASSGROUPS_NULL_CODE"),
@@ -746,14 +781,24 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 					}
 				}
 
+				Set<Class> classes = null;
+				Class classToUpdate = null;
+
 				for (ClassGroup cg : classGroups) {
 					tx = session.beginTransaction();
+					classes = cg.getClasses();
+					for (Class c : classes) {
+						classToUpdate = (Class) session.load(Class.class, c.getId());
+						c.setClassGroupObject(cg);
+						session.update(c);
+					}
 
 					session.save(cg);
 
 					tx.commit();
-					session.close();
+
 				}
+				session.close();
 
 			}
 
@@ -796,21 +841,27 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 		try {
 
 			String schema = multitenancyDao.getSchema(tenantId);
+			session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
+			String hql = "from AcademicYear A where A.academicYearFromTo = ?";
+			AcademicYear aYearInDB = (AcademicYear) session.createQuery(hql).setParameter(0, academicyear)
+					.uniqueResult();
 			AcademicYear academicYear = new AcademicYear();
 			academicYear.setAcademicYearFromTo(academicyear);
+
 			if (null != schema) {
+				if (null == aYearInDB) {
+					Set<Class> classes = getAcademicYearClasses(AsmsHelper.getPreviousAcademicYear(academicyear), schema);
+					academicYear.setClasses(new HashSet<>(classes));
 
-				List<Class> classes = getClasses(tenantId);
-				academicYear.setClasses(new HashSet<>(classes));
+					tx = session.beginTransaction();
 
-				session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
+					session.save(academicYear);
 
-				tx = session.beginTransaction();
-
-				session.save(academicyear);
-
-				tx.commit();
-				session.close();
+					tx.commit();
+					session.close();
+				} else {
+					throw exceptionHandler.constructAsmsException("11", "setup already done");
+				}
 
 			} else {
 				throw exceptionHandler.constructAsmsException(messages.getString("TENANT_INVALID_CODE"),

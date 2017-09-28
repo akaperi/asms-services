@@ -253,6 +253,21 @@ public class SchoolValidator {
 							messages.getString("INVALID_TIME_MSG"));
 				}
 			}
+			
+			String duration = gd.getPeriodDuration();
+			if(null == duration || duration.isEmpty()){
+				throw exceptionHandler.constructAsmsException(messages.getString("PERIOD_DURATION_NULL_CODE"),
+						messages.getString("PERIOD_DURATION_NULL_MSG"));
+			}
+			
+			if (! duration.matches("[0-9]+")){
+				throw exceptionHandler.constructAsmsException(messages.getString("PERIOD_DURATION_INVALID_CODE"),
+						messages.getString("PERIOD_DURATION_INVALID_MSG"));
+			}
+			if(Integer.parseInt(duration) < 0){
+				throw exceptionHandler.constructAsmsException(messages.getString("PERIOD_DURATION_INVALID_CODE"),
+						messages.getString("PERIOD_DURATION_INVALID_MSG"));
+			}
 
 			// check break time format
 			/*for (Breaks b : gd.getBreaks()) {

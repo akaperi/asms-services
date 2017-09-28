@@ -34,8 +34,24 @@ public class AsmsHelper {
 			return true;
 		} else {
 			// System.out.println("Current year not valid");
-			return false;
+			return true;
 		}
+
+	}
+
+	public static String getPreviousAcademicYear(String year) {
+
+		String[] tokenizeYear = year.trim().split("-");
+
+		String yearFirstHalf = tokenizeYear[0].substring(0, 2);
+		String fromYear = tokenizeYear[0].substring(2, 4);
+		String toYear = tokenizeYear[1].substring(0, 2);
+
+		// System.out.println("current year: "+yr);
+		int from = (Integer.parseInt(fromYear)) - 1;
+		int to = (Integer.parseInt(toYear)) - 1;
+
+		return yearFirstHalf + from + "-" + to;
 
 	}
 

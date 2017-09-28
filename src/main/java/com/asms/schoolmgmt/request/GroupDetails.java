@@ -17,7 +17,7 @@ public class GroupDetails {
 	private List<ClassDetails> classDetails;
 	private String startTime;
 	private String endTime;
-	private String periodDuration;
+	private String periodDuration;  // in minutes
 
 
 	private List<Breaks> breaks; 

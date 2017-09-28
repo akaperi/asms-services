@@ -53,16 +53,16 @@ public class Class {
 	
 	@ManyToOne
 	@JoinColumn(name = "group_id")
-	private ClassGroup classGroupObbject;
+	private ClassGroup classGroupObject;
 
 
 	@JsonIgnore
-	public ClassGroup getClassGroupObbject() {
-		return classGroupObbject;
+	public ClassGroup getClassGroupObject() {
+		return classGroupObject;
 	}
 
-	public void setClassGroupObbject(ClassGroup classGroupObbject) {
-		this.classGroupObbject = classGroupObbject;
+	public void setClassGroupObject(ClassGroup classGroupObject) {
+		this.classGroupObject = classGroupObject;
 	}
 
 	@OneToMany(mappedBy = "classObject")
