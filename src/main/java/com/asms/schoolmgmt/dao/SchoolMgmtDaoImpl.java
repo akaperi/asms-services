@@ -840,4 +840,32 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 
 	}
 
+	@Override
+	public  List<ClassSubjects> getSubjectByName(String className, String sectionName, String tenantId) throws AsmsException {
+		Session session = null;
+		String schema =multitenancyDao.getSchema(tenantId);
+		try {
+			session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
+			String hql = "from ClassSubjects C where C.classObject.sectionObject.name ='"+ className+ "' and  C.sectionObject.name='"+ sectionName+"'";
+			 List<ClassSubjects> subjects =session.createQuery(hql).list();
+			session.close();
+			return subjects;
+
+		} catch (Exception e) {
+			if (session.isOpen()) {
+				session.close();
+			}
+			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
+					+ "getSubjectByName()" + "   ", e);
+			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
+			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+					messages.getString("SYSTEM_EXCEPTION"));
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
+		}
+		
+	}
+
 }

@@ -33,4 +33,6 @@ public class SubjectDetails {
 		this.name = name;
 	}
 
+	
+
 }
