@@ -22,6 +22,8 @@ import com.asms.schoolmgmt.entity.Breaks;
 import com.asms.schoolmgmt.entity.SetupSchoolDetails;
 import com.asms.schoolmgmt.request.GroupDetails;
 import com.asms.schoolmgmt.request.SchoolDetails;
+import com.asms.schoolmgmt.request.SectionDetails;
+import com.asms.schoolmgmt.request.SubjectDetails;
 import com.asms.schoolmgmt.request.UserRequest;
 
 @Component
@@ -312,5 +314,68 @@ public class SchoolValidator {
 		}
 
 	}
+	
+	public void validateSubjectDetailsRequest(UserRequest request,ResourceBundle messages) throws AsmsException
+	{
+		if (null == request) {
+			throw exceptionHandler.constructAsmsException(messages.getString("REQUEST_NULL_CODE"),
+					messages.getString("REQUEST_NULL"));
+		}
+
+		if (null == request.getRequestType() || request.getRequestType().trim().isEmpty()) {
+			throw exceptionHandler.constructAsmsException(messages.getString("REQUEST_TYPE_NULL_CODE"),
+					messages.getString("REQUEST_TYPE_NULL"));
+		}
+		
+		SubjectDetails subjectDetails =  new SubjectDetails();
+		
+		if (null == subjectDetails) {
+			throw exceptionHandler.constructAsmsException(messages.getString("SUBJECT_DETAILS_NULL_CODE"),
+					messages.getString("SUBJECT_DETAILS_NULL_MSG"));
+		}
+
+		if (null == subjectDetails.getName() || subjectDetails.getName().isEmpty()) {
+			throw exceptionHandler.constructAsmsException(messages.getString("	SUBJECT_NAME_NULL_CODE"),
+					messages.getString("SUBJECT_NAME_NULL_MSG"));
+		}
+		
+	}
+	
+	public void validateSectiontDetailsRequest(UserRequest request,ResourceBundle messages) throws AsmsException
+	{
+		if (null == request) {
+			throw exceptionHandler.constructAsmsException(messages.getString("REQUEST_NULL_CODE"),
+					messages.getString("REQUEST_NULL"));
+		}
+
+		if (null == request.getRequestType() || request.getRequestType().trim().isEmpty()) {
+			throw exceptionHandler.constructAsmsException(messages.getString("REQUEST_TYPE_NULL_CODE"),
+					messages.getString("REQUEST_TYPE_NULL"));
+		}
+		
+		SectionDetails sectionDetails =  new SectionDetails();
+		
+		if (null == sectionDetails) {
+			throw exceptionHandler.constructAsmsException(messages.getString("SECTION_DETAILS_NULL_CODE"),
+					messages.getString("SECTION_DETAILS_NULL_MSG"));
+		}
+
+		if (null == sectionDetails.getName() ||  sectionDetails.getName().isEmpty()) {
+			throw exceptionHandler.constructAsmsException(messages.getString("	SECTION_NAME_NULL_CODE"),
+					messages.getString("SECTION_NAME_NULL_MSG"));
+		}
+		
+		if (null == sectionDetails.getAdditionalSubjectsDetails() ||  sectionDetails.getAdditionalSubjectsDetails().isEmpty()) {
+			throw exceptionHandler.constructAsmsException(messages.getString("	ADDITIONAL_SUBJECT_NULL_CODE"),
+					messages.getString("ADDITIONAL_SUBJECT_NULL_MSG"));
+		}
+		
+		if (null == sectionDetails.getSubjectDetails() || sectionDetails.getSubjectDetails().isEmpty()) {
+			throw exceptionHandler.constructAsmsException(messages.getString("	SUBJECT_DETAILS_NULL_CODE"),
+					messages.getString("SUBJECT_DETAILS_NULL_MSG"));
+		}
+		
+
+     }
 
 }

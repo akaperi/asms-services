@@ -5,6 +5,8 @@ import java.util.List;
 import com.asms.common.response.SuccessResponse;
 import com.asms.multitenancy.entity.Trust;
 import com.asms.schoolmgmt.entity.Class;
+import com.asms.schoolmgmt.entity.ClassSubjects;
+import com.asms.schoolmgmt.entity.Section;
 import com.asms.schoolmgmt.request.BroadCasteSearchTypesDetails;
 import com.asms.usermgmt.entity.StudentType;
 import com.asms.usermgmt.entity.User;
@@ -48,8 +50,20 @@ public class GetUserResponse extends SuccessResponse {
 	
 	private List<String> emails;
 	
+//	private Section section;
+	
 //	private BroadCasteSearchTypesDetails broadCasteSearchTypesDetails2;
 	
+	private  List<ClassSubjects> classSubjects;
+
+	public List<ClassSubjects> getClassSubjects() {
+		return classSubjects;
+	}
+
+	public void setClassSubjects(List<ClassSubjects> classSubjects) {
+		this.classSubjects = classSubjects;
+	}
+
 	public UserDetails getUser() {
 		return user;
 	}

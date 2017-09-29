@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.asms.Exception.AsmsException;
 import com.asms.schoolmgmt.entity.Class;
+import com.asms.schoolmgmt.entity.ClassSubjects;
 import com.asms.schoolmgmt.entity.School;
 import com.asms.schoolmgmt.entity.Section;
 import com.asms.schoolmgmt.entity.SetupSchoolDetails;
@@ -19,6 +20,10 @@ public interface SchoolMgmtDao {
 	public Class getClassByName(String name, String tenantId) throws AsmsException;
 
 	public Section getSectionByName(String className, String sectionName, String tenantId) throws AsmsException;
+	
+	public List<ClassSubjects> getSubjectByName(String className, String sectionName ,String tenantId) throws AsmsException;
+	
+	
 
 	public List<String> getNames() throws AsmsException;
 

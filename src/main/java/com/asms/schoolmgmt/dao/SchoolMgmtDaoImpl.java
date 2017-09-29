@@ -1026,7 +1026,6 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 				int hourToAdd = duration / 60;
 				int minuteToAdd = duration % 60;
 
-			
 				if (i < breakCalenders.size()) {
 					startTimeCalendar.add(Calendar.MINUTE, duration);
 					if (startTimeCalendar.getTime().compareTo(breakCalenders.get(i).getTime()) <= 0) {
@@ -1077,7 +1076,8 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 							minute = minute + "0";
 						}
 						data.setPeriodEndTime(hour + ":" + minute);
-						startTimeCalendar.set(Calendar.HOUR_OF_DAY, breakCalenders.get(i + 1).get(Calendar.HOUR_OF_DAY));
+						startTimeCalendar.set(Calendar.HOUR_OF_DAY,
+								breakCalenders.get(i + 1).get(Calendar.HOUR_OF_DAY));
 						startTimeCalendar.set(Calendar.MINUTE, breakCalenders.get(i + 1).get(Calendar.MINUTE));
 						dataList.add(data);
 
@@ -1120,4 +1120,35 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 		}
 
 	}
+
+	@Override
+	public List<ClassSubjects> getSubjectByName(String className, String sectionName, String tenantId)
+			throws AsmsException {
+		Session session = null;
+		String schema = multitenancyDao.getSchema(tenantId);
+		try {
+			session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
+			String hql = "from ClassSubjects C where C.classObject.sectionObject.name ='" + className
+					+ "' and  C.sectionObject.name='" + sectionName + "'";
+			List<ClassSubjects> subjects = session.createQuery(hql).list();
+			session.close();
+			return subjects;
+
+		} catch (Exception e) {
+			if (session.isOpen()) {
+				session.close();
+			}
+			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
+					+ "getSubjectByName()" + "   ", e);
+			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
+			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+					messages.getString("SYSTEM_EXCEPTION"));
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
+		}
+
+	}
+
 }
