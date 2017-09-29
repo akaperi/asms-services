@@ -4,101 +4,53 @@
 */
 package com.asms.schoolmgmt.request;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import com.asms.schoolmgmt.entity.Breaks;
+import com.asms.schoolmgmt.entity.ClassSubjects;
 
 public class TimeTableDetails {
 	/**
 	 * @{author} gayithri.hg 25-Sep-2017
 	 */
 
-	private String academicYear;
-	private String className;
-	private String sectionName;
-	private String startTime;
-	private String endTime;
-	private String periodDuration;  // in minutes
-
+	
 
 	List<TimeTableData> timeTableData = null;
 
+	private List<ClassSubjects> subjectDetails;
 
-	public String getAcademicYear() {
-		return academicYear;
-	}
+	private List<String> teachers;
 
-
-	public void setAcademicYear(String academicYear) {
-		this.academicYear = academicYear;
-	}
-
-
-	public String getClassName() {
-		return className;
-	}
-
-
-	public void setClassName(String className) {
-		this.className = className;
-	}
-
-
-	public String getSectionName() {
-		return sectionName;
-	}
-
-
-	public void setSectionName(String sectionName) {
-		this.sectionName = sectionName;
-	}
-
-
-	public String getStartTime() {
-		return startTime;
-	}
-
-
-	public void setStartTime(String startTime) {
-		this.startTime = startTime;
-	}
-
-
-	public String getEndTime() {
-		return endTime;
-	}
-
-
-	public void setEndTime(String endTime) {
-		this.endTime = endTime;
-	}
-
-
-	public String getPeriodDuration() {
-		return periodDuration;
-	}
-
-
-	public void setPeriodDuration(String periodDuration) {
-		this.periodDuration = periodDuration;
-	}
-
+	
 
 	public List<TimeTableData> getTimeTableData() {
 		return timeTableData;
 	}
 
-
 	public void setTimeTableData(List<TimeTableData> timeTableData) {
 		this.timeTableData = timeTableData;
 	}
-	
-	
 
 	
 
-	
-	
+	public List<ClassSubjects> getSubjectDetails() {
+		return subjectDetails;
+	}
 
+	public void setSubjectDetails(List<ClassSubjects> subjectDetails) {
+		this.subjectDetails = subjectDetails;
+	}
+
+	public List<String> getTeachers() {
+		return teachers;
+	}
+
+	public void setTeachers(List<String> teachers) {
+		this.teachers = teachers;
+	}
+
+
+
+	
+	
 }

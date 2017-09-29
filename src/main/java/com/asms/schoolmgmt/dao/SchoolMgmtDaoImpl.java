@@ -57,7 +57,11 @@ import com.asms.schoolmgmt.request.TimeTableData;
 import com.asms.schoolmgmt.request.TimeTableDetails;
 import com.asms.usermgmt.dao.UserMgmtDao;
 import com.asms.usermgmt.entity.Admin;
+import com.asms.usermgmt.entity.User;
 import com.asms.usermgmt.entity.student.Student;
+import com.asms.usermgmt.entity.teachingStaff.TeachingStaff;
+import com.asms.usermgmt.helper.EntityCreator;
+import com.asms.usermgmt.request.UserDetails;
 
 @Service
 @Component
@@ -919,6 +923,7 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 				String hql = "from AcademicYear C where C.academicYearFromTo=?";
 				AcademicYear academicYearObject = (AcademicYear) session.createQuery(hql).setParameter(0, academicYear)
 						.uniqueResult();
+				//get the classes for academec year
 				Set<Class> classes = academicYearObject.getClasses();
 				for (Class c : classes) {
 					if (c.getName().equalsIgnoreCase(className)) {
@@ -932,13 +937,20 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 
 					}
 				}
+				
+				// get start time, endtime, period duration and breaks
 				startTime = classobject.getClassGroupObject().getStartTime();
 				endTime = classobject.getClassGroupObject().getEndTime();
 				periodDuration = classobject.getClassGroupObject().getPeriodDuration();
 				breaks = classobject.getClassGroupObject().getBreaks();
 				session.close();
 				TimeTableDetails details = createTimeTable(startTime, endTime, periodDuration, breaks);
-				return null;
+				
+				List<ClassSubjects> subjects = getSubjectByName(className, sectionName, tenant);
+				details.setSubjectDetails(subjects);
+				details.setTeachers(getTeachersBySection(className, sectionName, schema));
+				// add subjects
+				return details;
 			} else {
 				throw exceptionHandler.constructAsmsException(messages.getString("TENANT_INVALID_CODE"),
 						messages.getString("TENANT_INVALID_CODE_MSG"));
@@ -963,6 +975,13 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 			}
 		}
 	}
+	
+	/*
+	 * method : createTimeTable
+	 * input :starttime, endtime, duration and breaks
+	 * output : TimeTableDetails object
+	 * 
+	 */
 
 	private TimeTableDetails createTimeTable(String startTime, String endTime, String periodDuration,
 			Set<Breaks> breaks) throws AsmsException {
@@ -972,6 +991,8 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 		try {
 			// time from front end comes in format HH:mm convert that to
 			// HH:mm:ss
+			
+			
 			String appendZero = "00";
 			startTime = startTime + ":" + appendZero;
 			endTime = endTime + ":" + appendZero;
@@ -980,6 +1001,8 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 				b.setStartTime(b.getStartTime() + ":" + appendZero);
 				b.setEndTime(b.getEndTime() + ":" + appendZero);
 			}
+			
+			// create calendar objects as we need to compare times
 			Calendar startTimeCalendar = null;
 			Calendar endTimeCalendar = null;
 			Calendar breakCalender = null;
@@ -996,6 +1019,7 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 			endTimeCalendar.setTime(time1);
 
 			for (Breaks b : breaks) {
+				// in breakCalenders time in even position is break start time and odd position is end time
 				time1 = new SimpleDateFormat("HH:mm:ss").parse(b.getStartTime());
 				breakCalender = Calendar.getInstance();
 				breakCalender.setTime(time1);
@@ -1006,20 +1030,15 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 				breakCalenders.add(breakCalender);
 			}
 
+			//sort break times
 			Collections.sort(breakCalenders);
 
-			logger.debug("start time : " + startTimeCalendar.getTime());
-			logger.debug("end time : " + endTimeCalendar.getTime());
-			for (Calendar c : breakCalenders) {
-				logger.debug("break  time : " + c.getTime());
-			}
-
-			// if (x.after(calendar1.getTime()) &&
-			// x.before(calendar2.getTime()))
-
+			
 			String hour = null;
 			String minute = null;
 			int i = 0;
+			
+			
 			while (startTimeCalendar.getTime().before(endTimeCalendar.getTime())) {
 
 				data = new TimeTableData();
@@ -1128,11 +1147,46 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 		String schema = multitenancyDao.getSchema(tenantId);
 		try {
 			session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
-			String hql = "from ClassSubjects C where C.classObject.sectionObject.name ='" + className
+			String hql = "from ClassSubjects C where C.sectionObject.classObject.name ='" + className
 					+ "' and  C.sectionObject.name='" + sectionName + "'";
 			List<ClassSubjects> subjects = session.createQuery(hql).list();
 			session.close();
 			return subjects;
+
+		} catch (Exception e) {
+			if (session.isOpen()) {
+				session.close();
+			}
+			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
+					+ "getSubjectByName()" + "   ", e);
+			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
+			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+					messages.getString("SYSTEM_EXCEPTION"));
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
+		}
+
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> getTeachersBySection(String className, String sectionName, String schema)
+			throws AsmsException {
+		Session session = null;
+		
+		try {
+			session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
+			String hql = "select C.teachingObject from TeachingSubjects C where C.classObject.name ='" + className
+					+ "' and  C.sectionObject.name='" + sectionName + "'";
+			List<User> users = session.createQuery(hql).list();
+			session.close();
+			List<String> teachers = new ArrayList<String>();
+			for(User u:users){
+				TeachingStaff t = (TeachingStaff)u;
+				teachers.add(t.getFirstName() + " " + t.getLastName());
+			}
+			return teachers;
 
 		} catch (Exception e) {
 			if (session.isOpen()) {

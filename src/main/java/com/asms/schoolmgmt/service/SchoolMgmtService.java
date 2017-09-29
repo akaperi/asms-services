@@ -559,7 +559,7 @@ public class SchoolMgmtService extends BaseService {
 	@GET
 	@Consumes("application/json")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	public Response getsubject(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse,
+	public Response getsubjects(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse,
 			@QueryParam("sectionName") String section, @QueryParam("className") String name,
 			@QueryParam("tenantId") String tenant) {
 
@@ -616,9 +616,9 @@ public class SchoolMgmtService extends BaseService {
 				TimeTableDetails details = schoolMgmtDao.getTimeTableDetails(academicYear, className, sectionName,
 						tenant);
 
-				GetUserResponse getUserResponse = new GetUserResponse();
-				// getUserResponse.setClasses(class1);
-				return Response.status(Status.OK).entity(getUserResponse).build();
+				SchoolSuccessResponse schoolSuccessResponse = new SchoolSuccessResponse();
+				schoolSuccessResponse.setTimeTableDetails(details);
+				return Response.status(Status.OK).entity(schoolSuccessResponse).build();
 
 			} else {
 				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();

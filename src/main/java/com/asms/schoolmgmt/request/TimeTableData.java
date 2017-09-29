@@ -20,9 +20,7 @@ public class TimeTableData {
 	
 	private boolean isBreak = false;
 	
-	private List<SubjectDetails> subjectDetails;
 	
-	private List<TeachingStaffDetails> teacherDetails;
 
 	public String getPeriodStartTime() {
 		return periodStartTime;
@@ -48,21 +46,7 @@ public class TimeTableData {
 		this.isBreak = isBreak;
 	}
 
-	public List<SubjectDetails> getSubjectDetails() {
-		return subjectDetails;
-	}
 
-	public void setSubjectDetails(List<SubjectDetails> subjectDetails) {
-		this.subjectDetails = subjectDetails;
-	}
-
-	public List<TeachingStaffDetails> getTeacherDetails() {
-		return teacherDetails;
-	}
-
-	public void setTeacherDetails(List<TeachingStaffDetails> teacherDetails) {
-		this.teacherDetails = teacherDetails;
-	}
 	
 	
 	

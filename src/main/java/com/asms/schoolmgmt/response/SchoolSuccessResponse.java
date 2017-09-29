@@ -4,12 +4,15 @@ import java.util.List;
 
 import com.asms.common.response.SuccessResponse;
 import com.asms.schoolmgmt.entity.Section;
+import com.asms.schoolmgmt.request.TimeTableDetails;
 
 public class SchoolSuccessResponse extends SuccessResponse{
 	
 	private List<String> subjectNames,classNames;
 	
 	private List<Section> sections;
+	
+	private TimeTableDetails timeTableDetails;
 
 	public List<String> getSubjectNames() {
 		return subjectNames;
@@ -34,5 +37,15 @@ public class SchoolSuccessResponse extends SuccessResponse{
 	public void setSections(List<Section> sections) {
 		this.sections = sections;
 	}
+
+	public TimeTableDetails getTimeTableDetails() {
+		return timeTableDetails;
+	}
+
+	public void setTimeTableDetails(TimeTableDetails timeTableDetails) {
+		this.timeTableDetails = timeTableDetails;
+	}
+	
+	
 
 }
