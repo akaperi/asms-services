@@ -554,12 +554,39 @@ public class SchoolMgmtService extends BaseService {
 			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
 		}
 	}
+
 	@Path("/ClassSubjectBySection")
 	@GET
 	@Consumes("application/json")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public Response getsubject(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse,
-			@QueryParam("sectionName") String section,@QueryParam("className")String name,@QueryParam("tenantId") String tenant) {
+			@QueryParam("sectionName") String section, @QueryParam("className") String name,
+			@QueryParam("tenantId") String tenant) {
+
+		try {
+			FailureResponse failureResponse = new FailureResponse();
+			// get bundles for error messages
+			HttpSession session = hRequest.getSession();
+			User user = (User) session.getAttribute("ap_user");
+
+			if (null != user) {
+				List<ClassSubjects> sectionName = schoolMgmtDao.getSubjectByName(name, section, tenant);
+
+				GetUserResponse getUserResponse = new GetUserResponse();
+				getUserResponse.setClassSubjects(sectionName);
+				return Response.status(Status.OK).entity(getUserResponse).build();
+
+			} else {
+				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			}
+
+		} catch (AsmsException ex) {
+			// construct failure response
+			FailureResponse failureResponse = new FailureResponse(ex);
+			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+		}
+	}
+
 	/*
 	 * api : /school/timetable/details request type :GET
 	 * 
@@ -586,10 +613,11 @@ public class SchoolMgmtService extends BaseService {
 
 			if (pUser.isPrivileged()) {
 
-				TimeTableDetails details= schoolMgmtDao.getTimeTableDetails(academicYear, className, sectionName, tenant);
+				TimeTableDetails details = schoolMgmtDao.getTimeTableDetails(academicYear, className, sectionName,
+						tenant);
 
 				GetUserResponse getUserResponse = new GetUserResponse();
-				//getUserResponse.setClasses(class1);
+				// getUserResponse.setClasses(class1);
 				return Response.status(Status.OK).entity(getUserResponse).build();
 
 			} else {
@@ -605,31 +633,3 @@ public class SchoolMgmtService extends BaseService {
 	}
 
 }
-
-		try {
-			FailureResponse failureResponse = new FailureResponse();
-			// get bundles for error messages
-			HttpSession session = hRequest.getSession();
-			User user = (User) session.getAttribute("ap_user");
-
-			if (null != user) {
-				 List<ClassSubjects> sectionName= schoolMgmtDao.getSubjectByName(name, section, tenant);
-
-				GetUserResponse getUserResponse = new GetUserResponse();
-				getUserResponse.setClassSubjects(sectionName);
-				return Response.status(Status.OK).entity(getUserResponse).build();
-
-			} else {
-				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
-			}
-
-		} catch (AsmsException ex) {
-			// construct failure response
-			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
-		}
-	}
-	
-}
-
-
