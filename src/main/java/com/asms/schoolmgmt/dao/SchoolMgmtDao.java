@@ -10,16 +10,11 @@ import com.asms.schoolmgmt.entity.SetupSchoolDetails;
 import com.asms.schoolmgmt.request.BroadCasteSearchTypesDetails;
 import com.asms.schoolmgmt.request.GroupDetails;
 import com.asms.schoolmgmt.request.SchoolDetails;
+import com.asms.schoolmgmt.request.TimeTableDetails;
 
 public interface SchoolMgmtDao {
 
-
 	public List<Section> getSections(String tenantId) throws AsmsException;
-	
-
-	
-	 
-
 
 	public Class getClassByName(String name, String tenantId) throws AsmsException;
 
@@ -34,7 +29,6 @@ public interface SchoolMgmtDao {
 	public List<String> getClassSujects(int classId, String tenantId) throws AsmsException;
 
 	public School getSchool(String schema) throws AsmsException;
-
 
 	/**
 	 * @param schoolDetails
@@ -60,5 +54,8 @@ public interface SchoolMgmtDao {
 	public void createGroups(List<GroupDetails> details, String tenant) throws AsmsException;
 
 	public void setupSchoolCopy(String academicyear, String tenantId) throws AsmsException;
+
+	public TimeTableDetails getTimeTableDetails(String academicYear, String className, String sectionName,
+			String tenant) throws AsmsException;
 
 }

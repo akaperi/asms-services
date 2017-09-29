@@ -1,8 +1,12 @@
 package com.asms.schoolmgmt.dao;
 
+import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -49,6 +53,8 @@ import com.asms.schoolmgmt.request.GroupDetails;
 import com.asms.schoolmgmt.request.SchoolDetails;
 import com.asms.schoolmgmt.request.SectionDetails;
 import com.asms.schoolmgmt.request.SubjectDetails;
+import com.asms.schoolmgmt.request.TimeTableData;
+import com.asms.schoolmgmt.request.TimeTableDetails;
 import com.asms.usermgmt.dao.UserMgmtDao;
 import com.asms.usermgmt.entity.Admin;
 import com.asms.usermgmt.entity.student.Student;
@@ -577,8 +583,8 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.asms.schoolmgmt.dao.SchoolMgmtDao#createBoradCasteMessage(com.asms.schoolmgmt.request.
-	 * BroadCasteSearchTypesDetails, java.lang.String)
+	 * com.asms.schoolmgmt.dao.SchoolMgmtDao#createBoradCasteMessage(com.asms.
+	 * schoolmgmt.request. BroadCasteSearchTypesDetails, java.lang.String)
 	 */
 
 	@Override
@@ -656,14 +662,10 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 
 	}
 
-
-	
-	
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.asms.schoolmgmt.dao.SchoolMgmtDao#getSections()
+	 * @see com.asms.schoolmgmt.dao.SchoolMgmtDao#getSections()
 	 */
 	@Override
 	public List<Section> getSections(String tenantId) throws AsmsException {
@@ -710,7 +712,6 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 	 * @return
 	 * @throws AsmsException
 	 */
-
 
 	@Override
 	public void createGroups(List<GroupDetails> details, String tenant) throws AsmsException {
@@ -850,7 +851,8 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 
 			if (null != schema) {
 				if (null == aYearInDB) {
-					Set<Class> classes = getAcademicYearClasses(AsmsHelper.getPreviousAcademicYear(academicyear), schema);
+					Set<Class> classes = getAcademicYearClasses(AsmsHelper.getPreviousAcademicYear(academicyear),
+							schema);
 					academicYear.setClasses(new HashSet<>(classes));
 
 					tx = session.beginTransaction();
@@ -891,4 +893,231 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 
 	}
 
+	/*
+	 * Method : getTimeTableDetails : gets the timetabledetails input :
+	 * className, sectionName,tenant return : TimeTableDetails
+	 *
+	 */
+
+	@Override
+	public TimeTableDetails getTimeTableDetails(String academicYear, String className, String sectionName,
+			String tenant) throws AsmsException {
+		Session session = null;
+		Transaction tx = null;
+
+		ResourceBundle messages = AsmsHelper.getMessageFromBundle();
+		try {
+
+			String schema = multitenancyDao.getSchema(tenant);
+			Class classobject = null;
+			String startTime = null;
+			String endTime = null;
+			String periodDuration = null;
+			Set<Breaks> breaks = null;
+			if (null != schema) {
+				session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
+				String hql = "from AcademicYear C where C.academicYearFromTo=?";
+				AcademicYear academicYearObject = (AcademicYear) session.createQuery(hql).setParameter(0, academicYear)
+						.uniqueResult();
+				Set<Class> classes = academicYearObject.getClasses();
+				for (Class c : classes) {
+					if (c.getName().equalsIgnoreCase(className)) {
+						List<Section> sections = c.getSectionObjects();
+						for (Section s : sections) {
+							if (s.getName().equalsIgnoreCase(sectionName)) {
+								classobject = c;
+								break;
+							}
+						}
+
+					}
+				}
+				startTime = classobject.getClassGroupObject().getStartTime();
+				endTime = classobject.getClassGroupObject().getEndTime();
+				periodDuration = classobject.getClassGroupObject().getPeriodDuration();
+				breaks = classobject.getClassGroupObject().getBreaks();
+				session.close();
+				TimeTableDetails details = createTimeTable(startTime, endTime, periodDuration, breaks);
+				return null;
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("TENANT_INVALID_CODE"),
+						messages.getString("TENANT_INVALID_CODE_MSG"));
+			}
+
+		} catch (Exception ex) {
+			if (session.isOpen()) {
+				session.close();
+			}
+			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
+					+ "getTimeTableDetails()" + "   ", ex);
+			if (ex instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) ex).getCode(),
+						((AsmsException) ex).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
+		}
+	}
+
+	private TimeTableDetails createTimeTable(String startTime, String endTime, String periodDuration,
+			Set<Breaks> breaks) throws AsmsException {
+		TimeTableDetails details = new TimeTableDetails();
+		TimeTableData data = null;
+		List<TimeTableData> dataList = new ArrayList<TimeTableData>();
+		try {
+			// time from front end comes in format HH:mm convert that to
+			// HH:mm:ss
+			String appendZero = "00";
+			startTime = startTime + ":" + appendZero;
+			endTime = endTime + ":" + appendZero;
+			int duration = Integer.parseInt(periodDuration);
+			for (Breaks b : breaks) {
+				b.setStartTime(b.getStartTime() + ":" + appendZero);
+				b.setEndTime(b.getEndTime() + ":" + appendZero);
+			}
+			Calendar startTimeCalendar = null;
+			Calendar endTimeCalendar = null;
+			Calendar breakCalender = null;
+			List<Calendar> breakCalenders = new ArrayList<Calendar>();
+
+			Date time1;
+
+			time1 = new SimpleDateFormat("HH:mm:ss").parse(startTime);
+			startTimeCalendar = Calendar.getInstance();
+			startTimeCalendar.setTime(time1);
+
+			time1 = new SimpleDateFormat("HH:mm:ss").parse(endTime);
+			endTimeCalendar = Calendar.getInstance();
+			endTimeCalendar.setTime(time1);
+
+			for (Breaks b : breaks) {
+				time1 = new SimpleDateFormat("HH:mm:ss").parse(b.getStartTime());
+				breakCalender = Calendar.getInstance();
+				breakCalender.setTime(time1);
+				breakCalenders.add(breakCalender);
+				time1 = new SimpleDateFormat("HH:mm:ss").parse(b.getEndTime());
+				breakCalender = Calendar.getInstance();
+				breakCalender.setTime(time1);
+				breakCalenders.add(breakCalender);
+			}
+
+			Collections.sort(breakCalenders);
+
+			logger.debug("start time : " + startTimeCalendar.getTime());
+			logger.debug("end time : " + endTimeCalendar.getTime());
+			for (Calendar c : breakCalenders) {
+				logger.debug("break  time : " + c.getTime());
+			}
+
+			// if (x.after(calendar1.getTime()) &&
+			// x.before(calendar2.getTime()))
+
+			String hour = null;
+			String minute = null;
+			int i = 0;
+			while (startTimeCalendar.getTime().before(endTimeCalendar.getTime())) {
+
+				data = new TimeTableData();
+				int hourToAdd = duration / 60;
+				int minuteToAdd = duration % 60;
+
+			
+				if (i < breakCalenders.size()) {
+					startTimeCalendar.add(Calendar.MINUTE, duration);
+					if (startTimeCalendar.getTime().compareTo(breakCalenders.get(i).getTime()) <= 0) {
+						startTimeCalendar.add(Calendar.MINUTE, -duration);
+						hour = String.valueOf(startTimeCalendar.get(Calendar.HOUR_OF_DAY));
+						if (hour.length() == 1) {
+							hour = "0" + hour;
+						}
+						minute = String.valueOf(startTimeCalendar.get(Calendar.MINUTE));
+						if (minute.length() == 1) {
+							minute = minute + "0";
+						}
+						data.setPeriodStartTime(hour + ":" + minute);
+
+						startTimeCalendar.add(Calendar.HOUR_OF_DAY, hourToAdd);
+						startTimeCalendar.add(Calendar.MINUTE, minuteToAdd);
+
+						hour = String.valueOf(startTimeCalendar.get(Calendar.HOUR_OF_DAY));
+						if (hour.length() == 1) {
+							hour = "0" + hour;
+						}
+						minute = String.valueOf(startTimeCalendar.get(Calendar.MINUTE));
+						if (minute.length() == 1) {
+							minute = minute + "0";
+						}
+						data.setPeriodEndTime(hour + ":" + minute);
+
+						dataList.add(data);
+					} else {
+
+						startTimeCalendar.add(Calendar.MINUTE, -duration);
+						hour = String.valueOf(breakCalenders.get(i).get(Calendar.HOUR_OF_DAY));
+						if (hour.length() == 1) {
+							hour = "0" + hour;
+						}
+						minute = String.valueOf(breakCalenders.get(i).get(Calendar.MINUTE));
+						if (minute.length() == 1) {
+							minute = minute + "0";
+						}
+						data.setPeriodStartTime(hour + ":" + minute);
+						data.setBreak(true);
+						hour = String.valueOf(breakCalenders.get(i + 1).get(Calendar.HOUR_OF_DAY));
+						if (hour.length() == 1) {
+							hour = "0" + hour;
+						}
+						minute = String.valueOf(breakCalenders.get(i + 1).get(Calendar.MINUTE));
+						if (minute.length() == 1) {
+							minute = minute + "0";
+						}
+						data.setPeriodEndTime(hour + ":" + minute);
+						startTimeCalendar.set(Calendar.HOUR_OF_DAY, breakCalenders.get(i + 1).get(Calendar.HOUR_OF_DAY));
+						startTimeCalendar.set(Calendar.MINUTE, breakCalenders.get(i + 1).get(Calendar.MINUTE));
+						dataList.add(data);
+
+						i = i + 2;
+					}
+				} else {
+					hour = String.valueOf(startTimeCalendar.get(Calendar.HOUR_OF_DAY));
+					if (hour.length() == 1) {
+						hour = "0" + hour;
+					}
+					minute = String.valueOf(startTimeCalendar.get(Calendar.MINUTE));
+					if (minute.length() == 1) {
+						minute = minute + "0";
+					}
+					data.setPeriodStartTime(hour + ":" + minute);
+
+					startTimeCalendar.add(Calendar.HOUR_OF_DAY, hourToAdd);
+					startTimeCalendar.add(Calendar.MINUTE, minuteToAdd);
+
+					hour = String.valueOf(startTimeCalendar.get(Calendar.HOUR_OF_DAY));
+					if (hour.length() == 1) {
+						hour = "0" + hour;
+					}
+					minute = String.valueOf(startTimeCalendar.get(Calendar.MINUTE));
+					if (minute.length() == 1) {
+						minute = minute + "0";
+					}
+					data.setPeriodEndTime(hour + ":" + minute);
+
+					dataList.add(data);
+
+				}
+
+			}
+			details.setTimeTableData(dataList);
+			return details;
+
+		} catch (ParseException e) {
+			throw exceptionHandler.constructAsmsException("11", "Invalid time sent");
+		}
+
+	}
 }

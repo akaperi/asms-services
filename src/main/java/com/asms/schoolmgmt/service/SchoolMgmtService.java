@@ -42,6 +42,7 @@ import com.asms.schoolmgmt.helper.SchoolValidator;
 import com.asms.schoolmgmt.request.BroadCasteSearchTypesDetails;
 import com.asms.schoolmgmt.request.GroupDetails;
 import com.asms.schoolmgmt.request.SchoolDetails;
+import com.asms.schoolmgmt.request.TimeTableDetails;
 import com.asms.schoolmgmt.request.UserRequest;
 import com.asms.schoolmgmt.response.SchoolSuccessResponse;
 import com.asms.usermgmt.auth.PrivilegesManager;
@@ -343,13 +344,11 @@ public class SchoolMgmtService extends BaseService {
 		}
 	}
 
-
-
 	/*
 	 * api : /school/broadCasteMessages request type :POST
 	 * 
-	 * Method : createbroadCasteMessages -> This method is used to send the emails .
-	 * Input:UserRequest  Output: Response object *
+	 * Method : createbroadCasteMessages -> This method is used to send the
+	 * emails . Input:UserRequest Output: Response object *
 	 * 
 	 * 
 	 */
@@ -389,24 +388,22 @@ public class SchoolMgmtService extends BaseService {
 			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
 		}
 	}
-	
-	
-	
-	
+
 	/*
 	 * api : /school/sections request type :GET
 	 * 
-	 * Method : getSections -> This method is used for Drop Down.
-	 * Input: tenantId    input Output: Response object *
+	 * Method : getSections -> This method is used for Drop Down. Input:
+	 * tenantId input Output: Response object *
 	 * 
 	 * 
 	 */
-	
+
 	@Path("/sections")
 	@GET
 	@Consumes("application/json")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	public Response getSections(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse, @QueryParam("tenantId") String tenant) {
+	public Response getSections(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse,
+			@QueryParam("tenantId") String tenant) {
 
 		try {
 			FailureResponse failureResponse = new FailureResponse();
@@ -457,8 +454,8 @@ public class SchoolMgmtService extends BaseService {
 			PrincipalUser pUser = privilegesManager.isPrivileged((User) user, Constants.admin_category_setup,
 					Constants.privileges.create_check.toString());
 			if (pUser.isPrivileged()) {
-				
-				 schoolMgmtDao.createGroups(details, tenant);
+
+				schoolMgmtDao.createGroups(details, tenant);
 				return Response.status(Status.OK).entity(rReponse).build();
 			} else {
 				FailureResponse failureResponse = new FailureResponse();
@@ -555,6 +552,50 @@ public class SchoolMgmtService extends BaseService {
 			FailureResponse failureResponse = new FailureResponse(ex);
 			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
 		}
+	}
+
+	/*
+	 * api : /school/timetable/details request type :GET
+	 * 
+	 * Method : getTimeTableDetails -> This method is used for generating table.
+	 * Input:classname, sectionname,tenantId input Output: Response object *
+	 * 
+	 * 
+	 */
+	@Path("/timetable/details")
+	@GET
+	@Consumes("application/json")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public Response getTimeTableDetails(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse,
+			@QueryParam("academicYear") String academicYear, @QueryParam("className") String className,
+			@QueryParam("sectionName") String sectionName, @QueryParam("tenantId") String tenant) {
+
+		try {
+			FailureResponse failureResponse = new FailureResponse();
+			// get bundles for error messages
+			HttpSession session = hRequest.getSession();
+			User user = (User) session.getAttribute("ap_user");
+			PrincipalUser pUser = privilegesManager.isPrivileged((User) user, Constants.academics_category_timeTable,
+					Constants.privileges.create_check.toString());
+
+			if (pUser.isPrivileged()) {
+
+				TimeTableDetails details= schoolMgmtDao.getTimeTableDetails(academicYear, className, sectionName, tenant);
+
+				GetUserResponse getUserResponse = new GetUserResponse();
+				//getUserResponse.setClasses(class1);
+				return Response.status(Status.OK).entity(getUserResponse).build();
+
+			} else {
+				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			}
+
+		} catch (AsmsException ex) {
+			// construct failure response
+			FailureResponse failureResponse = new FailureResponse(ex);
+			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+		}
+
 	}
 
 }
