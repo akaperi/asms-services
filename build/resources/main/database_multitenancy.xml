@@ -62,6 +62,7 @@
 		<mapping class="com.asms.usermgmt.entity.Admin" />
 		<mapping class="com.asms.usermgmt.entity.Privilege" />
 		<mapping class="com.asms.schoolmgmt.entity.Breaks" />
+		<mapping class="com.asms.schoolmgmt.entity.TimeTable" />
 		
 
 

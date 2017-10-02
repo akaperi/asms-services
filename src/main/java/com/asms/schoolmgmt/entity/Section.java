@@ -60,6 +60,10 @@ public class Section {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "sectionObject", fetch = FetchType.EAGER)
 	private Set<AdditionalSubjects> additionalSubjects = new HashSet<AdditionalSubjects>();
 	
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "sectionObject", fetch = FetchType.EAGER)
+	private Set<TimeTable> timeTables = new HashSet<TimeTable>();
+	
 	@ManyToOne
 	@JoinColumn(name = "class_id")
 	private Class classObject;
@@ -189,6 +193,24 @@ public class Section {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+
+
+
+
+	@JsonIgnore
+	public Set<TimeTable> getTimeTables() {
+		return timeTables;
+	}
+
+
+
+
+
+
+	public void setTimeTables(Set<TimeTable> timeTables) {
+		this.timeTables = timeTables;
 	}
 
 

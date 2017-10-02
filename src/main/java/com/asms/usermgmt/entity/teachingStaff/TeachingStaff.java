@@ -2,7 +2,9 @@ package com.asms.usermgmt.entity.teachingStaff;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -15,6 +17,7 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.asms.schoolmgmt.entity.TimeTable;
 import com.asms.usermgmt.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -48,6 +51,11 @@ public class TeachingStaff extends User {
 	@OneToOne(mappedBy="teachingObject", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private StaffStatutory1 StaffStatutory;
 	
+
+
+
+	@OneToMany(mappedBy="teachingObject", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<TimeTable> timeTables = new HashSet<TimeTable>();
 	
 
 	@Column(name = "t_staff_designation")
@@ -295,6 +303,15 @@ public class TeachingStaff extends User {
 
 	public void setAcStatus(String acStatus) {
 		this.acStatus = acStatus;
+	}
+	
+	@JsonIgnore
+	public Set<TimeTable> getTimeTables() {
+		return timeTables;
+	}
+
+	public void setTimeTables(Set<TimeTable> timeTables) {
+		this.timeTables = timeTables;
 	}
 
 	

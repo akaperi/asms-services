@@ -19,7 +19,7 @@ public class TimeTableDetails {
 
 	private List<ClassSubjects> subjectDetails;
 
-	private List<String> teachers;
+	private List<TeacherDetails> teachers;
 
 	
 
@@ -41,13 +41,15 @@ public class TimeTableDetails {
 		this.subjectDetails = subjectDetails;
 	}
 
-	public List<String> getTeachers() {
+	public List<TeacherDetails> getTeachers() {
 		return teachers;
 	}
 
-	public void setTeachers(List<String> teachers) {
+	public void setTeachers(List<TeacherDetails> teachers) {
 		this.teachers = teachers;
 	}
+
+	
 
 
 

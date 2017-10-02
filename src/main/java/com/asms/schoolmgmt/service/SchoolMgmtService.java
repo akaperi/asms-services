@@ -43,7 +43,9 @@ import com.asms.schoolmgmt.helper.SchoolValidator;
 import com.asms.schoolmgmt.request.BroadCasteSearchTypesDetails;
 import com.asms.schoolmgmt.request.GroupDetails;
 import com.asms.schoolmgmt.request.SchoolDetails;
+import com.asms.schoolmgmt.request.TeacherDetails;
 import com.asms.schoolmgmt.request.TimeTableDetails;
+import com.asms.schoolmgmt.request.TimeTableOnchangeDetails;
 import com.asms.schoolmgmt.request.UserRequest;
 import com.asms.schoolmgmt.response.SchoolSuccessResponse;
 import com.asms.usermgmt.auth.PrivilegesManager;
@@ -630,6 +632,99 @@ public class SchoolMgmtService extends BaseService {
 			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
 		}
 
+	}
+
+	/*
+	 * this method adds the selected teacher and subject to the timetable for
+	 * the given class, section and time on that day
+	 * 
+	 * 
+	 */
+	// ------------------------------------
+	@Path("/add/details/timetable")
+	@POST
+	@Consumes("application/json")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public Response addTimeTableDetails(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse,
+			TimeTableOnchangeDetails details, @QueryParam("tenantId") String tenant) {
+		RegistrationResponse rReponse = new RegistrationResponse();
+		ResourceBundle messages;
+		try {
+			// get bundles for error messages
+			messages = AsmsHelper.getMessageFromBundle();
+			// validate request
+			schoolValidator.validateTimeTableOnchangeDetails(details, messages);
+			// validate user details
+			// validator.validateUserDetails(userRequest, messages);
+			HttpSession session = hRequest.getSession();
+			Object user = session.getAttribute("ap_user");
+
+			PrincipalUser pUser = privilegesManager.isPrivileged((User) user, Constants.academics_category_timeTable,
+					Constants.privileges.create_check.toString());
+			if (pUser.isPrivileged()) {
+
+				schoolMgmtDao.TimeTableOnChange(details, tenant);
+				return Response.status(Status.OK).entity(rReponse).build();
+			} else {
+				FailureResponse failureResponse = new FailureResponse();
+				failureResponse.setCode(Integer.parseInt(messages.getString("NOT_AUTHORIZED_CODE")));
+				failureResponse.setErrorDescription(messages.getString("NOT_AUTHORIZED"));
+				return Response.status(200).entity(failureResponse).build();
+			}
+
+		} catch (AsmsException ex) {
+			// construct failure response
+			FailureResponse failureResponse = new FailureResponse(ex);
+			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+		}
+	}
+
+	/*
+	 * this method adds returns the available teachers to the timetable for the
+	 * given class, section and time on that day
+	 * 
+	 * 
+	 */
+	// ------------------------------------
+	@Path("/onchange/getteachers")
+	@GET
+	@Consumes("application/json")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public Response addTimeTableDetails(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse,
+			@QueryParam("timeFrom") String timeFrom, @QueryParam("timeTo") String timeTo, @QueryParam("day") String day,
+			@QueryParam("class") String className, @QueryParam("section") String sectionName,
+			@QueryParam("tenantId") String tenant) {
+		SchoolSuccessResponse schoolSuccessResponse = new SchoolSuccessResponse();
+		ResourceBundle messages;
+		try {
+			// get bundles for error messages
+			messages = AsmsHelper.getMessageFromBundle();
+			// validate request
+			schoolValidator.validateTimeTableOnchangeDetails(timeFrom, timeTo, day, className, sectionName, messages);
+			// validate user details
+			// validator.validateUserDetails(userRequest, messages);
+			HttpSession session = hRequest.getSession();
+			Object user = session.getAttribute("ap_user");
+
+			PrincipalUser pUser = privilegesManager.isPrivileged((User) user, Constants.academics_category_timeTable,
+					Constants.privileges.create_check.toString());
+			if (pUser.isPrivileged()) {
+
+				List<TeacherDetails> teachers = schoolMgmtDao.getTeachersOnChange(timeFrom, timeTo, day, className, sectionName, tenant);
+				schoolSuccessResponse.setTeachers(teachers);
+				return Response.status(Status.OK).entity(schoolSuccessResponse).build();
+			} else {
+				FailureResponse failureResponse = new FailureResponse();
+				failureResponse.setCode(Integer.parseInt(messages.getString("NOT_AUTHORIZED_CODE")));
+				failureResponse.setErrorDescription(messages.getString("NOT_AUTHORIZED"));
+				return Response.status(200).entity(failureResponse).build();
+			}
+
+		} catch (AsmsException ex) {
+			// construct failure response
+			FailureResponse failureResponse = new FailureResponse(ex);
+			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+		}
 	}
 
 }

@@ -11,7 +11,9 @@ import com.asms.schoolmgmt.entity.SetupSchoolDetails;
 import com.asms.schoolmgmt.request.BroadCasteSearchTypesDetails;
 import com.asms.schoolmgmt.request.GroupDetails;
 import com.asms.schoolmgmt.request.SchoolDetails;
+import com.asms.schoolmgmt.request.TeacherDetails;
 import com.asms.schoolmgmt.request.TimeTableDetails;
+import com.asms.schoolmgmt.request.TimeTableOnchangeDetails;
 
 public interface SchoolMgmtDao {
 
@@ -62,5 +64,10 @@ public interface SchoolMgmtDao {
 
 	public TimeTableDetails getTimeTableDetails(String academicYear, String className, String sectionName,
 			String tenant) throws AsmsException;
+
+	public void TimeTableOnChange(TimeTableOnchangeDetails details, String tenantId) throws AsmsException;
+
+	public List<TeacherDetails> getTeachersOnChange(String from, String to, String day, String className, String section,
+			String tenantId) throws AsmsException;
 
 }

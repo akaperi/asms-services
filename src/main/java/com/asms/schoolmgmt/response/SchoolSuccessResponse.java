@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.asms.common.response.SuccessResponse;
 import com.asms.schoolmgmt.entity.Section;
+import com.asms.schoolmgmt.request.TeacherDetails;
 import com.asms.schoolmgmt.request.TimeTableDetails;
 
 public class SchoolSuccessResponse extends SuccessResponse{
@@ -13,6 +14,16 @@ public class SchoolSuccessResponse extends SuccessResponse{
 	private List<Section> sections;
 	
 	private TimeTableDetails timeTableDetails;
+	
+	private List<TeacherDetails> teachers;
+
+	public List<TeacherDetails> getTeachers() {
+		return teachers;
+	}
+
+	public void setTeachers(List<TeacherDetails> teachers) {
+		this.teachers = teachers;
+	}
 
 	public List<String> getSubjectNames() {
 		return subjectNames;

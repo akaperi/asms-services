@@ -46,6 +46,7 @@ import com.asms.schoolmgmt.entity.ClassSubjects;
 import com.asms.schoolmgmt.entity.School;
 import com.asms.schoolmgmt.entity.Section;
 import com.asms.schoolmgmt.entity.SetupSchoolDetails;
+import com.asms.schoolmgmt.entity.TimeTable;
 import com.asms.schoolmgmt.request.AdditionalSubjectsDetails;
 import com.asms.schoolmgmt.request.BroadCasteSearchTypesDetails;
 import com.asms.schoolmgmt.request.ClassDetails;
@@ -53,13 +54,16 @@ import com.asms.schoolmgmt.request.GroupDetails;
 import com.asms.schoolmgmt.request.SchoolDetails;
 import com.asms.schoolmgmt.request.SectionDetails;
 import com.asms.schoolmgmt.request.SubjectDetails;
+import com.asms.schoolmgmt.request.TeacherDetails;
 import com.asms.schoolmgmt.request.TimeTableData;
 import com.asms.schoolmgmt.request.TimeTableDetails;
+import com.asms.schoolmgmt.request.TimeTableOnchangeDetails;
 import com.asms.usermgmt.dao.UserMgmtDao;
 import com.asms.usermgmt.entity.Admin;
 import com.asms.usermgmt.entity.User;
 import com.asms.usermgmt.entity.student.Student;
 import com.asms.usermgmt.entity.teachingStaff.TeachingStaff;
+import com.asms.usermgmt.entity.teachingStaff.TeachingSubjects;
 import com.asms.usermgmt.helper.EntityCreator;
 import com.asms.usermgmt.request.UserDetails;
 
@@ -903,6 +907,7 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 	 *
 	 */
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public TimeTableDetails getTimeTableDetails(String academicYear, String className, String sectionName,
 			String tenant) throws AsmsException {
@@ -923,7 +928,13 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 				String hql = "from AcademicYear C where C.academicYearFromTo=?";
 				AcademicYear academicYearObject = (AcademicYear) session.createQuery(hql).setParameter(0, academicYear)
 						.uniqueResult();
-				//get the classes for academec year
+				// get the classes for academec year
+				if (null == academicYear) {
+					throw exceptionHandler.constructAsmsException(
+							messages.getString("SCHOOL_SETUP_INVALID_ACADEMICYEAR_CODE"),
+							messages.getString("SCHOOL_SETUP_INVALID_ACADEMICYEAR_MSG"));
+				}
+
 				Set<Class> classes = academicYearObject.getClasses();
 				for (Class c : classes) {
 					if (c.getName().equalsIgnoreCase(className)) {
@@ -937,19 +948,39 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 
 					}
 				}
-				
+
 				// get start time, endtime, period duration and breaks
+				if (null == classobject) {
+					throw exceptionHandler.constructAsmsException(messages.getString("SCHOOL_SETUP_INVALID_CLASS_CODE"),
+							messages.getString("SCHOOL_SETUP_INVALID_CLASS_MSG"));
+				}
 				startTime = classobject.getClassGroupObject().getStartTime();
 				endTime = classobject.getClassGroupObject().getEndTime();
 				periodDuration = classobject.getClassGroupObject().getPeriodDuration();
 				breaks = classobject.getClassGroupObject().getBreaks();
-				session.close();
+
 				TimeTableDetails details = createTimeTable(startTime, endTime, periodDuration, breaks);
-				
+
 				List<ClassSubjects> subjects = getSubjectByName(className, sectionName, tenant);
 				details.setSubjectDetails(subjects);
 				details.setTeachers(getTeachersBySection(className, sectionName, schema));
 				// add subjects
+
+				// create time table if already not created
+				List<TimeTable> timeTables = createTimeTables(classobject, details);
+
+				hql = "from TimeTable T where sectionObject.classObject.id = ?";
+				List<TimeTable> tts = (List<TimeTable>) session.createQuery(hql).setParameter(0, classobject.getId())
+						.list();
+				if (tts == null || tts.isEmpty()) {
+					tx = session.beginTransaction();
+
+					for (TimeTable tt : timeTables) {
+						session.save(tt);
+					}
+					tx.commit();
+				}
+				session.close();
 				return details;
 			} else {
 				throw exceptionHandler.constructAsmsException(messages.getString("TENANT_INVALID_CODE"),
@@ -975,10 +1006,9 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 			}
 		}
 	}
-	
+
 	/*
-	 * method : createTimeTable
-	 * input :starttime, endtime, duration and breaks
+	 * method : createTimeTable input :starttime, endtime, duration and breaks
 	 * output : TimeTableDetails object
 	 * 
 	 */
@@ -991,8 +1021,7 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 		try {
 			// time from front end comes in format HH:mm convert that to
 			// HH:mm:ss
-			
-			
+
 			String appendZero = "00";
 			startTime = startTime + ":" + appendZero;
 			endTime = endTime + ":" + appendZero;
@@ -1001,7 +1030,7 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 				b.setStartTime(b.getStartTime() + ":" + appendZero);
 				b.setEndTime(b.getEndTime() + ":" + appendZero);
 			}
-			
+
 			// create calendar objects as we need to compare times
 			Calendar startTimeCalendar = null;
 			Calendar endTimeCalendar = null;
@@ -1019,7 +1048,8 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 			endTimeCalendar.setTime(time1);
 
 			for (Breaks b : breaks) {
-				// in breakCalenders time in even position is break start time and odd position is end time
+				// in breakCalenders time in even position is break start time
+				// and odd position is end time
 				time1 = new SimpleDateFormat("HH:mm:ss").parse(b.getStartTime());
 				breakCalender = Calendar.getInstance();
 				breakCalender.setTime(time1);
@@ -1030,15 +1060,13 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 				breakCalenders.add(breakCalender);
 			}
 
-			//sort break times
+			// sort break times
 			Collections.sort(breakCalenders);
 
-			
 			String hour = null;
 			String minute = null;
 			int i = 0;
-			
-			
+
 			while (startTimeCalendar.getTime().before(endTimeCalendar.getTime())) {
 
 				data = new TimeTableData();
@@ -1169,22 +1197,26 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 		}
 
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public List<String> getTeachersBySection(String className, String sectionName, String schema)
+	public List<TeacherDetails> getTeachersBySection(String className, String sectionName, String schema)
 			throws AsmsException {
 		Session session = null;
-		
+
 		try {
 			session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
 			String hql = "select C.teachingObject from TeachingSubjects C where C.classObject.name ='" + className
 					+ "' and  C.sectionObject.name='" + sectionName + "'";
 			List<User> users = session.createQuery(hql).list();
 			session.close();
-			List<String> teachers = new ArrayList<String>();
-			for(User u:users){
-				TeachingStaff t = (TeachingStaff)u;
-				teachers.add(t.getFirstName() + " " + t.getLastName());
+			List<TeacherDetails> teachers = new ArrayList<TeacherDetails>();
+			TeacherDetails details = null;
+			for (User u : users) {
+				details = new TeacherDetails();
+				TeachingStaff t = (TeachingStaff) u;
+				details.setName(t.getFirstName() + " " + t.getLastName());
+				details.setUserId(t.getSerialNo());
+				teachers.add(details);
 			}
 			return teachers;
 
@@ -1194,6 +1226,149 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 			}
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
 					+ "getSubjectByName()" + "   ", e);
+			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
+			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+					messages.getString("SYSTEM_EXCEPTION"));
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
+		}
+
+	}
+
+	// method to create timetable for the first time
+	private List<TimeTable> createTimeTables(Class classObject, TimeTableDetails details) {
+		TimeTable tt = null;
+		List<TimeTableData> ttds = details.getTimeTableData();
+		List<Section> sections = classObject.getSectionObjects();
+		List<TimeTable> timeTables = new ArrayList<TimeTable>();
+		for (Section s : sections) {
+			for (TimeTableData ttd : ttds) {
+
+				tt = createTimeTable(tt, ttd, "Monday", s);
+				timeTables.add(tt);
+				tt = createTimeTable(tt, ttd, "Tuesday", s);
+				timeTables.add(tt);
+				tt = createTimeTable(tt, ttd, "Wednesday", s);
+				timeTables.add(tt);
+				tt = createTimeTable(tt, ttd, "Thursday", s);
+				timeTables.add(tt);
+				tt = createTimeTable(tt, ttd, "Friday", s);
+				timeTables.add(tt);
+				tt = createTimeTable(tt, ttd, "Saturday", s);
+				timeTables.add(tt);
+
+			}
+
+		}
+		return timeTables;
+	}
+
+	private TimeTable createTimeTable(TimeTable tt, TimeTableData ttd, String day, Section s) {
+		tt = new TimeTable();
+		tt.setDay(day);
+		tt.setSectionObject(s);
+		tt.setTeachingObject(null);
+		tt.setTimeFrom(ttd.getPeriodStartTime());
+		tt.setTimeTo(ttd.getPeriodEndTime());
+		if (ttd.isBreak()) {
+			tt.setSubjectName("break");
+		}
+		return tt;
+	}
+
+	@Override
+	public void TimeTableOnChange(TimeTableOnchangeDetails details, String tenantId) throws AsmsException {
+		Session session = null;
+		Transaction tx = null;
+		String schema = multitenancyDao.getSchema(tenantId);
+		try {
+			session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
+			String hql = "from TeachingSubjects C where C.teachingObject.serialNo =?";
+
+			TeachingSubjects ts = (TeachingSubjects) session.createQuery(hql).setParameter(0, details.getTeacherId())
+					.uniqueResult();
+			if (null == ts) {
+				throw exceptionHandler.constructAsmsException(messages.getString("TEACHER_ID_INVALID_CODE"),
+						messages.getString("TEACHER_ID_INVALID_MSG"));
+			}
+			hql = "from TimeTable C where C.timeFrom =? and C.timeTo = ? and C.day = ? and C.sectionObject.name = ? and C.sectionObject.classObject.name = ?";
+			TimeTable tt = (TimeTable) session.createQuery(hql).setParameter(0, details.getTimeFrom())
+					.setParameter(1, details.getTimeTo()).setParameter(2, details.getDay())
+					.setParameter(3, details.getSectionName()).setParameter(4, details.getClassName()).uniqueResult();
+			tx = session.beginTransaction();
+			tt = (TimeTable) session.load(TimeTable.class, tt.getSerialNo());
+			tt.setTeachingObject(ts.getTeachingObject());
+			session.update(tt);
+			tx.commit();
+
+			session.close();
+
+		} catch (Exception e) {
+			if (session.isOpen()) {
+				session.close();
+			}
+			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
+					+ "TimeTableOnChange()" + "   ", e);
+			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
+			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+					messages.getString("SYSTEM_EXCEPTION"));
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
+		}
+
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<TeacherDetails> getTeachersOnChange(String from, String to, String day, String className,
+			String section, String tenantId) throws AsmsException {
+		Session session = null;
+		Transaction tx = null;
+		String schema = multitenancyDao.getSchema(tenantId);
+		try {
+			session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
+			String hql = "from TeachingSubjects C where C.sectionObject.name =? and C.sectionObject.classObject.name =?";
+
+			List<TeachingSubjects> ts = session.createQuery(hql).setParameter(0, section).setParameter(1, className)
+					.list();
+
+			hql = "select C.teachingObject from TimeTable C where C.timeFrom =? and C.timeTo = ? and C.day = ? and C.sectionObject.name = ? and C.sectionObject.classObject.name = ?"
+					+ "and C.teachingObject != null";
+			List<TeachingStaff> tss = (List<TeachingStaff>) session.createQuery(hql).setParameter(0, from)
+					.setParameter(1, to).setParameter(2, day).setParameter(3, section).setParameter(4, className)
+					.list();
+
+			List<TeacherDetails> teachers = new ArrayList<>();
+			for (TeachingSubjects tso : ts) {
+				boolean teacherBusy = false;
+				TeacherDetails td = null;
+				for (TeachingStaff tsso : tss) {
+					if (tso.getTeachingObject().getSerialNo() == tsso.getSerialNo()) {
+						teacherBusy = true;
+					}
+				}
+				if (teacherBusy == false) {
+					td = new TeacherDetails();
+					td.setName(tso.getTeachingObject().getFirstName() + " " + tso.getTeachingObject().getMiddleName()
+							+ " " + tso.getTeachingObject().getLastName());
+					td.setUserId(tso.getTeachingObject().getSerialNo());
+					teachers.add(td);
+				}
+			}
+
+			session.close();
+			return teachers;
+
+		} catch (Exception e) {
+			if (session.isOpen()) {
+				session.close();
+			}
+			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
+					+ "getTeachersOnChange()" + "   ", e);
 			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
 			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
 					messages.getString("SYSTEM_EXCEPTION"));
