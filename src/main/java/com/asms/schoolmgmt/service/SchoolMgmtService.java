@@ -35,6 +35,7 @@ import com.asms.multitenancy.dao.MultitenancyDao;
 import com.asms.multitenancy.entity.SuperAdmin;
 import com.asms.schoolmgmt.dao.SchoolMgmtDao;
 import com.asms.schoolmgmt.entity.AcademicYear;
+import com.asms.schoolmgmt.entity.AdditionalSubjects;
 import com.asms.schoolmgmt.entity.Class;
 import com.asms.schoolmgmt.entity.ClassSubjects;
 import com.asms.schoolmgmt.entity.Section;
@@ -43,6 +44,7 @@ import com.asms.schoolmgmt.helper.SchoolValidator;
 import com.asms.schoolmgmt.request.BroadCasteSearchTypesDetails;
 import com.asms.schoolmgmt.request.GroupDetails;
 import com.asms.schoolmgmt.request.SchoolDetails;
+import com.asms.schoolmgmt.request.SubjectDetails;
 import com.asms.schoolmgmt.request.TeacherDetails;
 import com.asms.schoolmgmt.request.TimeTableDetails;
 import com.asms.schoolmgmt.request.TimeTableOnchangeDetails;
@@ -726,5 +728,68 @@ public class SchoolMgmtService extends BaseService {
 			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
 		}
 	}
+	@Path("/AdditionalSubjects")
+	@GET
+	@Consumes("application/json")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public Response getsubject(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse,
+			@QueryParam("sectionName") String section,@QueryParam("className")String name,@QueryParam("tenantId") String tenant) {
+
+		try {
+			FailureResponse failureResponse = new FailureResponse();
+			// get bundles for error messages
+			HttpSession session = hRequest.getSession();
+			User user = (User) session.getAttribute("ap_user");
+
+			if (null != user) {
+				 List<AdditionalSubjects> additionalsubjectsName= schoolMgmtDao.getAdditionalSubjects(name, section ,tenant);
+
+				GetUserResponse getUserResponse = new GetUserResponse();
+				getUserResponse.setAdditionalSubjects(additionalsubjectsName);
+				return Response.status(Status.OK).entity(getUserResponse).build();
+
+			} else {
+				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			}
+
+		} catch (AsmsException ex) {
+			// construct failure response
+			FailureResponse failureResponse = new FailureResponse(ex);
+			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+		}
+	}
+	@Path("/subjectsAndAdditionalsubjects")
+	@GET
+	@Consumes("application/json")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public Response getsubjectsAndAdditionalsubjects(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse,
+			@QueryParam("sectionName") String section,@QueryParam("className")String name,@QueryParam("tenantId") String tenant) {
+
+		try {
+			FailureResponse failureResponse = new FailureResponse();
+			// get bundles for error messages
+			HttpSession session = hRequest.getSession();
+			User user = (User) session.getAttribute("ap_user");
+
+			if (null != user) {
+				 List<SubjectDetails> SubjectDetailsName= schoolMgmtDao.getsubjectsAndAdditionalsubjects(name, section ,tenant);
+
+				GetUserResponse getUserResponse = new GetUserResponse();
+				getUserResponse.setSubjectDetails(SubjectDetailsName);
+			
+				return Response.status(Status.OK).entity(getUserResponse).build();
+
+			} else {
+				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			}
+
+		} catch (AsmsException ex) {
+			// construct failure response
+			FailureResponse failureResponse = new FailureResponse(ex);
+			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+		}
+	}
+	
+
 
 }

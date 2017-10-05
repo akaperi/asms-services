@@ -3,6 +3,7 @@ package com.asms.schoolmgmt.dao;
 import java.util.List;
 
 import com.asms.Exception.AsmsException;
+import com.asms.schoolmgmt.entity.AdditionalSubjects;
 import com.asms.schoolmgmt.entity.Class;
 import com.asms.schoolmgmt.entity.ClassSubjects;
 import com.asms.schoolmgmt.entity.School;
@@ -11,6 +12,7 @@ import com.asms.schoolmgmt.entity.SetupSchoolDetails;
 import com.asms.schoolmgmt.request.BroadCasteSearchTypesDetails;
 import com.asms.schoolmgmt.request.GroupDetails;
 import com.asms.schoolmgmt.request.SchoolDetails;
+import com.asms.schoolmgmt.request.SubjectDetails;
 import com.asms.schoolmgmt.request.TeacherDetails;
 import com.asms.schoolmgmt.request.TimeTableDetails;
 import com.asms.schoolmgmt.request.TimeTableOnchangeDetails;
@@ -24,6 +26,11 @@ public interface SchoolMgmtDao {
 	public Section getSectionByName(String className, String sectionName, String tenantId) throws AsmsException;
 	
 	public List<ClassSubjects> getSubjectByName(String className, String sectionName ,String tenantId) throws AsmsException;
+	
+	public List<AdditionalSubjects> getAdditionalSubjects(String className, String sectionName ,String tenantId) throws AsmsException;
+	
+	public List<SubjectDetails> getsubjectsAndAdditionalsubjects(String className, String sectionName ,String tenantId) throws AsmsException;
+	
 	
 	
 

@@ -4,10 +4,12 @@ import java.util.List;
 
 import com.asms.common.response.SuccessResponse;
 import com.asms.multitenancy.entity.Trust;
+import com.asms.schoolmgmt.entity.AdditionalSubjects;
 import com.asms.schoolmgmt.entity.Class;
 import com.asms.schoolmgmt.entity.ClassSubjects;
 import com.asms.schoolmgmt.entity.Section;
 import com.asms.schoolmgmt.request.BroadCasteSearchTypesDetails;
+import com.asms.schoolmgmt.request.SubjectDetails;
 import com.asms.usermgmt.entity.StudentType;
 import com.asms.usermgmt.entity.User;
 import com.asms.usermgmt.request.UserDetails;
@@ -55,6 +57,29 @@ public class GetUserResponse extends SuccessResponse {
 //	private BroadCasteSearchTypesDetails broadCasteSearchTypesDetails2;
 	
 	private  List<ClassSubjects> classSubjects;
+	
+	private List<SubjectDetails> subjectDetails;
+	
+	
+	
+	public List<SubjectDetails> getSubjectDetails() {
+		return subjectDetails;
+	}
+
+	public void setSubjectDetails(List<SubjectDetails> subjectDetails) {
+		this.subjectDetails = subjectDetails;
+	}
+
+	public List<AdditionalSubjects> getAdditionalSubjects() {
+		return additionalSubjects;
+	}
+
+	public void setAdditionalSubjects(List<AdditionalSubjects> additionalSubjects) {
+		this.additionalSubjects = additionalSubjects;
+	}
+
+	private  List<AdditionalSubjects> additionalSubjects;
+
 
 	public List<ClassSubjects> getClassSubjects() {
 		return classSubjects;

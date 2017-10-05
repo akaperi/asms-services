@@ -1380,4 +1380,84 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 
 	}
 
+	@Override
+	public List<AdditionalSubjects> getAdditionalSubjects(String className, String sectionName, String tenantId)
+			throws AsmsException {
+		Session session = null;
+		String schema = multitenancyDao.getSchema(tenantId);
+		try {
+			session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
+			String hql = "from AdditionalSubjects C where C.sectionObject.classObject.name ='" + className
+					+ "' and  C.sectionObject.name='" + sectionName + "'";
+			List<AdditionalSubjects> subjects = session.createQuery(hql).list();
+			session.close();
+			return subjects;
+
+		} catch (Exception e) {
+			if (session.isOpen()) {
+				session.close();
+			}
+			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
+					+ "getSubjectByName()" + "   ", e);
+			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
+			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+					messages.getString("SYSTEM_EXCEPTION"));
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
+		}
+		
+	}
+
+	@Override
+	public List<SubjectDetails> getsubjectsAndAdditionalsubjects(String className, String sectionName, String tenantId)
+			throws AsmsException {
+		Session session = null;
+		 
+		  String schema = multitenancyDao.getSchema(tenantId);
+		    try {
+		         session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
+		         
+		         
+		         List<AdditionalSubjects> ads = session.createQuery("from AdditionalSubjects C where C.sectionObject.classObject.name ='" + className
+		       + "' and  C.sectionObject.name='" + sectionName + "'").list();
+
+		         List<ClassSubjects> cls = session.createQuery("from ClassSubjects C where C.sectionObject.classObject.name ='" + className
+		       + "' and  C.sectionObject.name='" + sectionName + "'").list();
+		       
+		        
+		       List<SubjectDetails> subjects = new ArrayList<SubjectDetails>();
+		         
+		         for(AdditionalSubjects ad : ads){
+		          SubjectDetails sb = new SubjectDetails ();
+		         // sb.setName(ad.getName());
+		   
+		  subjects.add(sb);       }
+		         for(AdditionalSubjects cs : ads){
+		          SubjectDetails sb = new SubjectDetails ();
+		         // sb.setName( cs.getName());
+		  subjects.add(sb);
+		  return subjects;
+		   }
+		        
+		   session.close();
+		   
+
+		  } catch (Exception e) {
+		   if (session.isOpen()) {
+		    session.close();
+		   }
+		   logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
+		     + "getSubjectByName()" + "   ", e);
+		   ResourceBundle messages = AsmsHelper.getMessageFromBundle();
+		   throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+		     messages.getString("SYSTEM_EXCEPTION"));
+		  } finally {
+		   if (session.isOpen()) {
+		    session.close();
+		   }
+		  }
+			return null;
+	} 
 }
