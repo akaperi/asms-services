@@ -32,6 +32,7 @@ import com.asms.usermgmt.entity.teachingStaff.StaffPreviousInformation1;
 import com.asms.usermgmt.entity.teachingStaff.StaffStatutory1;
 import com.asms.usermgmt.entity.teachingStaff.TeachingStaff;
 import com.asms.usermgmt.request.AdminDetails;
+import com.asms.usermgmt.request.UserBasicDetails;
 import com.asms.usermgmt.request.UserDetails;
 import com.asms.usermgmt.request.management.ManagementDetails;
 import com.asms.usermgmt.request.nonTeachingStaff.AddressDetails;
@@ -429,6 +430,61 @@ public class EntityCreator {
 
 		return userDetailsList;
 	}
+	
+	
+	
+	/*
+	 * Method: createUserBasicDetails ->Create UserBasicDetails from The UserObject
+	 * input : List Of User(List<User>) Returns : List Of
+	 * UserBasicDetails(List<UseBasicDetails>)
+	 * 
+	 */
+	public List<UserBasicDetails> createUserBasicDetails(List<User> users) throws ParseException {
+		UserBasicDetails userBasicDetails;
+		List<UserBasicDetails> userBasicDetailsList = new ArrayList<UserBasicDetails>();
+		for (User user : users) {
+
+			userBasicDetails = new UserBasicDetails();
+			userBasicDetails.setEmail(user.getEmail());
+			userBasicDetails.setRole(user.getRoleObject().getRoleName());
+			userBasicDetails.setSubRole(user.getSubRoleObject().getSubRoleName());
+			userBasicDetails.setUserId(user.getUserId());
+			
+			if (user.getRoleObject().getRoleName().equalsIgnoreCase(Constants.role_admin)) {
+				Admin admin = (Admin) user;
+				userBasicDetails.setFirstName(admin.getName());
+			}
+			if (user.getRoleObject().getRoleName().equalsIgnoreCase(Constants.role_student)) {
+				Student student = (Student) user;
+				userBasicDetails.setFirstName(student.getStudentFirstName());
+				userBasicDetails.setMiddleName(student.getStudentMiddleName());
+				userBasicDetails.setLastName(student.getStudentLastName());
+			}
+			if (user.getRoleObject().getRoleName().equalsIgnoreCase(Constants.role_management)) {
+				Management management = (Management) user;
+				userBasicDetails.setFirstName(management.getMngmtFirstName());
+				userBasicDetails.setMiddleName(management.getMngmtMiddleName());
+				userBasicDetails.setLastName(management.getMngmtLastName());
+			}
+			if (user.getRoleObject().getRoleName().equalsIgnoreCase(Constants.role_non_teaching_staff)) {
+				NonTeachingStaff nts = (NonTeachingStaff) user;
+				userBasicDetails.setFirstName(nts.getFirstName());
+				userBasicDetails.setMiddleName(nts.getMiddleName());
+				userBasicDetails.setLastName(nts.getLastName());
+			}
+			if (user.getRoleObject().getRoleName().equalsIgnoreCase(Constants.role_teaching_staff)) {
+				TeachingStaff ts = (TeachingStaff) user;
+				userBasicDetails.setFirstName(ts.getFirstName());
+				userBasicDetails.setLastName(ts.getLastName());
+				userBasicDetails.setMiddleName(ts.getMiddleName());
+			}
+
+			userBasicDetailsList.add(userBasicDetails);
+		}
+
+		return userBasicDetailsList;
+	}
+
 
 	/*
 	 * Method: createParent -> maps ui values to entity input : ParentDetails

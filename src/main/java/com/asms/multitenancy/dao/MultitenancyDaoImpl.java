@@ -65,18 +65,18 @@ public class MultitenancyDaoImpl implements MultitenancyDao {
 		try {
 
 			Configuration _configuration = new Configuration();
-			_configuration.configure("database_multitenancy.xml");
+			_configuration.configure(properties.getProperty("config_file"));
 			// Get a local configuration to configure
 			final Configuration tenantConfig = _configuration;
-
 			// Set the properties for this configuration
 			Properties props = new Properties();
+			props.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("asmsdb.properties"));
 			props.put(Environment.DEFAULT_SCHEMA, name);
 			tenantConfig.addProperties(props);
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName(dbProperties.getProperty("hibernate.connection.driver_class"));
 			// Get connection
-			Connection connection = DriverManager.getConnection(dbProperties.getProperty("db_url_multitenancy"),
-					dbProperties.getProperty("username"), dbProperties.getProperty("password"));
+			Connection connection = DriverManager.getConnection(dbProperties.getProperty("hibernate.connection.url"),
+					dbProperties.getProperty("hibernate.connection.username"), dbProperties.getProperty("hibernate.connection.password"));
 
 			// Create the schema
 			connection.createStatement().execute("CREATE SCHEMA " + name + "");
@@ -336,8 +336,13 @@ public class MultitenancyDaoImpl implements MultitenancyDao {
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
 					+ "getTrust" + "   ", e);
 			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
-			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
-					messages.getString("SYSTEM_EXCEPTION"));
+			if (e instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) e).getCode(),
+						((AsmsException) e).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
 		} finally {
 			if (session.isOpen()) {
 				session.close();

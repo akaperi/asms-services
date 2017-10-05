@@ -139,9 +139,14 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 			}
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
 					+ "getUserRole()" + "   ", e);
-			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
-			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
-					messages.getString("SYSTEM_EXCEPTION"));
+
+			if (e instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) e).getCode(),
+						((AsmsException) e).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
 		} finally {
 			if (session.isOpen()) {
 				session.close();
@@ -172,9 +177,13 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 			}
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
 					+ "getUser()" + "   ", e);
-			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
-			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
-					messages.getString("SYSTEM_EXCEPTION"));
+			if (e instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) e).getCode(),
+						((AsmsException) e).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
 		} finally {
 			if (session.isOpen()) {
 				session.close();
@@ -212,8 +221,13 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
 					+ "getUserById()" + "   ", e);
 			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
-			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
-					messages.getString("SYSTEM_EXCEPTION"));
+			if (e instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) e).getCode(),
+						((AsmsException) e).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
 		} finally {
 			if (session.isOpen()) {
 				session.close();
@@ -255,9 +269,13 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 			}
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
 					+ "getUserDetailsById()" + "   ", e);
-			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
-			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
-					messages.getString("SYSTEM_EXCEPTION"));
+			if (e instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) e).getCode(),
+						((AsmsException) e).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
 		} finally {
 			if (session.isOpen()) {
 				session.close();
@@ -289,9 +307,13 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 			}
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
 					+ "getStudentByUserId()" + "   ", e);
-			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
-			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
-					messages.getString("SYSTEM_EXCEPTION"));
+			if (e instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) e).getCode(),
+						((AsmsException) e).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
 		} finally {
 			if (session.isOpen()) {
 				session.close();
@@ -318,9 +340,13 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 			}
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
 					+ "getRoleObject()" + "   ", e);
-			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
-			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
-					messages.getString("SYSTEM_EXCEPTION"));
+			if (e instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) e).getCode(),
+						((AsmsException) e).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
 		} finally {
 			if (session.isOpen()) {
 				session.close();
@@ -347,9 +373,13 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 			}
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
 					+ "getSubRoleObject()" + "   ", e);
-			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
-			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
-					messages.getString("SYSTEM_EXCEPTION"));
+			if (e instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) e).getCode(),
+						((AsmsException) e).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
 		} finally {
 			if (session.isOpen()) {
 				session.close();
@@ -491,9 +521,13 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 		} catch (Exception e) {
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
 					+ "registerUser()" + "   ", e);
-			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
-			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
-					messages.getString("SYSTEM_EXCEPTION"));
+			if (e instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) e).getCode(),
+						((AsmsException) e).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
 		}
 
 	}
@@ -529,9 +563,13 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 			}
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
 					+ "insertUser()" + "   ", ex);
-			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
-			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
-					messages.getString("SYSTEM_EXCEPTION"));
+			if (ex instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) ex).getCode(),
+						((AsmsException) ex).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
 
 		} finally {
 			if (session.isOpen()) {
@@ -590,8 +628,13 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 					+ "insertStudent()" + "   ", ex);
 
 			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
-			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
-					messages.getString("SYSTEM_EXCEPTION"));
+			if (ex instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) ex).getCode(),
+						((AsmsException) ex).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
 
 		} finally {
 			if (session.isOpen()) {
@@ -629,8 +672,13 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 					+ "insertManagement()" + "   ", ex);
 
 			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
-			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
-					messages.getString("SYSTEM_EXCEPTION"));
+			if (ex instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) ex).getCode(),
+						((AsmsException) ex).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
 
 		} finally {
 			if (session.isOpen()) {
@@ -701,8 +749,13 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
 					+ "authenticate()" + "   ", e);
 			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
-			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
-					messages.getString("SYSTEM_EXCEPTION"));
+			if (e instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) e).getCode(),
+						((AsmsException) e).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
 
 		} finally {
 			if (session.isOpen()) {
@@ -742,8 +795,13 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 					+ "insertNonTeachingStaff()" + "   ", ex);
 
 			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
-			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
-					messages.getString("SYSTEM_EXCEPTION"));
+			if (ex instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) ex).getCode(),
+						((AsmsException) ex).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
 
 		} finally {
 			if (session.isOpen()) {
@@ -784,8 +842,13 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 					+ "insertTeachingStaff()" + "   ", ex);
 
 			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
-			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
-					messages.getString("SYSTEM_EXCEPTION"));
+			if (ex instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) ex).getCode(),
+						((AsmsException) ex).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
 
 		} finally {
 			if (session.isOpen()) {
@@ -819,8 +882,13 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 					+ "insertParent()" + "   ", ex);
 
 			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
-			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
-					messages.getString("SYSTEM_EXCEPTION"));
+			if (ex instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) ex).getCode(),
+						((AsmsException) ex).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
 
 		} finally {
 			if (session.isOpen()) {
@@ -851,9 +919,13 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 
 					+ "insertStudentAddress()" + "   ", ex);
 
-			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
-			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
-					messages.getString("SYSTEM_EXCEPTION"));
+			if (ex instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) ex).getCode(),
+						((AsmsException) ex).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
 
 		} finally {
 			if (session.isOpen()) {
@@ -887,8 +959,13 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 					+ "insertStudentDocs()" + "   ", ex);
 
 			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
-			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
-					messages.getString("SYSTEM_EXCEPTION"));
+			if (ex instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) ex).getCode(),
+						((AsmsException) ex).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
 
 		} finally {
 			if (session.isOpen()) {
@@ -922,9 +999,13 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 
 					+ "insertStudentSiblings()" + "   ", ex);
 
-			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
-			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
-					messages.getString("SYSTEM_EXCEPTION"));
+			if (ex instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) ex).getCode(),
+						((AsmsException) ex).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
 
 		} finally {
 			if (session.isOpen()) {
@@ -958,8 +1039,13 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 					+ "insertPreviousInfo()" + "   ", ex);
 
 			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
-			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
-					messages.getString("SYSTEM_EXCEPTION"));
+			if (ex instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) ex).getCode(),
+						((AsmsException) ex).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
 
 		} finally {
 			if (session.isOpen()) {
@@ -1154,8 +1240,13 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 					+ "insertaddressDetails()" + "   ", ex);
 
 			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
-			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
-					messages.getString("SYSTEM_EXCEPTION"));
+			if (ex instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) ex).getCode(),
+						((AsmsException) ex).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
 
 		} finally {
 			if (session.isOpen()) {
@@ -1193,8 +1284,13 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 					+ "insertDocumentDetails()" + "   ", ex);
 
 			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
-			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
-					messages.getString("SYSTEM_EXCEPTION"));
+			if (ex instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) ex).getCode(),
+						((AsmsException) ex).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
 
 		} finally {
 			if (session.isOpen()) {
@@ -1233,8 +1329,13 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 					+ "insertDocumentDetails()" + "   ", ex);
 
 			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
-			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
-					messages.getString("SYSTEM_EXCEPTION"));
+			if (ex instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) ex).getCode(),
+						((AsmsException) ex).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
 
 		} finally {
 			if (session.isOpen()) {
@@ -1271,8 +1372,13 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 					+ "insertStatutoryDetails()" + "   ", ex);
 
 			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
-			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
-					messages.getString("SYSTEM_EXCEPTION"));
+			if (ex instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) ex).getCode(),
+						((AsmsException) ex).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
 
 		} finally {
 			if (session.isOpen()) {
@@ -1393,15 +1499,19 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 						messages.getString("TENANT_INVALID_CODE_MSG"));
 			}
 
-		} catch (Exception e) {
+		} catch (Exception ex) {
 			if (session.isOpen()) {
 				session.close();
 			}
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
-					+ "search()" + "   ", e);
-			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
-			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
-					messages.getString("SYSTEM_EXCEPTION"));
+					+ "search()" + "   ", ex);
+			if (ex instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) ex).getCode(),
+						((AsmsException) ex).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
 		} finally {
 			if (session.isOpen()) {
 				session.close();
@@ -1473,15 +1583,20 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 			session.close();
 			return studentTypes;
 
-		} catch (Exception e) {
+		} catch (Exception ex) {
 			if (session.isOpen()) {
 				session.close();
 			}
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
-					+ "getAll()" + "   ", e);
+					+ "getAll()" + "   ", ex);
 			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
-			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
-					messages.getString("SYSTEM_EXCEPTION"));
+			if (ex instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) ex).getCode(),
+						((AsmsException) ex).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
 		} finally {
 			if (session.isOpen()) {
 				session.close();
@@ -1518,8 +1633,13 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 					+ "insertaddressDetails1TeachingStaff()" + "   ", ex);
 
 			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
-			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
-					messages.getString("SYSTEM_EXCEPTION"));
+			if (ex instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) ex).getCode(),
+						((AsmsException) ex).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
 
 		} finally {
 			if (session.isOpen()) {
@@ -1557,8 +1677,13 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 					+ "insertDocumentDetails1TeachingStaff()" + "   ", ex);
 
 			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
-			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
-					messages.getString("SYSTEM_EXCEPTION"));
+			if (ex instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) ex).getCode(),
+						((AsmsException) ex).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
 
 		} finally {
 			if (session.isOpen()) {
@@ -1598,8 +1723,13 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 					+ "insertDocumentDetails1TeachingStaff()" + "   ", ex);
 
 			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
-			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
-					messages.getString("SYSTEM_EXCEPTION"));
+			if (ex instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) ex).getCode(),
+						((AsmsException) ex).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
 
 		} finally {
 			if (session.isOpen()) {
@@ -1637,8 +1767,13 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 					+ "insertStatutoryDetails1TeachingStaff()" + "   ", ex);
 
 			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
-			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
-					messages.getString("SYSTEM_EXCEPTION"));
+			if (ex instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) ex).getCode(),
+						((AsmsException) ex).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
 
 		} finally {
 			if (session.isOpen()) {
@@ -1858,9 +1993,13 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 			}
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
 					+ "updateUser()" + "   ", e);
-			ResourceBundle message = AsmsHelper.getMessageFromBundle();
-			throw exceptionHandler.constructAsmsException(message.getString("SYSTEM_EXCEPTION_CODE"),
-					message.getString("SYSTEM_EXCEPTION"));
+			if (e instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) e).getCode(),
+						((AsmsException) e).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
 		} finally {
 			if (session.isOpen()) {
 				session.close();
@@ -1895,9 +2034,13 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 			}
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
 					+ "getUserDetails()" + "   ", e);
-			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
-			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
-					messages.getString("SYSTEM_EXCEPTION"));
+			if (e instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) e).getCode(),
+						((AsmsException) e).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
 		} finally {
 			if (session.isOpen()) {
 				session.close();
@@ -2781,15 +2924,15 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 			for (Privilege p : userPrs) {
 				name = p.getActivityName();
 				for (Privilege p1 : privileges) {
-					 if(p1.getActivityName().equalsIgnoreCase(name)){
-						 p.setCreateCheck(p1.getCreateCheck());
-						 p.setUpdateCheck(p1.getUpdateCheck());
-						 p.setRetrieveCheck(p1.getRetrieveCheck());
-						 p.setDeleteCheck(p1.getDeleteCheck());
-					 }
-					
+					if (p1.getActivityName().equalsIgnoreCase(name)) {
+						p.setCreateCheck(p1.getCreateCheck());
+						p.setUpdateCheck(p1.getUpdateCheck());
+						p.setRetrieveCheck(p1.getRetrieveCheck());
+						p.setDeleteCheck(p1.getDeleteCheck());
+					}
+
 				}
-				
+
 			}
 			session.update(user);
 			tx.commit();
@@ -2814,9 +2957,5 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 		}
 
 	}
-
-	
-	
-	
 
 }

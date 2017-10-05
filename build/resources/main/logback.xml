@@ -37,6 +37,14 @@
 		</encoder>
 	</appender>
 
+	<!-- ### log just the SQL ### -->
+	<logger name="org.hibernate.SQL" level="ERROR" />
+
+	<!-- ### log JDBC bind parameters ### -->
+	<logger name="org.hibernate.type" level="ERROR" />
+
+	<logger name="org.hibernate.tool.hbm2ddl" level="ERROR" />
+
 
 	<logger name="com.asms" additivity="false">
 		<level value="DEBUG" />
@@ -44,9 +52,7 @@
 		<appender-ref ref="consoleAppender" />
 	</logger>
 
-	<logger name="org.hibernate.type" level="WARN" />
 
-	<logger name="org.hibernate" level="WARN" />
 
 
 	<root>

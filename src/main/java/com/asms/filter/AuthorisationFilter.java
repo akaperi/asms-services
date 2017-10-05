@@ -1,6 +1,7 @@
 package com.asms.filter;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -58,6 +59,13 @@ public class AuthorisationFilter implements Filter {
 					if (response instanceof HttpServletResponse) {
 						HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 						httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+						response.setContentType("application/json");
+						// Get the printwriter object from response to write the required json object to the output stream      
+						PrintWriter out = response.getWriter();
+						// Assuming your json object is **jsonObject**, perform the following, it will return your json object  
+						String jsonObject = "{ \"Status\": \"Failure\", \"errorDescription\": \"UnAuthorized\" }";
+						out.print(jsonObject);
+						out.flush();
 					}
 				}
 			}

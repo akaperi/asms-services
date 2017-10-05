@@ -18,6 +18,7 @@
 	<beans:import resource="database.xml" />
 	<beans:import resource="properties.xml" />
 	<beans:import resource="mail.xml"/>
+	<beans:import resource="database_multitenancy.xml" />
 
 	<bean
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
