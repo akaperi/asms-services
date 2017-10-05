@@ -1,4 +1,5 @@
 package com.asms.usermgmt.dao;
+import java.io.File;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,9 +10,11 @@ import com.asms.rolemgmt.entity.Role;
 import com.asms.rolemgmt.entity.SubRole;
 import com.asms.usermgmt.entity.StudentType;
 import com.asms.usermgmt.entity.User;
+import com.asms.usermgmt.entity.management.Management;
 import com.asms.usermgmt.entity.student.Student;
 import com.asms.usermgmt.request.ChangePasswordDetails;
 import com.asms.usermgmt.request.UserDetails;
+import com.asms.usermgmt.request.management.ManagementDetails;
 import com.asms.usermgmt.service.CasteTypes;
 import com.asms.usermgmt.service.QualificationType;
 import com.asms.usermgmt.service.ReligionTypes;
@@ -61,6 +64,10 @@ public interface UserMgmtDao {
 	public List<UserDetails> searchForPrivileges(String role, String subRole, String id, String tenant) throws AsmsException;
 	
 	public void assignPrivileges(UserDetails details, String tenant) throws AsmsException;
+
+	//public List<Management> getManagementUserListFromExcel(File f, Object userType,String tenant) throws AsmsException;
+
+	public List<ManagementDetails> getManagementUserListFromExcel(File f,String roleName , String tenant) throws AsmsException;
 
 	
 

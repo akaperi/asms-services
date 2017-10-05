@@ -1,5 +1,6 @@
 package com.asms.usermgmt.service;
 
+import java.io.File;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -31,15 +32,19 @@ import com.asms.common.response.FailureResponse;
 import com.asms.common.response.SuccessResponse;
 import com.asms.common.service.BaseService;
 import com.asms.multitenancy.entity.SuperAdmin;
+import com.asms.rolemgmt.entity.Role;
+import com.asms.rolemgmt.entity.SubRole;
 import com.asms.usermgmt.auth.PrivilegesManager;
 import com.asms.usermgmt.dao.UserMgmtDao;
 import com.asms.usermgmt.entity.StudentType;
 import com.asms.usermgmt.entity.User;
+import com.asms.usermgmt.entity.management.Management;
 import com.asms.usermgmt.helper.PrincipalUser;
 import com.asms.usermgmt.helper.Validator;
 import com.asms.usermgmt.request.ChangePasswordDetails;
 import com.asms.usermgmt.request.UserDetails;
 import com.asms.usermgmt.request.UserRequest;
+import com.asms.usermgmt.request.management.ManagementDetails;
 import com.asms.usermgmt.response.GetUserResponse;
 import com.asms.usermgmt.response.LoginResponse;
 import com.asms.usermgmt.response.RegistrationResponse;
@@ -688,7 +693,78 @@ public class UserMgmtService extends BaseService {
 	}
 	
 	
-	
+	@Path("/upload")
+	@POST
+	//@Consumes("application/json")
+	@Consumes("multipart/form-data")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public Response uploadData(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse,
+			UserRequest userRequest, @QueryParam("tenantId") String tenant) {
+		RegistrationResponse rReponse = new RegistrationResponse();
+		ResourceBundle messages;
+		try {
+			// get bundles for error messages
+			messages = AsmsHelper.getMessageFromBundle();
+			// validate request
+			
+			File f = new File(userRequest.getUserDetails().getFileUploadPath());
+			
+			String fileName = f.getName();
+			if(fileName.equals("management") && fileName != null)
+			{
+				
+				userRequest.getUserDetails().setUserId("MGMT111");
+				userRequest.getUserDetails().setEmail("mgmt01@gmail.com");
+				userRequest.getUserDetails().setUserPassword("212221");
+				userRequest.getUserDetails().setRole("Management");
+				userRequest.getUserDetails().setSubRole("Trustee");
+				
+				
+				
+				
+				String roleName = userRequest.getUserDetails().getRole();
+				
+				List<ManagementDetails> managementList = userMgmtDao.getManagementUserListFromExcel(f,roleName,tenant);
+				
+				//userRequest.setUserDetails(managementList);
+			}
+			//List<Object> userList = userMgmtDao.getUserListFromExcel(f);
+			
+			
+
+//			validator.validateRequest(userRequest, messages, "create");
+//			// validate user details
+//			validator.validateUserDetails(userRequest, messages);
+			HttpSession session = hRequest.getSession();
+			User user = (User) session.getAttribute("ap_user");
+			// authorize
+
+			// check if logged in user has got rights to create user
+			PrincipalUser pUser = privilegesManager.isPrivileged(user, Constants.admin_category_userManagement,
+					Constants.privileges.create_check.toString());
+			if (pUser.isPrivileged()) {
+				UserDetails userDetails = userRequest.getUserDetails();
+				userDetails.setRole(userRequest.getUserRole());
+				userDetails.setSubRole(userRequest.getSubRole());
+				String userid = userMgmtDao.registerUser(userDetails, user, tenant);
+				rReponse.setIsNew("true");
+				rReponse.setUserId(userid);
+				rReponse.setProgressPercentage(20);
+				return Response.status(Status.OK).entity(rReponse).build();
+
+			} else {
+				FailureResponse failureResponse = new FailureResponse();
+				failureResponse.setCode(Integer.parseInt(messages.getString("NOT_AUTHORIZED_CODE")));
+				failureResponse.setErrorDescription(messages.getString("NOT_AUTHORIZED"));
+				return Response.status(200).entity(failureResponse).build();
+			}
+
+		} catch (AsmsException ex) {
+			// construct failure response
+			FailureResponse failureResponse = new FailureResponse(ex);
+			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+		}
+	}
 	
 	
 	

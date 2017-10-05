@@ -80,6 +80,8 @@ public class UserDetails {
 	
 	private Set<Privilege> privileges;
 	
+	private String fileUploadPath;
+	
 	
 
 	public Set<Privilege> getPrivileges() {
@@ -282,6 +284,14 @@ public class UserDetails {
 
 	public void setAdminDetails(AdminDetails adminDetails) {
 		this.adminDetails = adminDetails;
+	}
+
+	public String getFileUploadPath() {
+		return fileUploadPath;
+	}
+
+	public void setFileUploadPath(String fileUploadPath) {
+		this.fileUploadPath = fileUploadPath;
 	}
 
 

@@ -49,7 +49,7 @@ public class StudentDocuments {
 	private String birthCertificate;
 	
 	@Column(name = "student_other_certificate")
-	private String otherCertificate;
+	private String otherCertificate; //5 extra doc can be able to upload
 	
 	@Column(name = "student_remarks")
 	private String remarks;

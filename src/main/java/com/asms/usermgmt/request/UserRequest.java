@@ -23,6 +23,8 @@ public class UserRequest {
 	// detail type can be 
 	//Constants - > detail_address/documents/previous_info/statutory_details
 	private String detailType;
+	
+	
 
 	public String getRequestType() {
 		return requestType;
@@ -62,5 +64,7 @@ public class UserRequest {
 	public void setDetailType(String detailType) {
 		this.detailType = detailType;
 	}
+
+	
 
 }

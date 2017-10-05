@@ -10,10 +10,10 @@
 		<property name="hibernate.multiTenancy">NONE</property>
 		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
 		
-		<property name="hibernate.connection.url">jdbc:mysql://localhost:3306/multitenancy</property>
-		<property name="hibernate.connection.username">root</property>
-		<property name="hibernate.connection.password">Admin</property>
-		<property name="hibernate.connection.url">jdbc:mysql://localhost:3306/multitenancy</property>
+		<property name="hibernate.connection.url">jdbc:mysql://10.10.10.6:3306/multitenancy</property>
+		<property name="hibernate.connection.username">mallikarjun.guranna</property>
+		<property name="hibernate.connection.password">Anitha12345@gmail.com</property>
+		<property name="hibernate.connection.url">jdbc:mysql://10.10.10.6:3306/multitenancy</property>
 		
 
 

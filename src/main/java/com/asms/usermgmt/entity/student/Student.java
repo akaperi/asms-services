@@ -30,7 +30,7 @@ public class Student extends User {
 
 
 	@Column(name = "admission_no")
-	private String admissionNo;
+	private String admissionNo;// pre gen or data entry
 
 	@Column(name = "student_type")
 	private String studentType;
