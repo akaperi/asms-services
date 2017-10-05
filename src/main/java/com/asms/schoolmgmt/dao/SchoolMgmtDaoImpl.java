@@ -19,9 +19,16 @@ import java.util.UUID;
 import javax.annotation.Resource;
 import javax.security.auth.Subject;
 
+import org.hibernate.Criteria;
+import org.hibernate.Query;
+import org.hibernate.ScrollableResults;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.ProjectionList;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.Transformers;
 import org.jboss.logging.MDC;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,10 +68,12 @@ import com.asms.schoolmgmt.request.TimeTableOnchangeDetails;
 import com.asms.usermgmt.dao.UserMgmtDao;
 import com.asms.usermgmt.entity.Admin;
 import com.asms.usermgmt.entity.User;
+import com.asms.usermgmt.entity.student.Parent;
 import com.asms.usermgmt.entity.student.Student;
 import com.asms.usermgmt.entity.teachingStaff.TeachingStaff;
 import com.asms.usermgmt.entity.teachingStaff.TeachingSubjects;
 import com.asms.usermgmt.helper.EntityCreator;
+import com.asms.usermgmt.request.UserBasicDetails;
 import com.asms.usermgmt.request.UserDetails;
 
 @Service
@@ -209,9 +218,13 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 			}
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
 					+ "getClasses()" + "   ", e);
-			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
-			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
-					messages.getString("SYSTEM_EXCEPTION"));
+			if (e instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) e).getCode(),
+						((AsmsException) e).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
 		} finally {
 			if (session.isOpen()) {
 				session.close();
@@ -308,9 +321,13 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 			}
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
 					+ "getClassSujects()" + "   ", e);
-			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
-			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
-					messages.getString("SYSTEM_EXCEPTION"));
+			if (e instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) e).getCode(),
+						((AsmsException) e).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
 		} finally {
 			if (session.isOpen()) {
 				session.close();
@@ -498,6 +515,10 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 		try {
 
 			String schema = multitenancyDao.getSchema(tenant);
+			if (null == schema) {
+				throw exceptionHandler.constructAsmsException(messages.getString("TENANT_INVALID_CODE"),
+						messages.getString("TENANT_INVALID_CODE_MSG"));
+			}
 			session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
 			String hql = "from AcademicYear A where A.academicYearFromTo = ?";
 			AcademicYear aYearInDB = (AcademicYear) session.createQuery(hql)
@@ -596,58 +617,83 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 	 */
 
 	@Override
-	public List<String> createBoradCasteMessage(BroadCasteSearchTypesDetails searchTypesDetails, String tenantId)
-			throws AsmsException {
+	public void createBoradCasteMessage(BroadCasteSearchTypesDetails details, String tenantId) throws AsmsException {
 		Session session = null;
-		String sDate1 = searchTypesDetails.getDateOfIssue();
-		DateFormat edtFormat = new SimpleDateFormat("yyyy-mm-dd");
+		// String sDate1 = new Date();
+		// DateFormat edtFormat = new SimpleDateFormat("yyyy-mm-dd");
+	 messages = AsmsHelper.getMessageFromBundle();
 
 		try {
-			Date aLD = edtFormat.parse(sDate1);
+			// Date aLD = edtFormat.parse(sDate1);
 			String schema = multitenancyDao.getSchema(tenantId);
 			if (null != schema) {
 				session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
 
-				List<String> toEmailIdQry = new ArrayList<>();
-
 				String hql = "select S.name from School S";
 				String school = (String) session.createQuery(hql).uniqueResult();
 
-				if (searchTypesDetails.isAllParents() == true) {
-					toEmailIdQry.add("select fEmail from Parent");
-				}
-				if (searchTypesDetails.isAllStudents() == true) {
-					toEmailIdQry.add("select studentCreatedByWadmin from Student");
-				}
+				/*
+				 * List<String> toEmailIdQry = new ArrayList<>();
+				 * 
+				 * String hql = "select S.name from School S"; String school =
+				 * (String) session.createQuery(hql).uniqueResult();
+				 * 
+				 * if (searchTypesDetails.isAllParents() == true) {
+				 * toEmailIdQry.add("select fEmail from Parent"); } if
+				 * (searchTypesDetails.isAllStudents() == true) {
+				 * toEmailIdQry.add("select studentCreatedByWadmin from Student"
+				 * ); }
+				 * 
+				 * if (searchTypesDetails.isAllStudents() == true &&
+				 * searchTypesDetails.isAllParents() == true &&
+				 * searchTypesDetails.isAllManagement() == false) {
+				 * toEmailIdQry.add("select studentCreatedByWadmin from Student"
+				 * ); } if (searchTypesDetails.isAllManagement() == true &&
+				 * searchTypesDetails.isAllParents() == true &&
+				 * searchTypesDetails.isAllStudents() == true) { toEmailIdQry.
+				 * add("select mngmtCreatedByWadmin from Management"); } if
+				 * (searchTypesDetails.isAllNonTeaching() == true) {
+				 * toEmailIdQry.
+				 * add("select createdByWadmin from NonTeachingStaff"); }
+				 * 
+				 * if (searchTypesDetails.isAllTeachingStaff() == true) {
+				 * toEmailIdQry.add("select createdByWadmin from TeachingStaff"
+				 * ); }
+				 * 
+				 * for (String qry : toEmailIdQry) { List<String> emails =
+				 * session.createQuery(qry).list();
+				 * 
+				 * for (String email : emails) {
+				 * 
+				 * emailSender.send(school, email, "devendrasignh77@gmail.com",
+				 * searchTypesDetails.getSubject(),
+				 * searchTypesDetails.getMessage(), "text/html", aLD); }
+				 * 
+				 * } session.close();
+				 */
 
-				if (searchTypesDetails.isAllStudents() == true && searchTypesDetails.isAllParents() == true
-						&& searchTypesDetails.isAllManagement() == false) {
-					toEmailIdQry.add("select studentCreatedByWadmin from Student");
-				}
-				if (searchTypesDetails.isAllManagement() == true && searchTypesDetails.isAllParents() == true
-						&& searchTypesDetails.isAllStudents() == true) {
-					toEmailIdQry.add("select mngmtCreatedByWadmin from Management");
-				}
-				if (searchTypesDetails.isAllNonTeaching() == true) {
-					toEmailIdQry.add("select createdByWadmin from NonTeachingStaff");
-				}
+				List<UserBasicDetails> users = details.getUsers();
 
-				if (searchTypesDetails.isAllTeachingStaff() == true) {
-					toEmailIdQry.add("select createdByWadmin from TeachingStaff");
-				}
+				if (details.isAllParents() == true) {
+					if (null != users) {
+						// for()
+						Query q = session.createQuery("select P.fEmail, P.mEmail from Parent P");
+						List<Object[]> employees = (List<Object[]>) q.list();
+						for (Object[] employee : employees) {
+							Integer id = (Integer) employee[0];
+							String firstName = (String) employee[1];
 
-				for (String qry : toEmailIdQry) {
-					List<String> emails = session.createQuery(qry).list();
+						}
 
-					for (String email : emails) {
-
-						emailSender.send(school, email, "devendrasignh77@gmail.com", searchTypesDetails.getSubject(),
-								searchTypesDetails.getMessage(), "text/html", aLD);
 					}
 
 				}
+
 				session.close();
 
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("TENANT_INVALID_CODE"),
+						messages.getString("TENANT_INVALID_CODE_MSG"));
 			}
 		}
 
@@ -657,16 +703,19 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 			}
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
 					+ "createBoradCasteMessage" + "   ", e);
-			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
-			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
-					messages.getString("SYSTEM_EXCEPTION"));
+			if (e instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) e).getCode(),
+						((AsmsException) e).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
 
 		} finally {
 			if (session.isOpen()) {
 				session.close();
 			}
 		}
-		return null;
 
 	}
 
@@ -701,7 +750,12 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 			}
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
 					+ "getSections()" + "   ", e);
-			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
+
+			if (e instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) e).getCode(),
+						((AsmsException) e).getDescription());
+			}
+
 			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
 					messages.getString("SYSTEM_EXCEPTION"));
 		} finally {
@@ -850,6 +904,7 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 		try {
 
 			String schema = multitenancyDao.getSchema(tenantId);
+
 			session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
 			String hql = "from AcademicYear A where A.academicYearFromTo = ?";
 			AcademicYear aYearInDB = (AcademicYear) session.createQuery(hql).setParameter(0, academicyear)
@@ -1172,7 +1227,12 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 	public List<ClassSubjects> getSubjectByName(String className, String sectionName, String tenantId)
 			throws AsmsException {
 		Session session = null;
+		ResourceBundle messages = AsmsHelper.getMessageFromBundle();
 		String schema = multitenancyDao.getSchema(tenantId);
+		if (null == schema) {
+			throw exceptionHandler.constructAsmsException(messages.getString("TENANT_INVALID_CODE"),
+					messages.getString("TENANT_INVALID_CODE_MSG"));
+		}
 		try {
 			session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
 			String hql = "from ClassSubjects C where C.sectionObject.classObject.name ='" + className
@@ -1187,9 +1247,13 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 			}
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
 					+ "getSubjectByName()" + "   ", e);
-			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
-			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
-					messages.getString("SYSTEM_EXCEPTION"));
+			if (e instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) e).getCode(),
+						((AsmsException) e).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
 		} finally {
 			if (session.isOpen()) {
 				session.close();
@@ -1282,7 +1346,12 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 	public void TimeTableOnChange(TimeTableOnchangeDetails details, String tenantId) throws AsmsException {
 		Session session = null;
 		Transaction tx = null;
+		 messages = AsmsHelper.getMessageFromBundle();
 		String schema = multitenancyDao.getSchema(tenantId);
+		if (null == schema) {
+			throw exceptionHandler.constructAsmsException(messages.getString("TENANT_INVALID_CODE"),
+					messages.getString("TENANT_INVALID_CODE_MSG"));
+		}
 		try {
 			session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
 			String hql = "from TeachingSubjects C where C.teachingObject.serialNo =?";
@@ -1311,9 +1380,14 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 			}
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
 					+ "TimeTableOnChange()" + "   ", e);
-			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
-			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
-					messages.getString("SYSTEM_EXCEPTION"));
+			
+			if (e instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) e).getCode(),
+						((AsmsException) e).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
 		} finally {
 			if (session.isOpen()) {
 				session.close();
@@ -1328,7 +1402,12 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 			String section, String tenantId) throws AsmsException {
 		Session session = null;
 		Transaction tx = null;
+		ResourceBundle messages = AsmsHelper.getMessageFromBundle();
 		String schema = multitenancyDao.getSchema(tenantId);
+		if (null == schema) {
+			throw exceptionHandler.constructAsmsException(messages.getString("TENANT_INVALID_CODE"),
+					messages.getString("TENANT_INVALID_CODE_MSG"));
+		}
 		try {
 			session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
 			String hql = "from TeachingSubjects C where C.sectionObject.name =? and C.sectionObject.classObject.name =?";
@@ -1369,15 +1448,90 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 			}
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
 					+ "getTeachersOnChange()" + "   ", e);
-			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
-			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
-					messages.getString("SYSTEM_EXCEPTION"));
+			if (e instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) e).getCode(),
+						((AsmsException) e).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
 		} finally {
 			if (session.isOpen()) {
 				session.close();
 			}
 		}
 
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<UserBasicDetails> searchForBroadcastmessages(BroadCasteSearchTypesDetails details, String tenant)
+			throws AsmsException {
+		Session session = null;
+		messages = AsmsHelper.getMessageFromBundle();
+		String schema = multitenancyDao.getSchema(tenant);
+		if (null == schema) {
+			throw exceptionHandler.constructAsmsException(messages.getString("TENANT_INVALID_CODE"),
+					messages.getString("TENANT_INVALID_CODE_MSG"));
+		}
+		List<UserBasicDetails> userDetails = new ArrayList<UserBasicDetails>();
+		List<User> users = null;
+		List<Parent> parents = null;
+		String hql;
+		try {
+			session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
+			if (details.isAllUsers() == true) {
+				hql = "from User U";
+				users = (List<User>) session.createQuery(hql).list();
+			} else if (details.isAllManagement()) {
+				hql = "from Management M";
+				users = (List<User>) session.createQuery(hql).list();
+			}
+
+			else if (details.isAllNonTeaching()) {
+				hql = "from NonTeachingStaff N";
+				users = (List<User>) session.createQuery(hql).list();
+
+			} // for parent also student list would be returned, but message
+				// will go to parents
+			else if (details.isAllStudents() || details.isAllParents()) {
+				hql = "from Student S";
+				users = (List<User>) session.createQuery(hql).list();
+
+			} else if (details.isAllTeachingStaff()) {
+				hql = "from TeachingStaff S";
+				users = (List<User>) session.createQuery(hql).list();
+			} else if (null != details.getClassName() && !details.getClassName().isEmpty()) {
+				hql = "from Student S where S.studentClass = '" + details.getClassName() + "'";
+				if (null != details.getSection() && !details.getSection().isEmpty()) {
+					hql = hql + " and S.studentSection = '" + details.getSection() + "'";
+				}
+			}
+			EntityCreator entityCreator = new EntityCreator();
+			userDetails = entityCreator.createUserBasicDetails(users);
+
+			session.close();
+			return userDetails;
+
+		} catch (Exception e) {
+			if (session.isOpen()) {
+				session.close();
+			}
+			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
+					+ "searchForBroadcastmessages()" + "   ", e);
+			
+			if (e instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) e).getCode(),
+						((AsmsException) e).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
+		}
 	}
 
 }

@@ -6,6 +6,8 @@ import com.asms.common.response.SuccessResponse;
 import com.asms.schoolmgmt.entity.Section;
 import com.asms.schoolmgmt.request.TeacherDetails;
 import com.asms.schoolmgmt.request.TimeTableDetails;
+import com.asms.usermgmt.request.UserBasicDetails;
+import com.asms.usermgmt.request.UserDetails;
 
 public class SchoolSuccessResponse extends SuccessResponse{
 	
@@ -16,6 +18,16 @@ public class SchoolSuccessResponse extends SuccessResponse{
 	private TimeTableDetails timeTableDetails;
 	
 	private List<TeacherDetails> teachers;
+	
+	private List<UserBasicDetails> userBasicDetails;
+
+	public List<UserBasicDetails> getUserBasicDetails() {
+		return userBasicDetails;
+	}
+
+	public void setUserBasicDetails(List<UserBasicDetails> userDetails) {
+		this.userBasicDetails = userDetails;
+	}
 
 	public List<TeacherDetails> getTeachers() {
 		return teachers;

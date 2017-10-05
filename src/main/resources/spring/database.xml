@@ -4,13 +4,13 @@
 
 	<beans:bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
 		destroy-method="close">
-		<beans:property name="driverClassName" value="${driver_class_name}" />
-		<beans:property name="url" value="${db_url}" />
+		<beans:property name="driverClassName" value="${hibernate.connection.driver_class}" />
+		<beans:property name="url" value="${hibernate.connection.url}" />
 
 		<beans:property name="connectionProperties"
 			value="useUnicode=yes;characterEncoding=utf8;" />
-		<beans:property name="username" value="${username}" />
-		<beans:property name="password" value="${password}" />
+		<beans:property name="username" value="${hibernate.connection.username}" />
+		<beans:property name="password" value="${hibernate.connection.password}" />
 
 	</beans:bean>
 
@@ -111,25 +111,24 @@
 		</beans:property>
 		<beans:property name="hibernateProperties">
 			<beans:props>
-				<beans:prop key="connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider
-				</beans:prop>
-				<beans:prop key="hibernate.current_session_context_class">thread</beans:prop>
-				<beans:prop key="hibernate.autoReconnect">true</beans:prop>
-				<beans:prop key="hibernate.show_sql">false</beans:prop>
-				<beans:prop key="hibernate.connection.useUnicode">true</beans:prop>
-				<beans:prop key="hibernate.connection.characterEncoding">UTF-8</beans:prop>
-				<beans:prop key="hibernate.c3p0.min_size">5</beans:prop>
-				<beans:prop key="hibernate.c3p0.max_size">20</beans:prop>
-				<beans:prop key="hibernate.c3p0.timeout">300</beans:prop>
-				<beans:prop key="hibernate.c3p0.max_statements">50</beans:prop>
-				<beans:prop key="hibernate.c3p0.idle_test_period">3000</beans:prop>
+				<beans:prop key="connection.provider_class">${connection.provider_class}</beans:prop>
+				<beans:prop key="hibernate.current_session_context_class">${hibernate.current_session_context_class}</beans:prop>
+				<beans:prop key="hibernate.autoReconnect">${hibernate.autoReconnect}</beans:prop>
+				<beans:prop key="hibernate.show_sql">${hibernate.show_sql}</beans:prop>
+				<beans:prop key="hibernate.connection.useUnicode">${hibernate.connection.useUnicode}</beans:prop>
+				<beans:prop key="hibernate.connection.characterEncoding">${hibernate.connection.characterEncoding}</beans:prop>
+				<beans:prop key="hibernate.c3p0.min_size">${hibernate.c3p0.min_size}</beans:prop>
+				<beans:prop key="hibernate.c3p0.max_size">${hibernate.c3p0.max_size}</beans:prop>
+				<beans:prop key="hibernate.c3p0.timeout">${hibernate.c3p0.timeout}</beans:prop>
+				<beans:prop key="hibernate.c3p0.max_statements">${hibernate.c3p0.max_statements}</beans:prop>
+				<beans:prop key="hibernate.c3p0.idle_test_period">${hibernate.c3p0.idle_test_period}</beans:prop>
 
 
-				<beans:prop key="hibernate.connection.driver_class">${driver_class_name}</beans:prop>
-				<beans:prop key="hibernate.connection.password">${password}</beans:prop>
-				<beans:prop key="hibernate.connection.url">${db_url_multitenancy}</beans:prop>
-				<beans:prop key="hibernate.connection.username">${username}</beans:prop>
-				<beans:prop key="hibernate.dialect">${dialect}</beans:prop>
+				<beans:prop key="hibernate.connection.driver_class">${hibernate.connection.driver_class}</beans:prop>
+				<beans:prop key="hibernate.connection.password">${hibernate.connection.password}</beans:prop>
+				<beans:prop key="hibernate.connection.url">${hibernate.connection.url}</beans:prop>
+				<beans:prop key="hibernate.connection.username">${hibernate.connection.username}</beans:prop>
+				<beans:prop key="hibernate.dialect">${hibernate.dialect}</beans:prop>
 
 				<beans:prop key="hibernate.multiTenancy">SCHEMA</beans:prop>
 				<beans:prop key="hibernate.multi_tenant_connection_provider">com.asms.common.helper.MultiTenantConnectionProviderImpl

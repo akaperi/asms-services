@@ -690,6 +690,28 @@ public class UserMgmtService extends BaseService {
 	
 	
 	
+	@Path("/logout")
+	@GET
+	@Produces("application/json")
+	public Response logout(@Context HttpServletRequest request,
+			@Context HttpServletResponse response) {
+		FailureResponse failureResponse = new FailureResponse();
+		try {
+			
+			SuccessResponse sResponse = new SuccessResponse();
+			request.getSession().invalidate();
+			return Response.status(Status.OK).entity(sResponse).build();
+			
+		} catch (Exception ex) {
+			
+			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+		}
+
+	}
+	
+	
+	
+	
 	
 	
 	

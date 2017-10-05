@@ -1,5 +1,10 @@
 package com.asms.schoolmgmt.request;
 
+import java.util.List;
+
+import com.asms.usermgmt.request.UserBasicDetails;
+import com.asms.usermgmt.request.UserDetails;
+
 public class BroadCasteSearchTypesDetails {
 
 	
@@ -14,9 +19,19 @@ public class BroadCasteSearchTypesDetails {
 	
 	private boolean allTeachingStaff;
 	
+	private boolean allUsers;
+	
+	private String className;
+	
+	private String section;
+	
+	private List<UserBasicDetails> users;
+	
+	private List<UserBasicDetails> students;
 	
 	
-	private String dateOfIssue;
+	
+	
 	
 	private String subject;
 
@@ -69,13 +84,38 @@ public class BroadCasteSearchTypesDetails {
 	public void setAllTeachingStaff(boolean allTeachingStaff) {
 		this.allTeachingStaff = allTeachingStaff;
 	}
+	public boolean isAllUsers() {
+		return allUsers;
+	}
+	public void setAllUsers(boolean allUsers) {
+		this.allUsers = allUsers;
+	}
+	public String getClassName() {
+		return className;
+	}
+	public void setClassName(String className) {
+		this.className = className;
+	}
+	public String getSection() {
+		return section;
+	}
+	public void setSection(String section) {
+		this.section = section;
+	}
+	public List<UserBasicDetails> getUsers() {
+		return users;
+	}
+	public void setUsers(List<UserBasicDetails> users) {
+		this.users = users;
+	}
+	public List<UserBasicDetails> getStudents() {
+		return students;
+	}
+	public void setStudents(List<UserBasicDetails> students) {
+		this.students = students;
+	}
 	
-	public String getDateOfIssue() {
-		return dateOfIssue;
-	}
-	public void setDateOfIssue(String dateOfIssue) {
-		this.dateOfIssue = dateOfIssue;
-	}
+	
 	
 	
 	

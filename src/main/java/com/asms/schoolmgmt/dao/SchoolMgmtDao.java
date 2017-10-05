@@ -14,6 +14,8 @@ import com.asms.schoolmgmt.request.SchoolDetails;
 import com.asms.schoolmgmt.request.TeacherDetails;
 import com.asms.schoolmgmt.request.TimeTableDetails;
 import com.asms.schoolmgmt.request.TimeTableOnchangeDetails;
+import com.asms.usermgmt.request.UserBasicDetails;
+import com.asms.usermgmt.request.UserDetails;
 
 public interface SchoolMgmtDao {
 
@@ -46,7 +48,7 @@ public interface SchoolMgmtDao {
 
 	public void setupSchool(SetupSchoolDetails setupSchoolDetail, String schema) throws AsmsException;
 
-	public List<String> createBoradCasteMessage(BroadCasteSearchTypesDetails searchTypesDetails, String tenantId)
+	public void createBoradCasteMessage(BroadCasteSearchTypesDetails searchTypesDetails, String tenantId)
 			throws AsmsException;
 
 	/**
@@ -69,5 +71,8 @@ public interface SchoolMgmtDao {
 
 	public List<TeacherDetails> getTeachersOnChange(String from, String to, String day, String className, String section,
 			String tenantId) throws AsmsException;
+	
+	
+	public List<UserBasicDetails> searchForBroadcastmessages(BroadCasteSearchTypesDetails details, String tenant) throws AsmsException;
 
 }

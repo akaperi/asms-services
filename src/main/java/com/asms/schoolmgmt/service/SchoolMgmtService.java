@@ -26,6 +26,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.asms.Exception.AsmsException;
+import com.asms.Exception.ExceptionHandler;
 import com.asms.common.helper.AsmsHelper;
 import com.asms.common.helper.Constants;
 import com.asms.common.response.FailureResponse;
@@ -51,6 +52,8 @@ import com.asms.schoolmgmt.response.SchoolSuccessResponse;
 import com.asms.usermgmt.auth.PrivilegesManager;
 import com.asms.usermgmt.entity.User;
 import com.asms.usermgmt.helper.PrincipalUser;
+import com.asms.usermgmt.request.UserBasicDetails;
+import com.asms.usermgmt.request.UserDetails;
 import com.asms.usermgmt.request.student.ParentDetails;
 
 import com.asms.usermgmt.helper.PrincipalUser;
@@ -82,6 +85,9 @@ public class SchoolMgmtService extends BaseService {
 
 	@Resource(name = "asmsdbProperties")
 	private Properties dbProperties;
+
+	@Autowired
+	private ExceptionHandler exceptionHandler;
 
 	private static final Logger logger = LoggerFactory.getLogger(SchoolMgmtService.class);
 
@@ -348,6 +354,58 @@ public class SchoolMgmtService extends BaseService {
 	}
 
 	/*
+	 * api : /broadcastmessages/search request type :GET
+	 * 
+	 * Method : searchForbroadCasteMessages -> This method is used to search the
+	 * users list for broadcasting messages Input:UserRequest Output: Response
+	 * object *
+	 * 
+	 * 
+	 */
+
+	@Path("/broadcastmessages/search")
+	@POST
+	@Consumes("application/json")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public Response searchForbroadCasteMessages(@Context HttpServletRequest hRequest,
+			@Context HttpServletResponse hResponse, @QueryParam("tenantId") String tenant,
+			BroadCasteSearchTypesDetails details) {
+		try {
+			ResourceBundle messages;
+			// get bundles for error messages
+			messages = AsmsHelper.getMessageFromBundle();
+			if (null == details) {
+				throw exceptionHandler.constructAsmsException(messages.getString("REQUEST_NULL_CODE"),
+						messages.getString("REQUEST_NULL"));
+			}
+			FailureResponse failureResponse = new FailureResponse();
+			// get bundles for error messages
+			HttpSession session = hRequest.getSession();
+			User user = (User) session.getAttribute("ap_user");
+
+			PrincipalUser pUser = privilegesManager.isPrivileged((User) user,
+					Constants.academics_category_broadcastMessages.toString(),
+					Constants.privileges.create_check.toString());
+			if (pUser.isPrivileged()) {
+
+				List<UserBasicDetails> userDetails = schoolMgmtDao.searchForBroadcastmessages(details, tenant);
+
+				SchoolSuccessResponse schoolSuccessResponse = new SchoolSuccessResponse();
+				schoolSuccessResponse.setUserBasicDetails(userDetails);
+				return Response.status(Status.OK).entity(schoolSuccessResponse).build();
+
+			} else {
+				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			}
+
+		} catch (AsmsException ex) {
+			// construct failure response
+			FailureResponse failureResponse = new FailureResponse(ex);
+			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+		}
+	}
+
+	/*
 	 * api : /school/broadCasteMessages request type :POST
 	 * 
 	 * Method : createbroadCasteMessages -> This method is used to send the
@@ -361,10 +419,17 @@ public class SchoolMgmtService extends BaseService {
 	@Consumes("application/json")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public Response createbroadCasteMessages(@Context HttpServletRequest hRequest,
-			@Context HttpServletResponse hResponse, @QueryParam("tenantId") String tenant, UserRequest userRequest) {
+			@Context HttpServletResponse hResponse, @QueryParam("tenantId") String tenant,
+			BroadCasteSearchTypesDetails details) {
 		try {
 			FailureResponse failureResponse = new FailureResponse();
+			ResourceBundle messages;
 			// get bundles for error messages
+			messages = AsmsHelper.getMessageFromBundle();
+			if (null == details) {
+				throw exceptionHandler.constructAsmsException(messages.getString("REQUEST_NULL_CODE"),
+						messages.getString("REQUEST_NULL"));
+			}
 			HttpSession session = hRequest.getSession();
 			User user = (User) session.getAttribute("ap_user");
 
@@ -373,9 +438,7 @@ public class SchoolMgmtService extends BaseService {
 					Constants.privileges.create_check.toString());
 			if (pUser.isPrivileged()) {
 
-				BroadCasteSearchTypesDetails searchTypesDetails = userRequest.getBroadCasteSearchTypesDetails();
-
-				List<String> emails = schoolMgmtDao.createBoradCasteMessage(searchTypesDetails, tenant);
+				schoolMgmtDao.createBoradCasteMessage(details, tenant);
 
 				SchoolSuccessResponse schoolSuccessResponse = new SchoolSuccessResponse();
 				// schoolSuccessResponse.setDetails(emails);
@@ -710,7 +773,8 @@ public class SchoolMgmtService extends BaseService {
 					Constants.privileges.create_check.toString());
 			if (pUser.isPrivileged()) {
 
-				List<TeacherDetails> teachers = schoolMgmtDao.getTeachersOnChange(timeFrom, timeTo, day, className, sectionName, tenant);
+				List<TeacherDetails> teachers = schoolMgmtDao.getTeachersOnChange(timeFrom, timeTo, day, className,
+						sectionName, tenant);
 				schoolSuccessResponse.setTeachers(teachers);
 				return Response.status(Status.OK).entity(schoolSuccessResponse).build();
 			} else {
