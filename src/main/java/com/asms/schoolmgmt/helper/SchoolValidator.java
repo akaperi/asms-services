@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import com.asms.Exception.AsmsException;
 import com.asms.Exception.ExceptionHandler;
 import com.asms.common.helper.AsmsHelper;
+import com.asms.schoolmgmt.entity.AdditionalSubjects;
 import com.asms.schoolmgmt.entity.Breaks;
 import com.asms.schoolmgmt.entity.SetupSchoolDetails;
 import com.asms.schoolmgmt.request.GroupDetails;
@@ -457,4 +458,30 @@ public class SchoolValidator {
 		 */
 	}
 
+
+public void validateAdditionalSubjectsRequest( String className, String section, ResourceBundle messages) throws AsmsException {
+	
+
+	AdditionalSubjects additionalsubjects = new AdditionalSubjects();
+
+	if (null == additionalsubjects) {
+		throw exceptionHandler.constructAsmsException(messages.getString("ADDITIONAL_SUBJECTS_NULL_CODE"),
+				messages.getString("ADDITIONAL_SUBJECTS_NULL_MSG"));
+	}
+
+	if (null == additionalsubjects.getName() || additionalsubjects.getName().isEmpty()) {
+		throw exceptionHandler.constructAsmsException(messages.getString("	ADDITIONAL_NAME_NULL_CODE"),
+				messages.getString("ADDITIONAL_NAME_NULL_MSG"));
+	}
+	if (null == className || className.isEmpty()) {
+		throw exceptionHandler.constructAsmsException(messages.getString("CLASSNAME_NULL_CODE"),
+				messages.getString("CLASSNAME_NULL_MSG"));
+	}
+
+	if (null == section || section.isEmpty()) {
+		throw exceptionHandler.constructAsmsException(messages.getString("SECTION_NULL_CODE"),
+				messages.getString("SECTION_NULL_MSG"));
+
+}
+}
 }

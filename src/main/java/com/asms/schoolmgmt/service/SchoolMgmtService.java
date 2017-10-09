@@ -734,10 +734,15 @@ public class SchoolMgmtService extends BaseService {
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public Response getsubject(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse,
 			@QueryParam("sectionName") String section,@QueryParam("className")String name,@QueryParam("tenantId") String tenant) {
-
+		ResourceBundle messages;
 		try {
 			FailureResponse failureResponse = new FailureResponse();
 			// get bundles for error messages
+			messages = AsmsHelper.getMessageFromBundle();
+			// validate request
+			schoolValidator.validateAdditionalSubjectsRequest(name, section, messages);
+			// validate user details
+			// validator.validateUserDetails(userRequest, messages);
 			HttpSession session = hRequest.getSession();
 			User user = (User) session.getAttribute("ap_user");
 
@@ -768,10 +773,13 @@ public class SchoolMgmtService extends BaseService {
 		try {
 			FailureResponse failureResponse = new FailureResponse();
 			// get bundles for error messages
-			HttpSession session = hRequest.getSession();
+		//	if (null != name && null != section) 
+			
+				
+				HttpSession session = hRequest.getSession();
 			User user = (User) session.getAttribute("ap_user");
 
-			if (null != user) {
+			if (null != user && null != name && null != section) {
 				 List<SubjectDetails> SubjectDetailsName= schoolMgmtDao.getsubjectsAndAdditionalsubjects(name, section ,tenant);
 
 				GetUserResponse getUserResponse = new GetUserResponse();
@@ -779,11 +787,13 @@ public class SchoolMgmtService extends BaseService {
 			
 				return Response.status(Status.OK).entity(getUserResponse).build();
 
-			} else {
+				} else {
 				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
 			}
 
-		} catch (AsmsException ex) {
+			
+		
+		}catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
 			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();

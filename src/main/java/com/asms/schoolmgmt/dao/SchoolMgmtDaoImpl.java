@@ -1431,19 +1431,19 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 		         
 		         for(AdditionalSubjects ad : ads){
 		          SubjectDetails sb = new SubjectDetails ();
-		         // sb.setName(ad.getName());
+		          sb.setName(ad.getName());
 		   
 		  subjects.add(sb);       }
 		         for(AdditionalSubjects cs : ads){
 		          SubjectDetails sb = new SubjectDetails ();
-		         // sb.setName( cs.getName());
+		          sb.setName( cs.getName());
 		  subjects.add(sb);
 		  return subjects;
 		   }
 		        
 		   session.close();
 		   
-
+		         
 		  } catch (Exception e) {
 		   if (session.isOpen()) {
 		    session.close();
