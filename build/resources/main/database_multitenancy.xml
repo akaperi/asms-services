@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+	<session-factory>
+		<property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+		<property name="hibernate.hbm2ddl.auto">UPDATE</property>
+		<property name="hibernate.multiTenancy">NONE</property>
+		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+		
+		<property name="hibernate.connection.url">jdbc:mysql://10.10.10.6:3306/multitenancy</property>
+		<property name="hibernate.connection.username">mallikarjun.guranna</property>
+		<property name="hibernate.connection.password">Anitha12345@gmail.com</property>
+		<property name="hibernate.connection.url">jdbc:mysql://10.10.10.6:3306/multitenancy</property>
+		
+
+
+
+
+
+		
+		<mapping class="com.asms.schoolmgmt.entity.School" />
+		<mapping class="com.asms.usermgmt.entity.management.Management" />
+		<mapping class="com.asms.rolemgmt.entity.Role" />
+		<mapping class="com.asms.rolemgmt.entity.SubRole" />
+		<mapping class="com.asms.usermgmt.entity.User" />
+		<mapping class="com.asms.usermgmt.entity.student.Student" />
+		<mapping class="com.asms.usermgmt.entity.student.Parent" />
+		<mapping class="com.asms.usermgmt.entity.student.StudentAddress" />
+		<mapping class="com.asms.usermgmt.entity.student.StudentPreviousInfo" />
+		<mapping class="com.asms.usermgmt.entity.student.Sibling" />
+		<mapping class="com.asms.usermgmt.entity.student.StudentDocuments" />
+		<mapping class="com.asms.usermgmt.entity.student.StudentPreviousInfo" />
+		<mapping class="com.asms.usermgmt.entity.teachingStaff.TeachingStaff" />
+		<mapping class="com.asms.usermgmt.entity.nonTeachingStaff.NonTeachingStaff" />
+		<mapping class="com.asms.usermgmt.entity.teachingStaff.TeachingSubjects" />
+		<mapping class="com.asms.usermgmt.entity.student.StudentDocuments" />
+		<mapping class="com.asms.schoolmgmt.entity.ClassGroup" />
+		<mapping class="com.asms.schoolmgmt.entity.Class" />
+		<mapping class="com.asms.schoolmgmt.entity.Section" />
+		<mapping class="com.asms.schoolmgmt.entity.AcademicYear" />
+		<mapping class="com.asms.schoolmgmt.entity.AdditionalSubjects" />
+		<mapping class="com.asms.schoolmgmt.entity.ClassSubjects" />
+		
+		<mapping class="com.asms.usermgmt.entity.nonTeachingStaff.Address" />
+		<mapping class="com.asms.usermgmt.entity.nonTeachingStaff.NonTeachingStaff" />
+		<mapping class="com.asms.usermgmt.entity.nonTeachingStaff.StaffDocuments" />
+		<mapping
+			class="com.asms.usermgmt.entity.nonTeachingStaff.StaffPreviousInformation" />
+		<mapping class="com.asms.usermgmt.entity.nonTeachingStaff.StaffStatutory" />
+
+		<mapping class="com.asms.usermgmt.entity.teachingStaff.TeachingStaff" />
+		<mapping class="com.asms.usermgmt.entity.teachingStaff.Address1" />
+		<mapping class="com.asms.usermgmt.entity.teachingStaff.StaffDocuments1" />
+		<mapping
+			class="com.asms.usermgmt.entity.teachingStaff.StaffPreviousInformation1" />
+		<mapping class="com.asms.usermgmt.entity.teachingStaff.StaffStatutory1" />
+		<mapping class="com.asms.usermgmt.entity.teachingStaff.TeachingSubjects" />
+		<mapping class="com.asms.schoolmgmt.entity.SchoolBoard" />
+		<mapping class="com.asms.usermgmt.entity.Admin" />
+		<mapping class="com.asms.usermgmt.entity.Privilege" />
+		<mapping class="com.asms.schoolmgmt.entity.Breaks" />
+		<mapping class="com.asms.schoolmgmt.entity.TimeTable" />
+		<mapping class="com.asms.attendance.entity.StudentAttendance" />
+		<mapping class="com.asms.attendance.entity.StaffAttendance" />
+		
+
+
+
+	</session-factory>
+</hibernate-configuration>

@@ -384,6 +384,7 @@ public class UserMgmtService extends BaseService {
 			FailureResponse failureResponse = new FailureResponse();
 			// get bundles for error messages
 			messages = AsmsHelper.getMessageFromBundle();
+			
 			if (admissionNo == null && studentFirstName == null && studentLastName == null && mngmtFirstName == null
 					&& mngmtLastName == null && firstName == null && lastName == null) {
 				failureResponse.setCode(Integer.parseInt(messages.getString("USERID_NULL_CODE")));

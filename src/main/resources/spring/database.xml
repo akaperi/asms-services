@@ -105,7 +105,8 @@
 				<beans:value>com.asms.usermgmt.entity.Privilege	</beans:value>
 				<beans:value>com.asms.schoolmgmt.entity.Breaks</beans:value>
 				<beans:value>com.asms.schoolmgmt.entity.TimeTable</beans:value>
-				
+				<beans:value>com.asms.attendance.entity.StudentAttendance</beans:value>
+				<beans:value>com.asms.attendance.entity.StaffAttendance</beans:value>
 
 			</beans:list>
 		</beans:property>
