@@ -2,6 +2,8 @@ package com.asms.usermgmt.request;
 import java.util.Set;
 
 import com.asms.common.helper.Constants.privileges;
+import com.asms.examination.request.ExamRequestDetails;
+import com.asms.examination.request.ExaminationRequestDetails;
 import com.asms.usermgmt.entity.Privilege;
 import com.asms.usermgmt.entity.nonTeachingStaff.Address;
 import com.asms.usermgmt.entity.student.StudentAddress;
@@ -80,7 +82,10 @@ public class UserDetails {
 	
 	private Set<Privilege> privileges;
 	
+	private ExamRequestDetails examRequestDetails;
 	
+	
+	private ExaminationRequestDetails examinationRequestDetails;
 
 	public Set<Privilege> getPrivileges() {
 		return privileges;
@@ -282,6 +287,22 @@ public class UserDetails {
 
 	public void setAdminDetails(AdminDetails adminDetails) {
 		this.adminDetails = adminDetails;
+	}
+
+	public ExamRequestDetails getExamRequestDetails() {
+		return examRequestDetails;
+	}
+
+	public void setExamRequestDetails(ExamRequestDetails examRequestDetails) {
+		this.examRequestDetails = examRequestDetails;
+	}
+
+	public ExaminationRequestDetails getExaminationRequestDetails() {
+		return examinationRequestDetails;
+	}
+
+	public void setExaminationRequestDetails(ExaminationRequestDetails examinationRequestDetails) {
+		this.examinationRequestDetails = examinationRequestDetails;
 	}
 
 

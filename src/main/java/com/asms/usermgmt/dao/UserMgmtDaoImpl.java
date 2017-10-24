@@ -2817,6 +2817,53 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 
 	
 	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.asms.usermgmt.dao.UserMgmtDao#getStudentByClassName(String className)
+	 */
+	@Override
+	public List<Student> getStudentByClassName(String classNames, String tenantId) throws AsmsException {
+		Session session = null;
+		try {
+			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
+			String schema = multitenancyDao.getSchema(tenantId);
+			if (null != schema) {
+				session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
+				String hql = "from Student S where  S.studentClass='"+classNames+"'";
+				@SuppressWarnings("unchecked")
+				List<Student> students =session.createQuery(hql).list();
+				session.close();
+				return students;
+			} 
+			else {
+				throw exceptionHandler.constructAsmsException(messages.getString("TENANT_INVALID_CODE"),
+						messages.getString("TENANT_INVALID_CODE_MSG"));
+			}
+		} catch (Exception e) {
+			if (session.isOpen()) {
+				session.close();
+			}
+			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
+					+ "getStudentByClassName()" + "   ", e);
+			if (e instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) e).getCode(),
+						((AsmsException) e).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
+		}
+		finally {
+			if (session.isOpen()) {
+				session.close();
+			}
+		}
+	}
+
+	
+	
 	
 
 }

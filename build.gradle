@@ -47,7 +47,9 @@ dependencies {
     }
     compile group: 'mysql', name: 'mysql-connector-java', version:'5.1.27'
     
+    compile group: 'org.apache.pdfbox', name: 'pdfbox', version: '2.0.7'
     
+    compile group: 'com.itextpdf', name: 'itextpdf', version: '5.5.12'
     compile group:'com.sun.mail', name:'javax.mail', version:'1.5.4'
     compile group:'org.springframework', name:'spring-aop', version:'4.1.6.RELEASE'
     compile group:'org.aspectj', name:'aspectjrt', version:'1.6.11'
@@ -61,7 +63,7 @@ dependencies {
    task deploy(dependsOn: war)	{
     copy{
         from "build/libs"
-         into "f:/apache-tomcat-9.0.0.M21/apache-tomcat-9.0.0.M21/webapps/"
+         into "d:/apache-tomcat-9.0.0.M21/apache-tomcat-9.0.0.M21/webapps/"
       //into  "f:/apache-tomcat-8.5.14/apache-tomcat-8.5.14/webapps/"
           //svn path
           //into "https://app1.corp.esika.in/svn/aSMS/asms-services/"

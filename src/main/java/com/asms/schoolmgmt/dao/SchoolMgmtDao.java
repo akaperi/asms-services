@@ -3,6 +3,7 @@ package com.asms.schoolmgmt.dao;
 import java.util.List;
 
 import com.asms.Exception.AsmsException;
+import com.asms.schoolmgmt.entity.AcademicYear;
 import com.asms.schoolmgmt.entity.Class;
 import com.asms.schoolmgmt.entity.ClassSubjects;
 import com.asms.schoolmgmt.entity.School;
@@ -69,5 +70,11 @@ public interface SchoolMgmtDao {
 
 	public List<TeacherDetails> getTeachersOnChange(String from, String to, String day, String className, String section,
 			String tenantId) throws AsmsException;
+	
+	public void updateClassTeacher(String className,String sectionName,String teacherId,String tenantId) throws AsmsException;
+	
+	
+	
+	
 
 }

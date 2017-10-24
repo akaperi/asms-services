@@ -10,10 +10,10 @@
 		<property name="hibernate.multiTenancy">NONE</property>
 		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
 		
-		<property name="hibernate.connection.url">jdbc:mysql://localhost:3306/multitenancy</property>
-		<property name="hibernate.connection.username">root</property>
-		<property name="hibernate.connection.password">Admin</property>
-		<property name="hibernate.connection.url">jdbc:mysql://localhost:3306/multitenancy</property>
+		<property name="hibernate.connection.url">jdbc:mysql://10.10.10.6:3306/multitenancy</property>
+		<property name="hibernate.connection.username">devendra.sc</property>
+		<property name="hibernate.connection.password">rohit777$#%</property>
+		<property name="hibernate.connection.url">jdbc:mysql://10.10.10.6:3306/multitenancy</property>
 		
 
 
@@ -65,8 +65,11 @@
 		<mapping class="com.asms.schoolmgmt.entity.TimeTable" />
 		
 
+      <mapping class="com.asms.examination.entity.Examination"/>
+      <mapping class="com.asms.examination.entity.ExaminationDetails"/>
 
-
+      <mapping class="com.asms.examination.entity.MarksMaster"/>
+      <mapping class="com.asms.examination.entity.Marks"/>
 
 	</session-factory>
 </hibernate-configuration>

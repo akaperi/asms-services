@@ -43,6 +43,14 @@ public class CountryMgmtDaoImpl implements CountryNamesDao {
 
 	private static final Logger logger = LoggerFactory.getLogger(CountryMgmtDaoImpl.class);
 
+	
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.asms.CountryMgmt.dao.CountryNamesDao#getCountries()
+	 */
 	@Override
 	public List<Country> getCountries() throws AsmsException {
 		Session session = null;
@@ -74,6 +82,14 @@ public class CountryMgmtDaoImpl implements CountryNamesDao {
 
 	}
 
+	
+	
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.asms.CountryMgmt.dao.CountryNamesDao#getStates()
+	 */
 	@Override
 	public List<StateEntity> getStates() throws AsmsException {
 
@@ -105,6 +121,13 @@ public class CountryMgmtDaoImpl implements CountryNamesDao {
 
 	}
 
+	
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.asms.CountryMgmt.dao.CountryNamesDao#getDistrict(int  stateId )
+	 */
 	@Override
 	public List<String> getDistrict(int stateId) throws AsmsException {
 		Session session = null;
@@ -135,6 +158,13 @@ public class CountryMgmtDaoImpl implements CountryNamesDao {
 		}
 	}
 
+	
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.asms.CountryMgmt.dao.CountryNamesDao#getTehsil(int districtId )
+	 */
 	@Override
 	public List<String> getTehsil(int districtId) throws AsmsException {
 		Session session = null;
@@ -164,6 +194,13 @@ public class CountryMgmtDaoImpl implements CountryNamesDao {
 		}
 	}
 
+	
+	
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.asms.CountryMgmt.dao.CountryNamesDao#getVillage(int tehsilId )
+	 */
 	@Override
 	public List<String> getVillage(int tehsilId) throws AsmsException {
 		Session session = null;
@@ -193,6 +230,13 @@ public class CountryMgmtDaoImpl implements CountryNamesDao {
 		}
 	}
 
+	
+	
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.asms.CountryMgmt.dao.CountryNamesDao#getSubDivision(int districtId )
+	 */
 	@Override
 	public List<String> getSubDivision(int districtId) throws AsmsException {
 		Session session = null;

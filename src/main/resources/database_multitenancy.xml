@@ -65,8 +65,11 @@
 		<mapping class="com.asms.schoolmgmt.entity.TimeTable" />
 		
 
+      <mapping class="com.asms.examination.entity.Examination"/>
+      <mapping class="com.asms.examination.entity.ExaminationDetails"/>
 
-
+      <mapping class="com.asms.examination.entity.MarksMaster"/>
+      <mapping class="com.asms.examination.entity.Marks"/>
 
 	</session-factory>
 </hibernate-configuration>

@@ -38,15 +38,19 @@ public class AuthorisationFilter implements Filter {
 			HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 			HttpSession session = httpServletRequest.getSession();
 
-			// keeping session id in MDC so that it can be taken and used for login purpose
+			// keeping session id in MDC so that it can be taken and used for
+			// login purpose
 			MDC.put("sessionId", session.getId());
 
 			// get authenrication header
 			String authCredentials = httpServletRequest.getHeader(AUTHENTICATION_HEADER);
 			String pathInfo = httpServletRequest.getPathInfo();
-			// skip login flow for authorization header check as only after login requests
+			// skip login flow for authorization header check as only after
+			// login requests
 			// are checked for authorization header
-			if (pathInfo.contains("login")) {
+			if (pathInfo.contains("login") || pathInfo.contains("country") || pathInfo.contains("state")
+					|| pathInfo.contains("district") || pathInfo.contains("district") || pathInfo.contains("tehsil")
+					|| pathInfo.contains("village") || pathInfo.contains("subDivision")) {
 				chain.doFilter(request, response);
 			} else {
 				AuthenticationService authenticationService = new AuthenticationService();

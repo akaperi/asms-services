@@ -35,6 +35,7 @@ import com.asms.usermgmt.auth.PrivilegesManager;
 import com.asms.usermgmt.dao.UserMgmtDao;
 import com.asms.usermgmt.entity.StudentType;
 import com.asms.usermgmt.entity.User;
+import com.asms.usermgmt.entity.student.Student;
 import com.asms.usermgmt.helper.PrincipalUser;
 import com.asms.usermgmt.helper.Validator;
 import com.asms.usermgmt.request.ChangePasswordDetails;
@@ -360,6 +361,9 @@ public class UserMgmtService extends BaseService {
 	 * ); } }
 	 */
 
+	
+	
+	
 	/*
 	 * api : /user/search request type :GET
 	 * 
@@ -405,6 +409,7 @@ public class UserMgmtService extends BaseService {
 		}
 	}
 
+	
 	@Path("/privileges-search")
 	@GET
 	@Consumes("application/json")
@@ -689,6 +694,43 @@ public class UserMgmtService extends BaseService {
 	
 	
 	
+	/*
+	 * api : /user/student request type :GET
+	 * 
+	 * Method : getStudents -> This method is used to get students based on className. input
+	 * : String className, output: Response object
+	 * 
+	 * 
+	 */
+	@Path("/student")
+	@GET
+	@Consumes("application/json")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public Response getStudents(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse,
+			 @QueryParam("className") String className, @QueryParam("tenantId") String tenant) {
+		try {
+
+			FailureResponse failureResponse = new FailureResponse();
+			// get bundles for error messages
+			HttpSession session = hRequest.getSession();
+			User user = (User) session.getAttribute("ap_user");
+			if (null != user) {
+
+				List<Student> students = userMgmtDao.getStudentByClassName(className, tenant);
+				GetUserResponse getUserResponse = new GetUserResponse();
+				getUserResponse.setStudents(students);
+				return Response.status(Status.OK).entity(getUserResponse).build();
+			} else {
+				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			}
+
+		} catch (AsmsException ex) {
+			// construct failure response
+			FailureResponse failureResponse = new FailureResponse(ex);
+			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+		}
+
+	}
 	
 	
 	

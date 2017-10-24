@@ -62,7 +62,7 @@ public interface UserMgmtDao {
 	
 	public void assignPrivileges(UserDetails details, String tenant) throws AsmsException;
 
-	
+	public List<Student> getStudentByClassName(String classNames,String tenantId) throws AsmsException;
 
 	
 	

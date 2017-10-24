@@ -43,228 +43,114 @@ import com.asms.usermgmt.entity.User;
 public class CountryMgmtService extends BaseService {
 	@Autowired
 	CountryNamesDao countryNamesDao;
-	
-	
-	ArrayList<Country> countryList;
 
+	ArrayList<Country> countryList;
+	
+	
+	
+	/*
+	 * api : /countries/country request type :GET
+	 * 
+	 * Method : getCountriesName -> This method is used for Drop Down to get all the countries. Input:No
+	 * input Output: Response object *
+	 * 
+	 * 
+	 */
 	@Path("/country")
 	@GET
 	@Consumes("application/json")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	public Response getCountriesName(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse)
-	{
-		
-			try
-			{
-				FailureResponse failureResponse = new FailureResponse();
-			
-				HttpSession session = hRequest.getSession();
-				User user = (User) session.getAttribute("ap_user");
-				
-				if(user!=null){
-				List<Country> countries= countryNamesDao.getCountries();
-					
-				 CountrySuccessResponse countrySuccessResponse = new CountrySuccessResponse();
-				 countrySuccessResponse.setCountries2(countries);
-				 return Response.status(Status.OK).entity(countrySuccessResponse).build();
-					
-			} else {
-				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
-			}
-			}	catch(AsmsException e) {
-				
+	public Response getCountriesName(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse) {
 
-
-				FailureResponse failureResponse = new FailureResponse(e);
-				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
-				
-				
-			
-			}
+		try {
 		
-	
+
+			List<Country> countries = countryNamesDao.getCountries();
+
+			CountrySuccessResponse countrySuccessResponse = new CountrySuccessResponse();
+			countrySuccessResponse.setCountries(countries);
+			return Response.status(Status.OK).entity(countrySuccessResponse).build();
+
+		} catch (AsmsException e) {
+
+			FailureResponse failureResponse = new FailureResponse(e);
+			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+
+		}
+
 	}
+
 	
+	
+	
+	/*
+	 * api : /countries/state request type :GET
+	 * 
+	 * Method : getStatesName -> This method is used for Drop Down to get all the states. Input:No
+	 * input Output: Response object *
+	 * 
+	 * 
+	 */
 	@Path("/state")
 	@GET
 	@Consumes("application/json")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	public Response getStatesName(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse)
-	{
+	public Response getStatesName(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse) {
 
-		try
-		{
-			FailureResponse failureResponse = new FailureResponse();
+		try {
+			
 		
-			HttpSession session = hRequest.getSession();
-			User user = (User) session.getAttribute("ap_user");
-			
-			if(user!=null){
-			List<StateEntity> states= countryNamesDao.getStates();
-				
-			 CountrySuccessResponse countrySuccessResponse = new CountrySuccessResponse();
-			 countrySuccessResponse.setStateEntities(states);
-			 return Response.status(Status.OK).entity(countrySuccessResponse).build();
-				
-		} else {
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
-		}
-		}	catch(AsmsException e) {
-			
+				List<StateEntity> states = countryNamesDao.getStates();
 
+				CountrySuccessResponse countrySuccessResponse = new CountrySuccessResponse();
+				countrySuccessResponse.setStateEntities(states);
+				return Response.status(Status.OK).entity(countrySuccessResponse).build();
+
+			
+		} catch (AsmsException e) {
 
 			FailureResponse failureResponse = new FailureResponse(e);
 			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
-			
-			
-	}}
+
+		}
+	}
+
 	
+	
+	/*
+	 * api : /countries/district request type :GET
+	 * 
+	 * Method : getDistrict -> This method is used to get all the districts based on state Id. Input:stateId
+	 *  Output: Response object *
+	 * 
+	 * 
+	 */
 	@Path("/district")
 	@GET
 	@Consumes("application/json")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	public Response getDistrict(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse, @QueryParam("id") int stateId){
+	public Response getDistrict(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse,
+			@QueryParam("id") int stateId) {
 		ResourceBundle messages;
 		try {
 			FailureResponse failureResponse = new FailureResponse();
 			// get bundles for error messages
 			messages = AsmsHelper.getMessageFromBundle();
-			if(stateId == 0 )
-			{
+			if (stateId == 0) {
 				failureResponse.setCode(Integer.parseInt(messages.getString("USERID_NULL_CODE")));
 				failureResponse.setErrorDescription(messages.getString("USERID_NULL_MSG"));
 				return Response.status(200).entity(failureResponse).build();
-			
+
 			}
+
 			
-			HttpSession session = hRequest.getSession();
-			User user = (User) session.getAttribute("ap_user");
+				List<String> list = countryNamesDao.getDistrict(stateId);
+				CountrySuccessResponse countrySuccessResponse = new CountrySuccessResponse();
+				countrySuccessResponse.setDistrictNames(list);
+				return Response.status(Status.OK).entity(countrySuccessResponse).build();
+
 			
-			if(user!=null){
-			List<String> list =	countryNamesDao.getDistrict(stateId);
-			 CountrySuccessResponse countrySuccessResponse = new CountrySuccessResponse();
-			 countrySuccessResponse.setDistrictNames(list);
-			 return Response.status(Status.OK).entity(countrySuccessResponse).build();
-			 
-		}else {
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
-		}}
-			catch (AsmsException ex) 
-		{
-			// construct failure response
-			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
-		}
-	}
-	
-	@Path("/tehsil")
-	@GET
-	@Consumes("application/json")
-	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	public Response getTehsil(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse, @QueryParam("id") int districtId){
-		ResourceBundle messages;
-		try {
-			FailureResponse failureResponse = new FailureResponse();
-			// get bundles for error messages
-			messages = AsmsHelper.getMessageFromBundle();
-			if(districtId == 0 )
-			{
-				failureResponse.setCode(Integer.parseInt(messages.getString("USERID_NULL_CODE")));
-				failureResponse.setErrorDescription(messages.getString("USERID_NULL_MSG"));
-				return Response.status(200).entity(failureResponse).build();
-			
-			}
-			
-			HttpSession session = hRequest.getSession();
-			User user = (User) session.getAttribute("ap_user");
-			
-			if(user!=null){
-			List<String> list =	countryNamesDao.getTehsil(districtId);
-			 CountrySuccessResponse countrySuccessResponse = new CountrySuccessResponse();
-			 countrySuccessResponse.setTehsilNames(list);
-			 return Response.status(Status.OK).entity(countrySuccessResponse).build();
-			 
-		}else {
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
-		}}
-			catch (AsmsException ex) 
-		{
-			// construct failure response
-			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
-		}
-	}
-	
-	@Path("/village")
-	@GET
-	@Consumes("application/json")
-	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	public Response getVillage(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse, @QueryParam("id") int tehsilId){
-		ResourceBundle messages;
-		try {
-			FailureResponse failureResponse = new FailureResponse();
-			// get bundles for error messages
-			messages = AsmsHelper.getMessageFromBundle();
-			if(tehsilId == 0 )
-			{
-				failureResponse.setCode(Integer.parseInt(messages.getString("USERID_NULL_CODE")));
-				failureResponse.setErrorDescription(messages.getString("USERID_NULL_MSG"));
-				return Response.status(200).entity(failureResponse).build();
-			
-			}
-			
-			HttpSession session = hRequest.getSession();
-			User user = (User) session.getAttribute("ap_user");
-			
-			if(user!=null){
-			List<String> list =	countryNamesDao.getVillage(tehsilId);
-			 CountrySuccessResponse countrySuccessResponse = new CountrySuccessResponse();
-			 countrySuccessResponse.setVillageNames(list);
-			 return Response.status(Status.OK).entity(countrySuccessResponse).build();
-			 
-		}else {
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
-		}}
-			catch (AsmsException ex) 
-		{
-			// construct failure response
-			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
-		}
-	}
-	
-	@Path("/subDivision")
-	@GET
-	@Consumes("application/json")
-	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	public Response getSubDivision(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse, @QueryParam("id") int districtId){
-		ResourceBundle messages;
-		try {
-			FailureResponse failureResponse = new FailureResponse();
-			// get bundles for error messages
-			messages = AsmsHelper.getMessageFromBundle();
-			if(districtId == 0 )
-			{
-				failureResponse.setCode(Integer.parseInt(messages.getString("USERID_NULL_CODE")));
-				failureResponse.setErrorDescription(messages.getString("USERID_NULL_MSG"));
-				return Response.status(200).entity(failureResponse).build();
-			
-			}
-			
-			HttpSession session = hRequest.getSession();
-			User user = (User) session.getAttribute("ap_user");
-			
-			if(user!=null){
-			List<String> list =	countryNamesDao.getSubDivision(districtId);
-			 CountrySuccessResponse countrySuccessResponse = new CountrySuccessResponse();
-			 countrySuccessResponse.setSubDivisionNames(list);
-			 return Response.status(Status.OK).entity(countrySuccessResponse).build();
-			 
-		}else {
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
-		}}
-			catch (AsmsException ex) 
-		{
+		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
 			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
@@ -273,5 +159,129 @@ public class CountryMgmtService extends BaseService {
 
 	
 	
+	/*
+	 * api : /countries/tehsil request type :GET
+	 * 
+	 * Method : getTehsil -> This method is used to get all the tehsils based on districtId . Input: districtId
+	 *  Output: Response object *
+	 * 
+	 * 
+	 */
+	@Path("/tehsil")
+	@GET
+	@Consumes("application/json")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public Response getTehsil(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse,
+			@QueryParam("id") int districtId) {
+		ResourceBundle messages;
+		try {
+			FailureResponse failureResponse = new FailureResponse();
+			// get bundles for error messages
+			messages = AsmsHelper.getMessageFromBundle();
+			if (districtId == 0) {
+				failureResponse.setCode(Integer.parseInt(messages.getString("USERID_NULL_CODE")));
+				failureResponse.setErrorDescription(messages.getString("USERID_NULL_MSG"));
+				return Response.status(200).entity(failureResponse).build();
+
+			}
+
+			
+
+			
+				List<String> list = countryNamesDao.getTehsil(districtId);
+				CountrySuccessResponse countrySuccessResponse = new CountrySuccessResponse();
+				countrySuccessResponse.setTehsilNames(list);
+				return Response.status(Status.OK).entity(countrySuccessResponse).build();
+
+			
+		} catch (AsmsException ex) {
+			// construct failure response
+			FailureResponse failureResponse = new FailureResponse(ex);
+			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+		}
+	}
+
+	
+	
+	/*
+	 * api : /countries/village request type :GET
+	 * 
+	 * Method : getVillage -> This method is used to get all the villages based on  tehsilId. Input: tehsilId
+	 *  Output: Response object *
+	 * 
+	 * 
+	 */
+	@Path("/village")
+	@GET
+	@Consumes("application/json")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public Response getVillage(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse,
+			@QueryParam("id") int tehsilId) {
+		ResourceBundle messages;
+		try {
+			FailureResponse failureResponse = new FailureResponse();
+			// get bundles for error messages
+			messages = AsmsHelper.getMessageFromBundle();
+			if (tehsilId == 0) {
+				failureResponse.setCode(Integer.parseInt(messages.getString("USERID_NULL_CODE")));
+				failureResponse.setErrorDescription(messages.getString("USERID_NULL_MSG"));
+				return Response.status(200).entity(failureResponse).build();
+
+			}
+				List<String> list = countryNamesDao.getVillage(tehsilId);
+				CountrySuccessResponse countrySuccessResponse = new CountrySuccessResponse();
+				countrySuccessResponse.setVillageNames(list);
+				return Response.status(Status.OK).entity(countrySuccessResponse).build();
+
+			
+		} catch (AsmsException ex) {
+			// construct failure response
+			FailureResponse failureResponse = new FailureResponse(ex);
+			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+		}
+	}
+
+	
+	
+
+	/*
+	 * api : /countries/subDivision request type :GET
+	 * 
+	 * Method : getSubDivision -> This method is used to get all the subDivisions based on districtId . Input: districtId
+	 *  Output: Response object *
+	 * 
+	 * 
+	 */
+	@Path("/subDivision")
+	@GET
+	@Consumes("application/json")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public Response getSubDivision(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse,
+			@QueryParam("id") int districtId) {
+		ResourceBundle messages;
+		try {
+			FailureResponse failureResponse = new FailureResponse();
+			// get bundles for error messages
+			messages = AsmsHelper.getMessageFromBundle();
+			if (districtId == 0) {
+				failureResponse.setCode(Integer.parseInt(messages.getString("USERID_NULL_CODE")));
+				failureResponse.setErrorDescription(messages.getString("USERID_NULL_MSG"));
+				return Response.status(200).entity(failureResponse).build();
+
+			}
+
+			
+				List<String> list = countryNamesDao.getSubDivision(districtId);
+				CountrySuccessResponse countrySuccessResponse = new CountrySuccessResponse();
+				countrySuccessResponse.setSubDivisionNames(list);
+				return Response.status(Status.OK).entity(countrySuccessResponse).build();
+
+			
+		} catch (AsmsException ex) {
+			// construct failure response
+			FailureResponse failureResponse = new FailureResponse(ex);
+			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+		}
+	}
 
 }

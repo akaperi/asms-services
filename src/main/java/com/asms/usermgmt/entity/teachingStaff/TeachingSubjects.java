@@ -48,6 +48,10 @@ public class TeachingSubjects {
 	@ManyToOne
 	@JoinColumn(name = "section_id")
 	private Section sectionObject;
+	
+	
+	@Column(name="is_class_teacher")
+	private boolean isClassTeacher;
 
 	@JsonIgnore
 	public Section getSectionObject() {
@@ -90,6 +94,14 @@ public class TeachingSubjects {
 
 	public void setClassObject(Class classObject) {
 		this.classObject = classObject;
+	}
+
+	public boolean isClassTeacher() {
+		return isClassTeacher;
+	}
+
+	public void setClassTeacher(boolean isClassTeacher) {
+		this.isClassTeacher = isClassTeacher;
 	}
 
 

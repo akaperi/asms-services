@@ -10,6 +10,7 @@ import com.asms.schoolmgmt.entity.Section;
 import com.asms.schoolmgmt.request.BroadCasteSearchTypesDetails;
 import com.asms.usermgmt.entity.StudentType;
 import com.asms.usermgmt.entity.User;
+import com.asms.usermgmt.entity.student.Student;
 import com.asms.usermgmt.request.UserDetails;
 import com.asms.usermgmt.request.student.StudentDetails;
 import com.asms.usermgmt.service.CasteTypes;
@@ -55,6 +56,8 @@ public class GetUserResponse extends SuccessResponse {
 //	private BroadCasteSearchTypesDetails broadCasteSearchTypesDetails2;
 	
 	private  List<ClassSubjects> classSubjects;
+	
+	private List<Student> students;
 
 	public List<ClassSubjects> getClassSubjects() {
 		return classSubjects;
@@ -176,6 +179,14 @@ public class GetUserResponse extends SuccessResponse {
 
 	public void setEmails(List<String> emails) {
 		this.emails = emails;
+	}
+
+	public List<Student> getStudents() {
+		return students;
+	}
+
+	public void setStudents(List<Student> students) {
+		this.students = students;
 	}
 
 	

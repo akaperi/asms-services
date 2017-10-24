@@ -12,30 +12,18 @@ import com.asms.common.response.SuccessResponse;
  */
 public class CountrySuccessResponse extends SuccessResponse {
 	
-	private ArrayList<Country> countries;
+	//private ArrayList<Country> countries;
 	
 	
 	private List<StateEntity> stateEntities;
 	
-	private List<Country> countries2;
+	private List<Country> countries;
 	
 	private List<String> districtNames,tehsilNames,villageNames,subDivisionNames;
 
-	public ArrayList<Country> getCountries() {
-		return countries;
-	}
+	
 
-	public void setCountries(ArrayList<Country> countryList) {
-		this.countries = countryList;
-	}
-
-	public List<Country> getCountries2() {
-		return countries2;
-	}
-
-	public void setCountries2(List<Country> countries2) {
-		this.countries2 = countries2;
-	}
+	
 
 	public List<StateEntity> getStateEntities() {
 		return stateEntities;
@@ -75,6 +63,14 @@ public class CountrySuccessResponse extends SuccessResponse {
 
 	public void setSubDivisionNames(List<String> subDivisionNames) {
 		this.subDivisionNames = subDivisionNames;
+	}
+
+	public List<Country> getCountries() {
+		return countries;
+	}
+
+	public void setCountries(List<Country> countries) {
+		this.countries = countries;
 	}
 
 	

@@ -33,9 +33,9 @@ public class UserRequest {
 	private BroadCasteSearchTypesDetails broadCasteSearchTypesDetails;
 	
 	
-private Role role;
+    private Role role;
 
-private SubRole subRole2;
+   private SubRole subRole2;
 
 	public String getRequestType() {
 		return requestType;

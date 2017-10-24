@@ -1380,4 +1380,86 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 
 	}
 
+	@Override
+	public void updateClassTeacher(String className, String sectionName, String teacherId,
+			String tenantId) throws AsmsException {
+		
+		Session session = null;
+		Transaction tx = null;
+		try {
+
+			String schema=multitenancyDao.getSchema(tenantId);
+			if(null != schema){
+			session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
+			String hql="select distinct T from  TeachingSubjects T  where T.classObject.name='"+className+"' and T.sectionObject.classObject.name='"+sectionName+"' and "
+					+ "T.teachingObject='"+teacherId+"'";
+			
+			TeachingSubjects teachingSubjects = (TeachingSubjects)session.createQuery(hql).uniqueResult();
+			tx = session.beginTransaction();
+			teachingSubjects = (TeachingSubjects) session.load(TeachingSubjects.class, teachingSubjects.getSerialNo());
+			
+			teachingSubjects.setClassTeacher(true);
+			session.update(teachingSubjects);
+			tx.commit();
+			
+			
+			session.close();
+		
+			
+			}
+		} catch (Exception e) {
+			if (session.isOpen()) {
+				session.close();
+			}
+			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
+					+ "updateClassTeacher()" + "   ", e);
+			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
+			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+					messages.getString("SYSTEM_EXCEPTION"));
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
+		}
+		
+	}
+
+	/*@Override
+	public void updateSetUp(SetupSchoolDetails setupSchoolDetails, String tenant) throws AsmsException {
+		
+		Session session = null;
+
+		Transaction tx = null;
+		try {
+			String schema = multitenancyDao.getSchema(tenant);
+			if (null == schema) {
+				throw exceptionHandler.constructAsmsException(messages.getString("TENANT_INVALID_CODE"),
+						messages.getString("TENANT_INVALID_CODE_MSG"));
+
+			}
+			ResourceBundle messages = AsmsHelper.getMessageFromBundle();
+			
+			else if(setupSchoolDetails.getCurrentAcademicYear().equalsIgnoreCase(Constants.admin_category_setup))){
+
+          session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
+          tx = session.beginTransaction();
+        
+          if (null != setupSchoolDetails.getCurrentAcademicYear()) {
+        	  setupSchoolDetails.setCurrentAcademicYear(setupSchoolDetails.getCurrentAcademicYear());
+  		}
+          
+          
+        
+        
+			}
+		
+	
+		}*/
+	
+	
+	
+	
+		 
+	
+
 }

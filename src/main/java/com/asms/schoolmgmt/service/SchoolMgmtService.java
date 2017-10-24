@@ -51,6 +51,7 @@ import com.asms.schoolmgmt.response.SchoolSuccessResponse;
 import com.asms.usermgmt.auth.PrivilegesManager;
 import com.asms.usermgmt.entity.User;
 import com.asms.usermgmt.helper.PrincipalUser;
+import com.asms.usermgmt.request.UserDetails;
 import com.asms.usermgmt.request.student.ParentDetails;
 
 import com.asms.usermgmt.helper.PrincipalUser;
@@ -726,5 +727,54 @@ public class SchoolMgmtService extends BaseService {
 			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
 		}
 	}
+	
+	
+	
 
+
+
+	
+	@Path("/update/classTeacher")
+	@POST
+	@Consumes("application/json")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public Response updateClassTeacher(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse,
+@QueryParam("className") String className, @QueryParam("sectionName") String sectionName, @QueryParam("teacherId") String teacherId,@QueryParam("tenantId") String tenant) {
+		SchoolSuccessResponse schoolSuccessResponse = new SchoolSuccessResponse();
+		ResourceBundle messages;
+		try {
+			// get bundles for error messages
+			messages = AsmsHelper.getMessageFromBundle();
+			HttpSession session = hRequest.getSession();
+			Object user = session.getAttribute("ap_user");
+			
+			
+			PrincipalUser pUser = privilegesManager.isPrivileged((User) user, Constants.admin_category_setup,
+					Constants.privileges.update_check.toString());
+			if (pUser.isPrivileged()) {
+				
+				schoolMgmtDao.updateClassTeacher(className, sectionName, teacherId, tenant);
+				return Response.status(Status.OK).entity(schoolSuccessResponse).build();
+			}
+			else{
+				
+				FailureResponse failureResponse = new FailureResponse();
+				failureResponse.setCode(Integer.parseInt(messages.getString("NOT_AUTHORIZED_CODE")));
+				failureResponse.setErrorDescription(messages.getString("NOT_AUTHORIZED"));
+				return Response.status(200).entity(failureResponse).build();
+			}
+			
+		
+	} catch (AsmsException ex) {
+		// construct failure response
+		FailureResponse failureResponse = new FailureResponse(ex);
+		return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+	}
+
+		
+	}
+	
+	
+	
+	
 }
