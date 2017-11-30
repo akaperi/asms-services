@@ -78,7 +78,7 @@ public class AuthorisationFilter implements Filter {
 				boolean authenticationStatus = authenticationService.authenticate(authCredentials, user);
 				if (authenticationStatus) {
 					chain.doFilter(request, response);
-				} else {
+				} /*else {
 					if (response instanceof HttpServletResponse) {
 						httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 						response.setContentType("application/json");
@@ -89,7 +89,7 @@ public class AuthorisationFilter implements Filter {
 						out.print(jsonObject);
 						out.flush();
 					}
-				}
+				}*/
 				
 				
 	
