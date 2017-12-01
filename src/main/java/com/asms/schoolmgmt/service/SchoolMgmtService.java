@@ -390,12 +390,12 @@ public class SchoolMgmtService extends BaseService {
 
 	// grouping classes code goes here
 	// ------------------------------------
-	@Path("/groups/create")
+	@Path("/groups-create")
 	@POST
 	@Consumes("application/json")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public Response createGroups(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse,
-			List<GroupDetails> details, @QueryParam("tenantId") String tenant) {
+			List<GroupDetails> details, @QueryParam("domain") String domain) {
 		RegistrationResponse rReponse = new RegistrationResponse();
 		ResourceBundle messages;
 		try {
@@ -412,7 +412,7 @@ public class SchoolMgmtService extends BaseService {
 					Constants.privileges.create_check.toString());
 			if (pUser.isPrivileged()) {
 
-				schoolMgmtDao.createGroups(details, tenant);
+				schoolMgmtDao.createGroups(details, domain);
 				return Response.status(Status.OK).entity(rReponse).build();
 			} else {
 				FailureResponse failureResponse = new FailureResponse();

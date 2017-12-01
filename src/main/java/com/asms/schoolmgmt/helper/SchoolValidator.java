@@ -221,8 +221,18 @@ public class SchoolValidator {
 		}
 
 		for (GroupDetails gd : details) {
+			
+			if (null == gd.getGroupName() || gd.getGroupName().isEmpty()) {
+				throw exceptionHandler.constructAsmsException(messages.getString("GROUP_NAME_NULL_CODE"),
+						messages.getString("GROUP_NAME_NULL_MSG"));
+			}
+			
+			if (null == gd.getClasses() || gd.getClasses().isEmpty()) {
+				throw exceptionHandler.constructAsmsException(messages.getString("GROUP_CLASSES_NULL_CODE"),
+						messages.getString("GROUP_CLASSES_NULL_MSG"));
+			}
 
-			if (null == gd.getStartTime() || gd.getStartTime().isEmpty()) {
+		/*	if (null == gd.getStartTime() || gd.getStartTime().isEmpty()) {
 				throw exceptionHandler.constructAsmsException(messages.getString("START_TIME_NULL_CODE"),
 						messages.getString("START_TIME_NULL_MSG"));
 			}

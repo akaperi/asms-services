@@ -3,8 +3,8 @@ package com.asms.messagemgmt.response;
 import java.util.List;
 
 import com.asms.common.response.SuccessResponse;
+import com.asms.messagemgmt.entity.Message;
 import com.asms.usermgmt.request.UserBasicDetails;
-import com.mysql.jdbc.Messages;
 
 public class MessageSuccessResponse extends SuccessResponse{
 	
@@ -14,7 +14,7 @@ public class MessageSuccessResponse extends SuccessResponse{
 	
 	private List<MessageDetails> messageDetails;
 	
-	private List<Messages> messages;
+	private List<Message> messages;
 	
 	
 
@@ -34,13 +34,15 @@ public class MessageSuccessResponse extends SuccessResponse{
 		this.messageDetails = messageDetails;
 	}
 
-	public List<Messages> getMessages() {
+	public List<Message> getMessages() {
 		return messages;
 	}
 
-	public void setMessages(List<Messages> messages) {
+	public void setMessages(List<Message> messages) {
 		this.messages = messages;
 	}
+
+
 
 	
 

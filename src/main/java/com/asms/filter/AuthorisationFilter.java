@@ -19,7 +19,6 @@ import org.slf4j.LoggerFactory;
 //import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-import com.asms.common.helper.AsmsHelper;
 import com.asms.common.service.AuthenticationService;
 import com.asms.usermgmt.entity.User;
 
@@ -60,7 +59,7 @@ public class AuthorisationFilter implements Filter {
 			// skip login flow for authorization header check as only after login requests
 			// are checked for authorization header
 			logger.info(".....path info..." + pathInfo);
-			if (pathInfo.contains("login") || pathInfo.contains("country") || pathInfo.contains("image-upload") || pathInfo.contains("state") || pathInfo.contains("district")
+			if (pathInfo.contains("asms-services") || pathInfo.contains("countries/country") || pathInfo.contains("login") || pathInfo.contains("country") || pathInfo.contains("image-upload") || pathInfo.contains("state") || pathInfo.contains("district")
 					|| pathInfo.contains("village") || pathInfo.contains("tehsil") || pathInfo.contains("subDivision") ||  pathInfo.contains("trust/register") ||  pathInfo.contains("trusts") || pathInfo.contains("boards")){
 				logger.info(".....    enetring if...for no authorisation header check...");
 				chain.doFilter(request, response);
@@ -78,7 +77,7 @@ public class AuthorisationFilter implements Filter {
 				boolean authenticationStatus = authenticationService.authenticate(authCredentials, user);
 				if (authenticationStatus) {
 					chain.doFilter(request, response);
-				} /*else {
+				} else {
 					if (response instanceof HttpServletResponse) {
 						httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 						response.setContentType("application/json");
@@ -89,7 +88,7 @@ public class AuthorisationFilter implements Filter {
 						out.print(jsonObject);
 						out.flush();
 					}
-				}*/
+				}
 				
 				
 	

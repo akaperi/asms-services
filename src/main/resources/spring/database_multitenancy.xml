@@ -38,6 +38,8 @@
 		<mapping class="com.asms.schoolmgmt.entity.AcademicYear" />
 		<mapping class="com.asms.schoolmgmt.entity.ClassSubjects" />
 		<mapping class="com.asms.schoolmgmt.entity.WeaklyHoliday" />
+		<mapping class="com.asms.schoolmgmt.entity.WeaklyHalfDay" />
+		<mapping class="com.asms.schoolmgmt.entity.ClassGroupMap" />
 
 		<mapping class="com.asms.usermgmt.entity.nonTeachingStaff.Address" />
 		<mapping class="com.asms.usermgmt.entity.nonTeachingStaff.NonTeachingStaff" />

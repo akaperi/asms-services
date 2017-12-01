@@ -47,19 +47,6 @@ public class Class {
 	private String name;
 	
 	
-	@ManyToOne
-	@JoinColumn(name = "group_id")
-	private ClassGroup classGroupObject;
-
-
-	@JsonIgnore
-	public ClassGroup getClassGroupObject() {
-		return classGroupObject;
-	}
-
-	public void setClassGroupObject(ClassGroup classGroupObject) {
-		this.classGroupObject = classGroupObject;
-	}
 
 	
 

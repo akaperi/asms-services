@@ -47,6 +47,7 @@ import com.asms.common.mail.EmailSender;
 import com.asms.feemgmt.dao.FeeMgmtDao;
 
 import com.asms.multitenancy.dao.MultitenancyDao;
+import com.asms.multitenancy.entity.Classes;
 import com.asms.multitenancy.entity.Trust;
 import com.asms.rolemgmt.entity.Role;
 import com.asms.rolemgmt.entity.SubRole;
@@ -54,6 +55,7 @@ import com.asms.schoolmgmt.entity.AcademicYear;
 import com.asms.schoolmgmt.entity.Breaks;
 import com.asms.schoolmgmt.entity.Class;
 import com.asms.schoolmgmt.entity.ClassGroup;
+import com.asms.schoolmgmt.entity.ClassGroupMap;
 import com.asms.schoolmgmt.entity.ClassSubjects;
 import com.asms.schoolmgmt.entity.School;
 import com.asms.schoolmgmt.entity.Section;
@@ -290,7 +292,7 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 				String hql = "select B.boardId from BoardMaster B where B.boardNames=?";
 				int boardId = (int) session.createQuery(hql).setParameter(0, school.getBoardName()).uniqueResult();
 				if (boardId > 0) {
-					 hql = "select B.subjectName from BoardSubjectMaster B where B.boardId='" + boardId + "'";
+					hql = "select B.subjectName from BoardSubjectMaster B where B.boardId='" + boardId + "'";
 
 					@SuppressWarnings("unchecked")
 					List<String> subjects = session.createQuery(hql).list();
@@ -393,7 +395,6 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 			school.setAffiliationId(schoolDetails.getAffiliationId().trim());
 			school.setRegistrationCode(schoolDetails.getRegistrationCode().trim());
 			school.setWebsite(schoolDetails.getWebsite().trim());
-			school.setLogo(schoolDetails.getLogo().trim());
 			school.setAddressLine1(schoolDetails.getAddressLine1().trim());
 			school.setAddressLine2(schoolDetails.getAddressLine2().trim());
 			school.setLocation(schoolDetails.getLocation().trim());
@@ -434,12 +435,11 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 			emailSender.send("", school.getContactPersonEmailId(), "asmstest123@gmail.com", "School Registered",
 					"Your School Registered" + ":" + school.getContactPersonEmailId() + ":" + password, "text/html");
 			return school;
-		}  catch (NumberFormatException e) {
+		} catch (NumberFormatException e) {
 			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
 
 					+ "insertSchool() numberfomat" + "   ", e);
 
-			
 			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
 					messages.getString("SYSTEM_EXCEPTION"));
 		}
@@ -449,7 +449,6 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 
 					+ "insertSchool()" + "   ", e);
 
-			
 			throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
 					messages.getString("SYSTEM_EXCEPTION"));
 		}
@@ -726,104 +725,127 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 	 * @throws AsmsException
 	 */
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public void createGroups(List<GroupDetails> details, String tenant) throws AsmsException {
+	public void createGroups(List<GroupDetails> details, String domain) throws AsmsException {
 
 		Session session = null;
 		Transaction tx = null;
 
-		List<ClassDetails> classDetailsList;
+		List<String> classes;
 		Class classObject = null;
 		List<ClassGroup> classGroups = new ArrayList<ClassGroup>();
 		ClassGroup classGroup = null;
 		String hql = null;
-		List<Breaks> breakDetails = null;
-		String className = null;
-		Breaks breakes = null;
 		try {
-			String schema = multitenancyDao.getSchema(tenant);
+			String schema = multitenancyDao.getSchemaByDomain(domain);
 			messages = AsmsHelper.getMessageFromBundle();
 			if (null != schema) {
 				session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
+				tx = session.beginTransaction();
 
 				for (GroupDetails gd : details) {
-					classDetailsList = gd.getClassDetails();
+					classes = gd.getClasses();
 					classGroup = new ClassGroup();
-					if (null != classDetailsList) {
-						for (ClassDetails cd : classDetailsList) {
-							className = cd.getName();
+					if (null != classes && !classes.isEmpty()) {
+						hql = "from ClassGroup CG";
+
+						List<ClassGroup> dbClassGroups = (List<ClassGroup>) session.createQuery(hql).list();
+						if (null != dbClassGroups && !dbClassGroups.isEmpty()) {
+							for (ClassGroup dbCg : dbClassGroups) {
+								session.delete(dbCg);
+							}
+						}
+						hql = "from ClassGroupMap CGM";
+						List<ClassGroupMap> dbClassGroupMaps = (List<ClassGroupMap>) session.createQuery(hql).list();
+						if (null != dbClassGroupMaps && !dbClassGroupMaps.isEmpty()) {
+							for (ClassGroupMap dbCgMap : dbClassGroupMaps) {
+								session.delete(dbCgMap);
+							}
+						}
+
+
+						for (String cd : classes) {
+
+							classGroup.setName(gd.getGroupName().trim());
 
 							hql = " from Class C where C.name = ?";
-							classObject = (Class) session.createQuery(hql).setParameter(0, className).uniqueResult();
+							classObject = (Class) session.createQuery(hql).setParameter(0, cd.trim()).uniqueResult();
 							if (null != classObject) {
 
-								classGroup.getClasses().add(classObject);
+							classGroup.getClassIds().add(classObject.getId())	;
 
-							}
-
-						}
-						if (!classGroup.getClasses().isEmpty()) {
-							classGroup.setStartTime(gd.getStartTime());
-							classGroup.setEndTime(gd.getEndTime());
-							classGroup.setPeriodDuration(gd.getPeriodDuration());
-							breakDetails = gd.getBreaks();
-							if (null != breakDetails) {
-								for (Breaks b : breakDetails) {
-
-									breakes = new Breaks();
-
-									breakes.setStartTime(b.getStartTime());
-									breakes.setEndTime(b.getEndTime());
-
-									breakes.setClassGroup(classGroup);
-									classGroup.getBreaks().add(breakes);
-
-								}
 							} else {
 								throw this.exceptionHandler.constructAsmsException(
-										this.messages.getString("BREAK_NULL_CODE"),
-										this.messages.getString("BREAK_NULL_MSG"));
+										this.messages.getString("GROUP_CLASS_NAME_INVALID_CODE"),
+										this.messages.getString("GROUP_CLASS_NAME_INVALID_MSG") + ":" + cd);
 							}
+							
 
-							WeaklyHolidayDetails weaklyHolidayDetails = gd.getWeaklyHolidayDetails();
-							if (null != weaklyHolidayDetails) {
-								if (null != weaklyHolidayDetails.getHolidays()) {
-									for (String whd : weaklyHolidayDetails.getHolidays()) {
-
-										WeaklyHoliday wh = new WeaklyHoliday();
-
-										wh.setDayofholiday(whd);
-
-										wh.setClassGroupObject(classGroup);
-										classGroup.getWeaklyHolidays().add(wh);
-									}
-									classGroups.add(classGroup);
-								}
-							}
 						}
+						classGroups.add(classGroup);
+						/*
+						 * if (!classGroup.getClasses().isEmpty()) {
+						 * classGroup.setStartTime(gd.getStartTime());
+						 * classGroup.setEndTime(gd.getEndTime());
+						 * classGroup.setPeriodDuration(gd.getPeriodDuration());
+						 * breakDetails = gd.getBreaks(); if (null !=
+						 * breakDetails) { for (Breaks b : breakDetails) {
+						 * 
+						 * breakes = new Breaks();
+						 * 
+						 * breakes.setStartTime(b.getStartTime());
+						 * breakes.setEndTime(b.getEndTime());
+						 * 
+						 * breakes.setClassGroup(classGroup);
+						 * classGroup.getBreaks().add(breakes);
+						 * 
+						 * } } else { throw
+						 * this.exceptionHandler.constructAsmsException(
+						 * this.messages.getString("BREAK_NULL_CODE"),
+						 * this.messages.getString("BREAK_NULL_MSG")); }
+						 * 
+						 * WeaklyHolidayDetails weaklyHolidayDetails =
+						 * gd.getWeaklyHolidayDetails(); if (null !=
+						 * weaklyHolidayDetails) { if (null !=
+						 * weaklyHolidayDetails.getHolidays()) { for (String whd
+						 * : weaklyHolidayDetails.getHolidays()) {
+						 * 
+						 * WeaklyHoliday wh = new WeaklyHoliday();
+						 * 
+						 * wh.setDayofholiday(whd);
+						 * 
+						 * wh.setClassGroupObject(classGroup);
+						 * classGroup.getWeaklyHolidays().add(wh); }
+						 * classGroups.add(classGroup); } } }
+						 */
 					} else {
 						throw this.exceptionHandler.constructAsmsException(
 								this.messages.getString("CLASSGROUPS_NULL_CODE"),
 								this.messages.getString("CLASSGROUPS_NULL_MSG"));
 					}
 				}
-				Set<Class> classes = null;
-				Class classToUpdate = null;
+				Set<Class> classesSet = null;
+				ClassGroupMap classGroupMap = null;
 
 				for (ClassGroup cg : classGroups) {
-					tx = session.beginTransaction();
-					classes = cg.getClasses();
-					for (Class c : classes) {
-						classToUpdate = (Class) session.load(Class.class, c.getId());
-						c.setClassGroupObject(cg);
-						session.update(c);
+					
+					session.save(cg);
+					
+					
+					for (int c : cg.getClassIds()) {
+						classGroupMap = new ClassGroupMap();
+						classGroupMap.setClassId(c);
+						classGroupMap.setGroupId(cg.getSerialNo());
+						session.save(classGroupMap);
 					}
 
-					session.save(cg);
+					
 
-					tx.commit();
+					
 					// session.close();
 				}
+				tx.commit();
 				session.close();
 
 			} else {
@@ -831,6 +853,9 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 						this.messages.getString("TENANT_INVALID_CODE_MSG"));
 			}
 		} catch (Exception ex) {
+			if(null != tx && !tx.wasCommitted()){
+				tx.rollback();
+			}
 			if (null != session && session.isOpen()) {
 				session.close();
 			}
@@ -844,6 +869,9 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 			throw this.exceptionHandler.constructAsmsException(this.messages.getString("SYSTEM_EXCEPTION_CODE"),
 					this.messages.getString("SYSTEM_EXCEPTION"));
 		} finally {
+			if(null != tx && !tx.wasCommitted()){
+				tx.rollback();
+			}
 			if (null != session && session.isOpen()) {
 				session.close();
 			}
@@ -925,7 +953,7 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 		Transaction tx = null;
 
 		ResourceBundle messages = AsmsHelper.getMessageFromBundle();
-		try {
+		/*try {
 
 			String schema = multitenancyDao.getSchema(tenant);
 			Class classobject = null;
@@ -1014,7 +1042,8 @@ public class SchoolMgmtDaoImpl implements SchoolMgmtDao {
 			if (null != session && session.isOpen()) {
 				session.close();
 			}
-		}
+		}*/
+		return null;
 	}
 
 	/*

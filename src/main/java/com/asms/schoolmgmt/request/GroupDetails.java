@@ -4,6 +4,7 @@
 */
 package com.asms.schoolmgmt.request;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.asms.schoolmgmt.entity.Breaks;
@@ -14,24 +15,36 @@ public class GroupDetails {
 	 */
 
 	private String groupName;
-	private String requestType;
-	private List<ClassDetails> classDetails;
+	private List<String> classes;
 	private String startTime;
 	private String endTime;
 	private String periodDuration;  // in minutes
+	private int noOfPeriods;
 	
+	
+
 	private WeaklyHolidayDetails weaklyHolidayDetails;
+	
+	private WeaklyHalfDayDetails weaklyHalfDayDetails;
 
 	private List<Breaks> breaks; 
 
 	
 
-	public List<ClassDetails> getClassDetails() {
-		return classDetails;
+	public int getNoOfPeriods() {
+		return noOfPeriods;
 	}
 
-	public void setClassDetails(List<ClassDetails> classDetails) {
-		this.classDetails = classDetails;
+	public void setNoOfPeriods(int noOfPeriods) {
+		this.noOfPeriods = noOfPeriods;
+	}
+
+	public List<String> getClasses() {
+		return classes;
+	}
+
+	public void setClasses(List<String> classes) {
+		this.classes = classes;
 	}
 
 	public String getStartTime() {
@@ -60,14 +73,7 @@ public class GroupDetails {
 		this.breaks = breaks;
 	}
 
-	public String getRequestType() {
-		return requestType;
-	}
 
-	public void setRequestType(String requestType) {
-		this.requestType = requestType;
-	}
-	
 	public String getPeriodDuration() {
 		return periodDuration;
 	}
@@ -91,6 +97,17 @@ public class GroupDetails {
 	public void setGroupName(String groupName) {
 		this.groupName = groupName;
 	}
+
+	public WeaklyHalfDayDetails getWeaklyHalfDayDetails() {
+		return weaklyHalfDayDetails;
+	}
+
+	public void setWeaklyHalfDayDetails(WeaklyHalfDayDetails weaklyHalfDayDetails) {
+		this.weaklyHalfDayDetails = weaklyHalfDayDetails;
+	}
+	
+	
+	
 	
 
 }

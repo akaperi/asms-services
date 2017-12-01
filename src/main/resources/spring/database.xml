@@ -48,10 +48,12 @@
 				<beans:value>com.asms.schoolmgmt.entity.Section</beans:value>
 				<beans:value>com.asms.schoolmgmt.entity.AcademicYear</beans:value>
 				<beans:value>com.asms.schoolmgmt.entity.ClassSubjects</beans:value>
+				<beans:value>com.asms.schoolmgmt.entity.ClassGroupMap</beans:value>
 
 				<beans:value>com.asms.usermgmt.entity.StudentType</beans:value>
 				<beans:value>com.asms.schoolmgmt.entity.BoardMaster</beans:value>
 				<beans:value>com.asms.schoolmgmt.entity.WeaklyHoliday</beans:value>
+				<beans:value>com.asms.schoolmgmt.entity.WeaklyHalfDay</beans:value>
 
 				<beans:value>com.asms.usermgmt.entity.nonTeachingStaff.Address
 				</beans:value>

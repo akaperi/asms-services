@@ -39,6 +39,9 @@ public class Breaks {
 	
 	@Column(name = "end_time")
 	private String endTime;
+	
+	@Column(name = "no_of_breaks")
+	private int noOfBreaks;
 
 	@ManyToOne
 	@JoinColumn(name = "group_id")

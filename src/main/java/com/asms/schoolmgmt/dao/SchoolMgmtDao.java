@@ -59,7 +59,7 @@ public interface SchoolMgmtDao {
 	 * @return
 	 * @throws AsmsException
 	 */
-	public void createGroups(List<GroupDetails> details, String tenant) throws AsmsException;
+	public void createGroups(List<GroupDetails> details, String domain) throws AsmsException;
 
 	public void setupSchoolCopy(String academicyear, String tenantId) throws AsmsException;
 
