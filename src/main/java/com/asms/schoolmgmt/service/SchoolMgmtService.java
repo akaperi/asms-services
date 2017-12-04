@@ -119,7 +119,7 @@ public class SchoolMgmtService extends BaseService {
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 
 	}
@@ -177,7 +177,7 @@ public class SchoolMgmtService extends BaseService {
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 
 	}
@@ -218,7 +218,7 @@ public class SchoolMgmtService extends BaseService {
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 	}
 
@@ -252,13 +252,13 @@ public class SchoolMgmtService extends BaseService {
 				return Response.status(Status.OK).entity(getUserResponse).build();
 
 			} else {
-				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+				return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 			}
 
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 
 	}
@@ -290,12 +290,12 @@ public class SchoolMgmtService extends BaseService {
 				return Response.status(Status.OK).entity(countrySuccessResponse).build();
 
 			} else {
-				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+				return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 			}
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 	}
 
@@ -336,12 +336,12 @@ public class SchoolMgmtService extends BaseService {
 				return Response.status(Status.OK).entity(countrySuccessResponse).build();
 
 			} else {
-				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+				return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 			}
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 	}
 
@@ -377,13 +377,13 @@ public class SchoolMgmtService extends BaseService {
 				return Response.status(Status.OK).entity(schoolSuccessResponse).build();
 
 			} else {
-				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+				return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 			}
 
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 
 	}
@@ -424,9 +424,53 @@ public class SchoolMgmtService extends BaseService {
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 	}
+	
+	
+	
+	
+	// scheduling groups code goes here
+		// ------------------------------------
+		@Path("/groups-schedule")
+		@POST
+		@Consumes("application/json")
+		@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+		public Response scheduleGroups(@Context HttpServletRequest hRequest, @Context HttpServletResponse hResponse,
+				GroupDetails details, @QueryParam("domain") String domain) {
+			RegistrationResponse rReponse = new RegistrationResponse();
+			ResourceBundle messages;
+			try {
+				// get bundles for error messages
+				messages = AsmsHelper.getMessageFromBundle();
+				// validate request
+				schoolValidator.validateScheduleGroupsRequest(details, messages, "create");
+				// validate user details
+				// validator.validateUserDetails(userRequest, messages);
+				HttpSession session = hRequest.getSession();
+				Object user = session.getAttribute("ap_user");
+
+				PrincipalUser pUser = privilegesManager.isPrivileged((User) user, Constants.admin_category_setup,
+						Constants.privileges.create_check.toString());
+				if (pUser.isPrivileged()) {
+
+					//schoolMgmtDao.createGroups(details, domain);
+					return Response.status(Status.OK).entity(rReponse).build();
+				} else {
+					FailureResponse failureResponse = new FailureResponse();
+					failureResponse.setCode(Integer.parseInt(messages.getString("NOT_AUTHORIZED_CODE")));
+					failureResponse.setErrorDescription(messages.getString("NOT_AUTHORIZED"));
+					return Response.status(200).entity(failureResponse).build();
+				}
+
+			} catch (AsmsException ex) {
+				// construct failure response
+				FailureResponse failureResponse = new FailureResponse(ex);
+				return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
+			}
+		}
+
 
 	@Path("/schema/update")
 	@POST
@@ -466,7 +510,7 @@ public class SchoolMgmtService extends BaseService {
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 	}
 
@@ -502,12 +546,12 @@ public class SchoolMgmtService extends BaseService {
 				return Response.status(Status.OK).entity(successResponse).build();
 
 			} else {
-				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+				return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 			}
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 	}
 
@@ -533,13 +577,13 @@ public class SchoolMgmtService extends BaseService {
 				return Response.status(Status.OK).entity(getUserResponse).build();
 
 			} else {
-				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+				return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 			}
 
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 	}
 
@@ -577,13 +621,13 @@ public class SchoolMgmtService extends BaseService {
 				return Response.status(Status.OK).entity(schoolSuccessResponse).build();
 
 			} else {
-				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+				return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 			}
 
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 
 	}
@@ -629,7 +673,7 @@ public class SchoolMgmtService extends BaseService {
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 	}
 
@@ -678,7 +722,7 @@ public class SchoolMgmtService extends BaseService {
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 	}
 
@@ -714,12 +758,12 @@ public class SchoolMgmtService extends BaseService {
 	 * return Response.status(Status.OK).entity(getUserResponse).build();
 	 * 
 	 * } else { return
-	 * Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build(
+	 * Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build(
 	 * ); }
 	 * 
 	 * } catch (AsmsException ex) { // construct failure response
 	 * FailureResponse failureResponse = new FailureResponse(ex); return
-	 * Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build(
+	 * Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build(
 	 * ); } }
 	 */
 
@@ -747,13 +791,13 @@ public class SchoolMgmtService extends BaseService {
 	 * userMgmtDao.uploadFileToS3(content, name, userId, type); // } return
 	 * Response.status(Status.OK).entity(schoolSuccessResponse).build(); } else
 	 * { return
-	 * Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build(
+	 * Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build(
 	 * ); }
 	 * 
 	 * } catch (AsmsException ex) {
 	 * 
 	 * return
-	 * Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build(
+	 * Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build(
 	 * ); } }
 	 */
 
@@ -776,12 +820,12 @@ public class SchoolMgmtService extends BaseService {
 				// }
 				return Response.status(Status.OK).entity(schoolSuccessResponse).build();
 			} else {
-				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+				return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 			}
 
 		} catch (AsmsException ex) {
 
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 
 	}

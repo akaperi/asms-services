@@ -84,7 +84,7 @@ public class AdmissionService {
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 	}
 	
@@ -128,7 +128,7 @@ public class AdmissionService {
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 	}
 	
@@ -173,7 +173,7 @@ public class AdmissionService {
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 	}
 
@@ -220,7 +220,7 @@ public class AdmissionService {
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 	}
 }

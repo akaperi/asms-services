@@ -104,7 +104,7 @@ public class RoleMgmtService extends BaseService{
 	} catch (AsmsException ex) {
 		// construct failure response
 		FailureResponse failureResponse = new FailureResponse(ex);
-		return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+		return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 	}
 		
 	}
@@ -132,13 +132,13 @@ public class RoleMgmtService extends BaseService{
 				return Response.status(Status.OK).entity(getRoleResponse).build();
 
 			} else {
-				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+				return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 			}
 
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 
 	}
@@ -156,7 +156,7 @@ public class RoleMgmtService extends BaseService{
 			HttpSession session = hRequest.getSession();
 			User user = (User) session.getAttribute("ap_user");
 			if(null == role){
-				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+				return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 			}
 			
 			if (null != user) {
@@ -167,13 +167,13 @@ public class RoleMgmtService extends BaseService{
 				return Response.status(Status.OK).entity(getRoleResponse).build();
 
 			} else {
-				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+				return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 			}
 
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 
 	}

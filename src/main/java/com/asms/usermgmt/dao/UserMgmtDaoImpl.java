@@ -78,6 +78,7 @@ import com.asms.usermgmt.request.student.StudentAddressDetails;
 import com.asms.usermgmt.request.student.StudentDetails;
 import com.asms.usermgmt.request.student.StudentDocumentDetails;
 import com.asms.usermgmt.request.student.StudentPreviousDetails;
+import com.asms.usermgmt.request.teachingStaff.AdditionalDetails1;
 import com.asms.usermgmt.request.teachingStaff.StaffDocumentsDetails1;
 import com.asms.usermgmt.request.teachingStaff.StaffPreviousInformationDetails1;
 import com.asms.usermgmt.request.teachingStaff.StaffStatutoryDetails1;
@@ -868,7 +869,7 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 
 		try {
 
-			// String hql;
+			//String hql;
 			// messages = AsmsHelper.getMessageFromBundle();
 			// session =
 			// sessionFactory.withOptions().tenantIdentifier(dbProperties.getProperty("default_schema"))
@@ -1518,13 +1519,14 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 					initialValue = 1 + 1;
 					Student s = (Student) studentUser;
 
-					if (null != s.getStudentPreviousInfo()) {
-						initialValue = initialValue + 1;
-					}
+					
 					if (null != s.getParentObject()) {
 						initialValue = initialValue + 1;
 					}
 
+					if (null != s.getStudentDocuments()) {
+						initialValue = initialValue + 1;
+					}
 					if (null != s.getStudentAddress()) {
 						initialValue = initialValue + 1;
 					}
@@ -1710,6 +1712,16 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 					rReponse.setProgressPercentage(calulateRegistrationProgress(initialValue, 6));
 
 				}
+				
+				if(null != teachingStaffDetails.getAdditionalDetails1()) {
+					
+					//AdditionalDetails additionalDetails = entityCreator
+							//.createAdditionalDetails(teachingStaffDetails.getAdditionalDetails1(), user);
+					//insertAdditionalDetails(T, additionalDetails, schema);
+					
+					
+				}
+				
 				if (null != teachingStaffDetails.getStaffDocumentsDetails()) {
 					StaffDocuments1 StaffDocuments = entityCreator
 							.createDocumentDetails1(teachingStaffDetails.getStaffDocumentsDetails(), user);
@@ -2586,7 +2598,7 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 						student.setEmail(userDetails.getEmail());
 					}
 
-					updateStudentDetails(student, userDetails.getStudentDetails());
+				//	updateStudentDetails(student, userDetails.getStudentDetails());
 					updateStudentDetails(student, userDetails.getStudentDetails());
 				}
 
@@ -2892,9 +2904,9 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 			student.setThirdlanguage(studentDetails.getThirdlanguage());
 		}
 
-		if (null != studentDetails.getStatus() || !studentDetails.getStatus().isEmpty()) {
+		/*if (null != studentDetails.getStatus() || !studentDetails.getStatus().isEmpty()) {
 			student.setStatus(studentDetails.getStatus());
-		}
+		}*/
 
 	}
 
@@ -4476,4 +4488,50 @@ public class UserMgmtDaoImpl implements UserMgmtDao {
 
 	}
 
+	//@SuppressWarnings("unused")
+	/*private void insertAdditionalDetails(TeachingStaff T, AdditionalDetails additionalDetails, String schema) throws AsmsException{
+		Session session = null;
+		Transaction tx = null;
+		try {
+			session = sessionFactory.withOptions().tenantIdentifier(schema).openSession();
+			tx = session.beginTransaction();
+			
+			AdditionalDetails dAadd = T.getAdditionalDetails();
+			if (null == dAadd) {
+				session.save(additionalDetails);
+			} else {
+				dAadd =  (AdditionalDetails) session.load(AdditionalDetails.class, dAadd.getSerialNo());
+				updateAdditionalDetails(dAadd, additionalDetails);
+				session.update(dAadd);
+			}
+			tx.commit();
+			session.close();
+			
+		}catch (Exception e) {
+			if (null != session && session.isOpen()) {
+				session.close();
+			}
+			logger.error("Session Id: " + MDC.get("sessionId") + "   " + "Method: " + this.getClass().getName() + "."
+					+ "getStudentByStudentId()" + "   ", e);
+			if (e instanceof AsmsException) {
+				throw exceptionHandler.constructAsmsException(((AsmsException) e).getCode(),
+						((AsmsException) e).getDescription());
+			} else {
+				throw exceptionHandler.constructAsmsException(messages.getString("SYSTEM_EXCEPTION_CODE"),
+						messages.getString("SYSTEM_EXCEPTION"));
+			}
+		} finally {
+			if (null != session && session.isOpen()) {
+				session.close();
+			}
+		}
+	}
+	
+	
+	
+	private void updateAdditionalDetails(AdditionalDetails dAadd, AdditionalDetails additionalDetails) {
+		if (null != additionalDetails.getMaritalStatus()) {
+			dAadd.setMaritalStatus(additionalDetails.getMaritalStatus());
+		}
+	}*/
 }

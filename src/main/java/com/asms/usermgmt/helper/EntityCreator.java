@@ -49,7 +49,7 @@ import com.asms.usermgmt.request.student.StudentAddressDetails;
 import com.asms.usermgmt.request.student.StudentDetails;
 import com.asms.usermgmt.request.student.StudentDocumentDetails;
 import com.asms.usermgmt.request.student.StudentPreviousDetails;
-import com.asms.usermgmt.request.teachingStaff.AddressDetails1;
+import com.asms.usermgmt.request.teachingStaff.AdditionalDetails1;
 import com.asms.usermgmt.request.teachingStaff.StaffDocumentsDetails1;
 import com.asms.usermgmt.request.teachingStaff.StaffPreviousInformationDetails1;
 import com.asms.usermgmt.request.teachingStaff.StaffStatutoryDetails1;
@@ -739,7 +739,7 @@ public class EntityCreator {
 			userDetails.setTeachingStaffDetails(tDetails);
 
 			if (null != teachingStaff.getAddress()) {
-				AddressDetails1 taDetails = new AddressDetails1();
+				AddressDetails taDetails = new AddressDetails();
 				taDetails.setAddressLine1(teachingStaff.getAddress().getAddressLine1());
 				taDetails.setAddressLine2(teachingStaff.getAddress().getAddressLine2());
 				taDetails.setCountry(teachingStaff.getAddress().getCountry());
@@ -750,7 +750,7 @@ public class EntityCreator {
 				taDetails.setVillage(teachingStaff.getAddress().getVillage());
 				taDetails.setPincode(teachingStaff.getAddress().getPincode());
 
-				tDetails.setAddressDetails1(taDetails);
+				tDetails.setAddressDetails(taDetails);
 			}
 
 			if (null != teachingStaff.getStaffDocuments()) {
@@ -1126,4 +1126,5 @@ public class EntityCreator {
 		return akacartuser;
 	}
 
+	
 }

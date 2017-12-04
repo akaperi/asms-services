@@ -30,11 +30,8 @@ public class ClassSubjects
 	private String name;
 	
 	@ManyToOne
-	@JoinColumn(name = "class_id")
+	@JoinColumn(name ="class_id")
 	private Class classObject;
-	
-	
-	
 	
 	public String getName() {
 		return name;
@@ -44,8 +41,6 @@ public class ClassSubjects
 		this.name = name;
 	}
 
-
-	
 	
 	@JsonIgnore
 	public Class getClassObject() {

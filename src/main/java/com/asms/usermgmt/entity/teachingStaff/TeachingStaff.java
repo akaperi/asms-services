@@ -39,6 +39,8 @@ public class TeachingStaff extends User {
 	@OneToOne(mappedBy="teachingObject", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Address1 address;
 	
+	
+	
 	@XmlElement
 	@OneToOne(mappedBy="teachingObject", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private StaffDocuments1 staffDocuments;
@@ -364,6 +366,7 @@ public class TeachingStaff extends User {
 	public void setStaffId(String staffId) {
 		this.staffId = staffId;
 	}
+
 
 
 	

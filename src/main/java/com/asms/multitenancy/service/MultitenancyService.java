@@ -97,7 +97,7 @@ public class MultitenancyService extends BaseService{
 		}catch(AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		
 	
 		
@@ -136,7 +136,7 @@ public class MultitenancyService extends BaseService{
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 	}
 	
@@ -172,13 +172,13 @@ public class MultitenancyService extends BaseService{
 				return Response.status(Status.OK).entity(commonreponse).build();
 
 			} else {
-				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+				return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 			}
 
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 
 	}
@@ -218,13 +218,13 @@ public class MultitenancyService extends BaseService{
 				return Response.status(Status.OK).entity(getUserResponse).build();
 
 			}	else {
-					return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+					return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 				}
 
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 	}
 	
@@ -263,13 +263,13 @@ public class MultitenancyService extends BaseService{
 				return Response.status(Status.OK).entity(cResponse).build();
 
 			}	else {
-					return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+					return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 				}
 
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 	}
 	
@@ -307,13 +307,13 @@ public class MultitenancyService extends BaseService{
 				return Response.status(Status.OK).entity(cResponse).build();
 
 			}	else {
-					return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+					return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 				}
 
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 	}
 	
@@ -351,13 +351,13 @@ public class MultitenancyService extends BaseService{
 				return Response.status(Status.OK).entity(cResponse).build();
 
 			}	else {
-					return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+					return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 				}
 
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 	}
 	

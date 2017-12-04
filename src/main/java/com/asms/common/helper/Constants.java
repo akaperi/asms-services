@@ -32,6 +32,7 @@ public class Constants {
 	public static final String role_management_subrole_Trustee = "Trustee";
 
 	public static final String detail_address = "addressDetails";
+	public static final String detail_additional= "additionalDetails1";
 	public static final String documents = "documents";
 	public static final String previous_info = "previous_info";
 	public static final String statutory_details = "statutory_details";

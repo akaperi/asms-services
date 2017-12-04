@@ -99,7 +99,7 @@ public class CalendarMgmtService {
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 	
 	}
@@ -125,13 +125,13 @@ public Response getevent(@Context HttpServletRequest hRequest, @Context HttpServ
 			calendarResponse.setEventDetails(eventDetails);
 			return Response.status(Status.OK).entity(calendarResponse).build();
 		} else {
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 
 	} catch (AsmsException ex) {
 		// construct failure response
 		FailureResponse failureResponse = new FailureResponse(ex);
-		return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+		return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 	}
 
 }
@@ -187,7 +187,7 @@ public Response updateevent(@Context HttpServletRequest hRequest, @Context HttpS
 			} catch (AsmsException ex) {
 				// construct failure response
 				FailureResponse failureResponse = new FailureResponse(ex);
-				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+				return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 			}
 		}
 	

@@ -5,7 +5,6 @@
 package com.asms.usermgmt.request.teachingStaff;
 
 import java.util.List;
-
 import com.asms.usermgmt.request.TeachingClassAndSubjectDetails;
 import com.asms.usermgmt.request.nonTeachingStaff.AddressDetails;
 import com.asms.usermgmt.request.nonTeachingStaff.StaffDocumentsDetails;
@@ -66,13 +65,13 @@ public class TeachingStaffDetails {
 	
 	private StaffStatutoryDetails staffStatutoryDetails;
 	
-	private AddressDetails1 addressDetails1;
-	
 	private StaffDocumentsDetails1 staffDocumentsDetails1;
 	
 	private StaffPreviousInformationDetails1 staffPreviousInformationDetails1;
 	
 	private StaffStatutoryDetails1 statutoryDetails1;
+	
+	private AdditionalDetails1 additionalDetails1;
 	
 
 	public String getSchoolId() {
@@ -255,14 +254,7 @@ public class TeachingStaffDetails {
 		this.creationTime = creationTime;
 	}
 
-	public AddressDetails1 getAddressDetails1() {
-		return addressDetails1;
-	}
-
-	public void setAddressDetails1(AddressDetails1 addressDetails1) {
-		this.addressDetails1 = addressDetails1;
-	}
-
+	
 	public StaffDocumentsDetails1 getStaffDocumentsDetails1() {
 		return staffDocumentsDetails1;
 	}
@@ -295,5 +287,16 @@ public class TeachingStaffDetails {
 		this.bloodGroup = bloodGroup;
 	}
 
+	public AdditionalDetails1 getAdditionalDetails1() {
+		return additionalDetails1;
+	}
+
+	public void setAdditionalDetails1(AdditionalDetails1 additionalDetails1) {
+		this.additionalDetails1 = additionalDetails1;
+	}
+
+	
+	
+	
 	
 }

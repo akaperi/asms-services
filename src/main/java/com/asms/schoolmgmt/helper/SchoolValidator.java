@@ -17,7 +17,6 @@ import com.asms.Exception.AsmsException;
 import com.asms.Exception.ExceptionHandler;
 import com.asms.common.helper.AsmsHelper;
 
-
 import com.asms.schoolmgmt.entity.SetupSchoolDetails;
 import com.asms.schoolmgmt.request.GroupDetails;
 import com.asms.schoolmgmt.request.SchoolDetails;
@@ -33,7 +32,8 @@ public class SchoolValidator {
 	@Autowired
 	private ExceptionHandler exceptionHandler;
 
-	//private static final Logger logger = LoggerFactory.getLogger(SchoolValidator.class);
+	// private static final Logger logger =
+	// LoggerFactory.getLogger(SchoolValidator.class);
 
 	/*
 	 * Method: validateSchoolDetailsRequest -> validates SchoolDetailsRequest
@@ -60,7 +60,6 @@ public class SchoolValidator {
 					messages.getString("SCHOOL_DETAILS_NULL_MSG"));
 		}
 
-	
 		if (null == details.getName() || details.getName().isEmpty()) {
 			throw exceptionHandler.constructAsmsException(messages.getString("SCHOOL_NAME_NULL_CODE"),
 					messages.getString("SCHOOL_NAME_NULL_MSG"));
@@ -161,7 +160,7 @@ public class SchoolValidator {
 			throw exceptionHandler.constructAsmsException(messages.getString("SCHOOL_BOARD_NULL_CODE"),
 					messages.getString("SCHOOL_BOARD_NULL_MSG"));
 		}
-		
+
 		if (null == details.getSubDomain() || details.getSubDomain().isEmpty()) {
 			throw exceptionHandler.constructAsmsException(messages.getString("SCHOOL_SUB_DOMAIN_NULL_CODE"),
 					messages.getString("SCHOOL_SUB_DOMAIN_NULL_MSG"));
@@ -221,68 +220,63 @@ public class SchoolValidator {
 		}
 
 		for (GroupDetails gd : details) {
-			
+
 			if (null == gd.getGroupName() || gd.getGroupName().isEmpty()) {
 				throw exceptionHandler.constructAsmsException(messages.getString("GROUP_NAME_NULL_CODE"),
 						messages.getString("GROUP_NAME_NULL_MSG"));
 			}
-			
+
 			if (null == gd.getClasses() || gd.getClasses().isEmpty()) {
 				throw exceptionHandler.constructAsmsException(messages.getString("GROUP_CLASSES_NULL_CODE"),
 						messages.getString("GROUP_CLASSES_NULL_MSG"));
 			}
 
-		/*	if (null == gd.getStartTime() || gd.getStartTime().isEmpty()) {
-				throw exceptionHandler.constructAsmsException(messages.getString("START_TIME_NULL_CODE"),
-						messages.getString("START_TIME_NULL_MSG"));
-			}
-
-			if (null == gd.getEndTime() || gd.getEndTime().isEmpty()) {
-				throw exceptionHandler.constructAsmsException(messages.getString("END_TIME_NULL_CODE"),
-						messages.getString("END_TIME_NULL_MSG"));
-			}
-
-			// check time is in hh:mm format
-			StringTokenizer time = new StringTokenizer(gd.getStartTime(), ":");
-			while (time.hasMoreElements()) {
-
-				if (time.nextElement().toString().matches("[0-9]+")) {
-					// valid
-				} else {
-					throw exceptionHandler.constructAsmsException(messages.getString("INVALID_TIME_CODE"),
-							messages.getString("INVALID_TIME_MSG"));
-				}
-			}
-
-			time = new StringTokenizer(gd.getEndTime(), ":");
-			while (time.hasMoreElements()) {
-				if (time.nextElement().toString().matches("[0-9]+")) {
-					// valid
-				} else {
-					throw exceptionHandler.constructAsmsException(messages.getString("INVALID_TIME_CODE"),
-							messages.getString("INVALID_TIME_MSG"));
-				}
-			}
-
-			String duration = gd.getPeriodDuration();
-			if (null == duration || duration.isEmpty()) {
-				throw exceptionHandler.constructAsmsException(messages.getString("PERIOD_DURATION_NULL_CODE"),
-						messages.getString("PERIOD_DURATION_NULL_MSG"));
-			}
-
-			if (!duration.matches("[0-9]+")) {
-				throw exceptionHandler.constructAsmsException(messages.getString("PERIOD_DURATION_INVALID_CODE"),
-						messages.getString("PERIOD_DURATION_INVALID_MSG"));
-			}
-			if (Integer.parseInt(duration) < 0) {
-				throw exceptionHandler.constructAsmsException(messages.getString("PERIOD_DURATION_INVALID_CODE"),
-						messages.getString("PERIOD_DURATION_INVALID_MSG"));
-			}
-
-			// check break time format
 			/*
-			 * for (Breaks b : gd.getBreaks()) { while (time.hasMoreElements())
-			 * { StringTokenizer time1 = new
+			 * if (null == gd.getStartTime() || gd.getStartTime().isEmpty()) {
+			 * throw exceptionHandler.constructAsmsException(messages.getString(
+			 * "START_TIME_NULL_CODE"),
+			 * messages.getString("START_TIME_NULL_MSG")); }
+			 * 
+			 * if (null == gd.getEndTime() || gd.getEndTime().isEmpty()) { throw
+			 * exceptionHandler.constructAsmsException(messages.getString(
+			 * "END_TIME_NULL_CODE"), messages.getString("END_TIME_NULL_MSG"));
+			 * }
+			 * 
+			 * // check time is in hh:mm format StringTokenizer time = new
+			 * StringTokenizer(gd.getStartTime(), ":"); while
+			 * (time.hasMoreElements()) {
+			 * 
+			 * if (time.nextElement().toString().matches("[0-9]+")) { // valid }
+			 * else { throw
+			 * exceptionHandler.constructAsmsException(messages.getString(
+			 * "INVALID_TIME_CODE"), messages.getString("INVALID_TIME_MSG")); }
+			 * }
+			 * 
+			 * time = new StringTokenizer(gd.getEndTime(), ":"); while
+			 * (time.hasMoreElements()) { if
+			 * (time.nextElement().toString().matches("[0-9]+")) { // valid }
+			 * else { throw
+			 * exceptionHandler.constructAsmsException(messages.getString(
+			 * "INVALID_TIME_CODE"), messages.getString("INVALID_TIME_MSG")); }
+			 * }
+			 * 
+			 * String duration = gd.getPeriodDuration(); if (null == duration ||
+			 * duration.isEmpty()) { throw
+			 * exceptionHandler.constructAsmsException(messages.getString(
+			 * "PERIOD_DURATION_NULL_CODE"),
+			 * messages.getString("PERIOD_DURATION_NULL_MSG")); }
+			 * 
+			 * if (!duration.matches("[0-9]+")) { throw
+			 * exceptionHandler.constructAsmsException(messages.getString(
+			 * "PERIOD_DURATION_INVALID_CODE"),
+			 * messages.getString("PERIOD_DURATION_INVALID_MSG")); } if
+			 * (Integer.parseInt(duration) < 0) { throw
+			 * exceptionHandler.constructAsmsException(messages.getString(
+			 * "PERIOD_DURATION_INVALID_CODE"),
+			 * messages.getString("PERIOD_DURATION_INVALID_MSG")); }
+			 * 
+			 * // check break time format /* for (Breaks b : gd.getBreaks()) {
+			 * while (time.hasMoreElements()) { StringTokenizer time1 = new
 			 * StringTokenizer(time.nextElement().toString(), ":"); while
 			 * (time1.hasMoreElements()) { if
 			 * (time1.nextElement().toString().matches("[0-9]+")) { // valid }
@@ -295,6 +289,69 @@ public class SchoolValidator {
 			 */
 
 		}
+
+	}
+
+	public void validateScheduleGroupsRequest(GroupDetails gd, ResourceBundle messages, String type)
+			throws AsmsException {
+		// .matches("[0-9]+"
+
+		if (null == gd) {
+			throw exceptionHandler.constructAsmsException(messages.getString("REQUEST_NULL_CODE"),
+					messages.getString("REQUEST_NULL"));
+		}
+
+		if (null == gd.getStartTime() || gd.getStartTime().isEmpty()) {
+			throw exceptionHandler.constructAsmsException(messages.getString("START_TIME_NULL_CODE"),
+					messages.getString("START_TIME_NULL_MSG"));
+		}
+
+		if (null == gd.getEndTime() || gd.getEndTime().isEmpty()) {
+			throw exceptionHandler.constructAsmsException(messages.getString("END_TIME_NULL_CODE"),
+					messages.getString("END_TIME_NULL_MSG"));
+		}
+
+		/*
+		 * // check time is in hh:mm format StringTokenizer time = new
+		 * StringTokenizer(gd.getStartTime(), ":"); while
+		 * (time.hasMoreElements()) {
+		 * 
+		 * if (time.nextElement().toString().matches("[0-9]+")) { // valid }
+		 * else { throw
+		 * exceptionHandler.constructAsmsException(messages.getString(
+		 * "INVALID_TIME_CODE"), messages.getString("INVALID_TIME_MSG")); } }
+		 * 
+		 * time = new StringTokenizer(gd.getEndTime(), ":"); while
+		 * (time.hasMoreElements()) { if
+		 * (time.nextElement().toString().matches("[0-9]+")) { // valid } else {
+		 * throw exceptionHandler.constructAsmsException(messages.getString(
+		 * "INVALID_TIME_CODE"), messages.getString("INVALID_TIME_MSG")); } }
+		 * 
+		 * String duration = gd.getPeriodDuration(); if (null == duration ||
+		 * duration.isEmpty()) { throw
+		 * exceptionHandler.constructAsmsException(messages.getString(
+		 * "PERIOD_DURATION_NULL_CODE"),
+		 * messages.getString("PERIOD_DURATION_NULL_MSG")); }
+		 * 
+		 * if (!duration.matches("[0-9]+")) { throw
+		 * exceptionHandler.constructAsmsException(messages.getString(
+		 * "PERIOD_DURATION_INVALID_CODE"),
+		 * messages.getString("PERIOD_DURATION_INVALID_MSG")); } if
+		 * (Integer.parseInt(duration) < 0) { throw
+		 * exceptionHandler.constructAsmsException(messages.getString(
+		 * "PERIOD_DURATION_INVALID_CODE"),
+		 * messages.getString("PERIOD_DURATION_INVALID_MSG")); }
+		 * 
+		 * // check break time format /* for (Breaks b : gd.getBreaks()) { while
+		 * (time.hasMoreElements()) { StringTokenizer time1 = new
+		 * StringTokenizer(time.nextElement().toString(), ":"); while
+		 * (time1.hasMoreElements()) { if
+		 * (time1.nextElement().toString().matches("[0-9]+")) { // valid } else
+		 * { throw exceptionHandler.constructAsmsException(messages.getString(
+		 * "INVALID_TIME_CODE"), messages.getString("INVALID_TIME_MSG")); } } }
+		 * 
+		 * }
+		 */
 
 	}
 
@@ -324,66 +381,69 @@ public class SchoolValidator {
 
 	}
 
-	/*public void validateSubjectDetailsRequest(UserRequest request, ResourceBundle messages) throws AsmsException {
-		if (null == request) {
-			throw exceptionHandler.constructAsmsException(messages.getString("REQUEST_NULL_CODE"),
-					messages.getString("REQUEST_NULL"));
-		}
-
-		if (null == request.getRequestType() || request.getRequestType().trim().isEmpty()) {
-			throw exceptionHandler.constructAsmsException(messages.getString("REQUEST_TYPE_NULL_CODE"),
-					messages.getString("REQUEST_TYPE_NULL"));
-		}
-
-		SubjectDetails subjectDetails = request.getSubjectDetails();
-
-		if (null == subjectDetails) {
-			throw exceptionHandler.constructAsmsException(messages.getString("SUBJECT_DETAILS_NULL_CODE"),
-					messages.getString("SUBJECT_DETAILS_NULL_MSG"));
-		}
-
-		if (null == subjectDetails.getName() || subjectDetails.getName().isEmpty()) {
-			throw exceptionHandler.constructAsmsException(messages.getString("	SUBJECT_NAME_NULL_CODE"),
-					messages.getString("SUBJECT_NAME_NULL_MSG"));
-		}
-
-	}
-
-	public void validateSectiontDetailsRequest(UserRequest request, ResourceBundle messages) throws AsmsException {
-		if (null == request) {
-			throw exceptionHandler.constructAsmsException(messages.getString("REQUEST_NULL_CODE"),
-					messages.getString("REQUEST_NULL"));
-		}
-
-		if (null == request.getRequestType() || request.getRequestType().trim().isEmpty()) {
-			throw exceptionHandler.constructAsmsException(messages.getString("REQUEST_TYPE_NULL_CODE"),
-					messages.getString("REQUEST_TYPE_NULL"));
-		}
-
-		SectionDetails sectionDetails = request.getSectionDetails();
-
-		if (null == sectionDetails) {
-			throw exceptionHandler.constructAsmsException(messages.getString("SECTION_DETAILS_NULL_CODE"),
-					messages.getString("SECTION_DETAILS_NULL_MSG"));
-		}
-
-		if (null == sectionDetails.getName() || sectionDetails.getName().isEmpty()) {
-			throw exceptionHandler.constructAsmsException(messages.getString("	SECTION_NAME_NULL_CODE"),
-					messages.getString("SECTION_NAME_NULL_MSG"));
-		}
-
-		if (null == sectionDetails.getAdditionalSubjectsDetails()
-				|| sectionDetails.getAdditionalSubjectsDetails().isEmpty()) {
-			throw exceptionHandler.constructAsmsException(messages.getString("	ADDITIONAL_SUBJECT_NULL_CODE"),
-					messages.getString("ADDITIONAL_SUBJECT_NULL_MSG"));
-		}
-
-		if (null == sectionDetails.getSubjectDetails() || sectionDetails.getSubjectDetails().isEmpty()) {
-			throw exceptionHandler.constructAsmsException(messages.getString("	SUBJECT_DETAILS_NULL_CODE"),
-					messages.getString("SUBJECT_DETAILS_NULL_MSG"));
-		}
-
-	}*/
+	/*
+	 * public void validateSubjectDetailsRequest(UserRequest request,
+	 * ResourceBundle messages) throws AsmsException { if (null == request) {
+	 * throw exceptionHandler.constructAsmsException(messages.getString(
+	 * "REQUEST_NULL_CODE"), messages.getString("REQUEST_NULL")); }
+	 * 
+	 * if (null == request.getRequestType() ||
+	 * request.getRequestType().trim().isEmpty()) { throw
+	 * exceptionHandler.constructAsmsException(messages.getString(
+	 * "REQUEST_TYPE_NULL_CODE"), messages.getString("REQUEST_TYPE_NULL")); }
+	 * 
+	 * SubjectDetails subjectDetails = request.getSubjectDetails();
+	 * 
+	 * if (null == subjectDetails) { throw
+	 * exceptionHandler.constructAsmsException(messages.getString(
+	 * "SUBJECT_DETAILS_NULL_CODE"),
+	 * messages.getString("SUBJECT_DETAILS_NULL_MSG")); }
+	 * 
+	 * if (null == subjectDetails.getName() ||
+	 * subjectDetails.getName().isEmpty()) { throw
+	 * exceptionHandler.constructAsmsException(messages.
+	 * getString("	SUBJECT_NAME_NULL_CODE"),
+	 * messages.getString("SUBJECT_NAME_NULL_MSG")); }
+	 * 
+	 * }
+	 * 
+	 * public void validateSectiontDetailsRequest(UserRequest request,
+	 * ResourceBundle messages) throws AsmsException { if (null == request) {
+	 * throw exceptionHandler.constructAsmsException(messages.getString(
+	 * "REQUEST_NULL_CODE"), messages.getString("REQUEST_NULL")); }
+	 * 
+	 * if (null == request.getRequestType() ||
+	 * request.getRequestType().trim().isEmpty()) { throw
+	 * exceptionHandler.constructAsmsException(messages.getString(
+	 * "REQUEST_TYPE_NULL_CODE"), messages.getString("REQUEST_TYPE_NULL")); }
+	 * 
+	 * SectionDetails sectionDetails = request.getSectionDetails();
+	 * 
+	 * if (null == sectionDetails) { throw
+	 * exceptionHandler.constructAsmsException(messages.getString(
+	 * "SECTION_DETAILS_NULL_CODE"),
+	 * messages.getString("SECTION_DETAILS_NULL_MSG")); }
+	 * 
+	 * if (null == sectionDetails.getName() ||
+	 * sectionDetails.getName().isEmpty()) { throw
+	 * exceptionHandler.constructAsmsException(messages.
+	 * getString("	SECTION_NAME_NULL_CODE"),
+	 * messages.getString("SECTION_NAME_NULL_MSG")); }
+	 * 
+	 * if (null == sectionDetails.getAdditionalSubjectsDetails() ||
+	 * sectionDetails.getAdditionalSubjectsDetails().isEmpty()) { throw
+	 * exceptionHandler.constructAsmsException(messages.
+	 * getString("	ADDITIONAL_SUBJECT_NULL_CODE"),
+	 * messages.getString("ADDITIONAL_SUBJECT_NULL_MSG")); }
+	 * 
+	 * if (null == sectionDetails.getSubjectDetails() ||
+	 * sectionDetails.getSubjectDetails().isEmpty()) { throw
+	 * exceptionHandler.constructAsmsException(messages.
+	 * getString("	SUBJECT_DETAILS_NULL_CODE"),
+	 * messages.getString("SUBJECT_DETAILS_NULL_MSG")); }
+	 * 
+	 * }
+	 */
 
 	public void validateTimeTableOnchangeDetails(TimeTableOnchangeDetails details, ResourceBundle messages)
 			throws AsmsException {
@@ -466,19 +526,18 @@ public class SchoolValidator {
 		 */
 	}
 
+	public void validateAdditionalSubjectsRequest(String className, String section, ResourceBundle messages)
+			throws AsmsException {
 
-public void validateAdditionalSubjectsRequest( String className, String section, ResourceBundle messages) throws AsmsException {
-	
+		if (null == className || className.isEmpty()) {
+			throw exceptionHandler.constructAsmsException(messages.getString("CLASSNAME_NULL_CODE"),
+					messages.getString("CLASSNAME_NULL_MSG"));
+		}
 
-	if (null == className || className.isEmpty()) {
-		throw exceptionHandler.constructAsmsException(messages.getString("CLASSNAME_NULL_CODE"),
-				messages.getString("CLASSNAME_NULL_MSG"));
+		if (null == section || section.isEmpty()) {
+			throw exceptionHandler.constructAsmsException(messages.getString("SECTION_NULL_CODE"),
+					messages.getString("SECTION_NULL_MSG"));
+
+		}
 	}
-
-	if (null == section || section.isEmpty()) {
-		throw exceptionHandler.constructAsmsException(messages.getString("SECTION_NULL_CODE"),
-				messages.getString("SECTION_NULL_MSG"));
-
-}
-}
 }

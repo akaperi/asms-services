@@ -100,13 +100,13 @@ public class CurriculumPlanMgmtService extends BaseService {
 				return Response.status(Status.OK).entity(cpSuccessResponse).build();
 
 			} else {
-				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+				return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 			}
 
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 	}
 	
@@ -148,13 +148,13 @@ public class CurriculumPlanMgmtService extends BaseService {
 				return Response.status(Status.OK).entity(cPlanSuccessResponse).build();
 
 			} else {
-				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+				return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 			}
 
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 	}
 

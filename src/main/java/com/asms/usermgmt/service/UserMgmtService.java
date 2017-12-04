@@ -101,13 +101,13 @@ public class UserMgmtService extends BaseService {
 				getUserResponse.setUser(userObject);
 				return Response.status(Status.OK).entity(getUserResponse).build();
 			} else {
-				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+				return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 			}
 
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 	}
 	/*
@@ -138,13 +138,13 @@ public class UserMgmtService extends BaseService {
 				getUserResponse.setStudentTypes(userObject);
 				return Response.status(Status.OK).entity(getUserResponse).build();
 			} else {
-				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+				return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 			}
 
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 
 	}
@@ -177,13 +177,13 @@ public class UserMgmtService extends BaseService {
 				getUserResponse.setQualificationTypes(userObject);
 				return Response.status(Status.OK).entity(getUserResponse).build();
 			} else {
-				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+				return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 			}
 
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 
 	}
@@ -215,13 +215,13 @@ public class UserMgmtService extends BaseService {
 				getUserResponse.setReligionTypes(userObject);
 				return Response.status(Status.OK).entity(getUserResponse).build();
 			} else {
-				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+				return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 			}
 
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 
 	}
@@ -254,13 +254,13 @@ public class UserMgmtService extends BaseService {
 				getUserResponse.setCasteTypes(userObject);
 				return Response.status(Status.OK).entity(getUserResponse).build();
 			} else {
-				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+				return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 			}
 
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 
 	}
@@ -308,7 +308,7 @@ public class UserMgmtService extends BaseService {
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 	}
 	// end of Update
@@ -359,7 +359,7 @@ public class UserMgmtService extends BaseService {
 	 * 
 	 * } catch (AsmsException ex) { // construct failure response FailureResponse
 	 * failureResponse = new FailureResponse(ex); return
-	 * Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build( );
+	 * Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build( );
 	 * } }
 	 */
 
@@ -404,7 +404,7 @@ public class UserMgmtService extends BaseService {
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 	}
 
@@ -445,7 +445,7 @@ public class UserMgmtService extends BaseService {
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 	}
 
@@ -491,7 +491,7 @@ public class UserMgmtService extends BaseService {
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 	}
 
@@ -542,7 +542,7 @@ public class UserMgmtService extends BaseService {
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 	}
 
@@ -594,14 +594,14 @@ public class UserMgmtService extends BaseService {
 			} else {
 				failureResponse.setCode(Integer.parseInt(messages.getString("AUTHENTICATION_FAILED_CODE")));
 				failureResponse.setErrorDescription(messages.getString("AUTHENTICATION_FAILED_MSG"));
-				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+				return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 
 			}
 
 		} catch (AsmsException ex) {
 			// construct failure response
 			 failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 
 	}
@@ -632,12 +632,12 @@ public class UserMgmtService extends BaseService {
 			} else {
 				failureResponse.setCode(Integer.parseInt(messages.getString("AUTHENTICATION_FAILED_CODE")));
 				failureResponse.setErrorDescription(messages.getString("AUTHENTICATION_FAILED_MSG"));
-				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+				return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 			}
 
 		} catch (AsmsException ex) {
 			// construct failure response
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 
 	}
@@ -673,7 +673,7 @@ public class UserMgmtService extends BaseService {
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 	}
 
@@ -722,7 +722,7 @@ public class UserMgmtService extends BaseService {
 		} catch (AsmsException ex) {
 			// construct failure response
 
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 	}
 
@@ -739,7 +739,7 @@ public class UserMgmtService extends BaseService {
 
 		} catch (Exception ex) {
 
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 
 	}
@@ -765,13 +765,13 @@ public class UserMgmtService extends BaseService {
 				getUserResponse.setStudents(students);
 				return Response.status(Status.OK).entity(getUserResponse).build();
 			} else {
-				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+				return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 			}
 
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 	}
 
@@ -816,7 +816,7 @@ public class UserMgmtService extends BaseService {
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 	}
 
@@ -847,13 +847,13 @@ public class UserMgmtService extends BaseService {
 			}
 
 			else {
-				return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+				return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 			}
 
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 
 		}
 	}
@@ -885,13 +885,13 @@ public class UserMgmtService extends BaseService {
 				
 			} else {
 				Object failureResponse = null;
-				return  Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+				return  Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 			}
 
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return  Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return  Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 	}
 	
@@ -919,13 +919,13 @@ public class UserMgmtService extends BaseService {
 				
 			} else {
 				Object failureResponse = null;
-				return  Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+				return  Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 			}
 
 		} catch (AsmsException ex) {
 			// construct failure response
 			FailureResponse failureResponse = new FailureResponse(ex);
-			return  Response.status(Status.EXPECTATION_FAILED).entity(failureResponse).build();
+			return  Response.status(Status.PRECONDITION_FAILED).entity(failureResponse).build();
 		}
 	}
 	
